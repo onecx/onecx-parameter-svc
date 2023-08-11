@@ -1,0 +1,46 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd"
+                   objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+    <changeSet author="dev (generated)" id="1646993858104-1">
+        <createTable tableName="apm_app_param_history">
+            <column name="guid" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="apm_app_param_history_pkey"/>
+            </column>
+            <column name="creationdate" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="creationuser" type="VARCHAR(255)"/>
+            <column name="modificationdate" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="modificationuser" type="VARCHAR(255)"/>
+            <column name="optlock" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="application_id" type="VARCHAR(255)"/>
+            <column name="count" type="BIGINT"/>
+            <column name="default_value" type="VARCHAR(255)"/>
+            <column name="interval_end" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="instance_id" type="VARCHAR(255)"/>
+            <column name="param_key" type="VARCHAR(255)"/>
+            <column name="interval_start" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="value_type" type="VARCHAR(255)"/>
+            <column name="used_value" type="VARCHAR(255)"/>
+        </createTable>
+
+        <addColumn tableName="apm_app_param">
+            <column name="import_value" type="VARCHAR(255)"/>
+            <column name="set_value" type="VARCHAR(255)"/>
+            <column name="value_type" type="VARCHAR(255)"/>
+        </addColumn>
+
+        <dropUniqueConstraint constraintName="ukp21v4giibljn7g5ud3g9ekskv" tableName="application_parameters"/>
+        <dropTable tableName="application_parameters"/>
+        <dropColumn columnName="param_type" tableName="apm_app_param"/>
+        <dropColumn columnName="param_unit" tableName="apm_app_param"/>
+        <dropColumn columnName="param_value" tableName="apm_app_param"/>
+        <dropColumn columnName="range_from" tableName="apm_app_param"/>
+        <dropColumn columnName="range_to" tableName="apm_app_param"/>
+        <dropColumn columnName="role_type" tableName="apm_app_param"/>
+        <dropSequence sequenceName="gen_business_id"/>
+    </changeSet>
+
+</databaseChangeLog>

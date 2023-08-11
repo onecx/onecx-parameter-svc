@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <APM_APP_PARAM guid="GUID1" optlock="1" application_id="app1" param_name="param" param_key="param" set_value="${STRING_ENV_VARIABLE}/test" param_description="param example" value_type="STRING" />
+    <APM_APP_PARAM guid="GUID2" optlock="1" application_id="app1" param_name="integer_param" param_key="integer_param" set_value="${INTEGER_ENV_VARIABLE}${INTEGER_ENV_VARIABLE}" param_description="integer param example" value_type="NUMBER" />
+    <APM_APP_PARAM guid="GUID3" optlock="1" application_id="app1" param_name="boolean_param" param_key="boolean_param" set_value="${BOOLEAN_ENV_VARIABLE}" param_description="boolean param example" value_type="BOOLEAN" />
+</dataset>
