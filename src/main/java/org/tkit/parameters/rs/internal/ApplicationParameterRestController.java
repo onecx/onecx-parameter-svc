@@ -17,7 +17,6 @@ import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
-import org.tkit.parameters.domain.criteria.ApplicationParameterSearchCriteria;
 import org.tkit.parameters.domain.daos.ApplicationParameterDAO;
 import org.tkit.parameters.domain.daos.ApplicationParameterDataDAO;
 import org.tkit.parameters.domain.models.ApplicationParameter;
@@ -25,7 +24,6 @@ import org.tkit.parameters.domain.models.ApplicationParameterData;
 import org.tkit.parameters.rs.internal.dtos.*;
 import org.tkit.parameters.rs.internal.mappers.ApplicationParameterDataMapper;
 import org.tkit.parameters.rs.internal.mappers.ApplicationParameterInternalMapper;
-import org.tkit.quarkus.jpa.daos.PageResult;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,20 +48,37 @@ public class ApplicationParameterRestController {
     @Inject
     ApplicationParameterDataMapper applicationParameterDataMapper;
 
+    @GET()
+    @Path("applications")
+    @Operation(operationId = "getAllApplications", description = "Find all parameters")
+    @APIResponse(responseCode = "200", description = "OK", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ApplicationsPageResultDTO.class)))
+    @APIResponse(responseCode = "400", description = "Bad request")
+    @APIResponse(responseCode = "500", description = "Internal Server Error")
+    public Response getAllApplications() {
+        var apps = applicationParameterDAO.searchAllApplications();
+        return Response.ok(applicationParameterInternalMapper.apps(apps)).build();
+    }
+
+    @GET()
+    @Path("keys")
+    @Operation(operationId = "getAllKeys", description = "Find all parameters")
+    @APIResponse(responseCode = "200", description = "OK", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = KeysPageResultDTO.class)))
+    @APIResponse(responseCode = "400", description = "Bad request")
+    @APIResponse(responseCode = "500", description = "Internal Server Error")
+    public Response getAllKeys(@BeanParam KeysSearchCriteriaDTO dto) {
+        var criteria = applicationParameterInternalMapper.map(dto);
+        var keys = applicationParameterDAO.searchAllKeys(criteria);
+        return Response.ok(applicationParameterInternalMapper.apps(keys)).build();
+    }
+
     @GET
     @Operation(operationId = "getAllApplicationParameters", description = "Find all parameters")
     @APIResponse(responseCode = "200", description = "OK", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ApplicationParameterPageResultDTO.class)))
     @APIResponse(responseCode = "400", description = "Bad request")
     @APIResponse(responseCode = "500", description = "Internal Server Error")
-    public Response getAllApplicationParameters(@BeanParam ApplicationParameterSearchCriteriaDTO dto,
-            @QueryParam("distinct") Boolean distinct) {
-        ApplicationParameterSearchCriteria criteria = applicationParameterInternalMapper.map(dto);
-        PageResult<ApplicationParameter> parameters;
-        if (Boolean.TRUE.equals(distinct)) {
-            parameters = applicationParameterDAO.searchDistinctByCriteria(criteria);
-        } else {
-            parameters = applicationParameterDAO.searchByCriteria(criteria);
-        }
+    public Response getAllApplicationParameters(@BeanParam ApplicationParameterSearchCriteriaDTO dto) {
+        var criteria = applicationParameterInternalMapper.map(dto);
+        var parameters = applicationParameterDAO.searchByCriteria(criteria);
         ApplicationParameterPageResultDTO results = applicationParameterInternalMapper.map(parameters);
 
         // map ApplicationParameterData to ApplicationParameter due to backward compatibility

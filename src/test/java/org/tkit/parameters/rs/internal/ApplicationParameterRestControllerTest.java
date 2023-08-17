@@ -46,28 +46,43 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
 
     }
 
-    static Stream<Arguments> findByCriteriaDistinctTestData() {
-        return Stream.of(
-                Arguments.of(Map.of("distinct", true), 4),
-                Arguments.of(Map.of("distinct", true, "applicationId", ""), 4),
-                Arguments.of(Map.of("distinct", true, "applicationId", "app1"), 1),
-                Arguments.of(Map.of("distinct", true, "key", ""), 4),
-                Arguments.of(Map.of("distinct", true, "key", "k1"), 0));
-    }
-
-    @ParameterizedTest
-    @MethodSource("findByCriteriaDistinctTestData")
+    @Test
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
-    void shouldFindAllParametersWithoutCriteriaDistinct(Map<String, String> queryParams, int size) {
+    void searchAllApplicationsTest() {
         PageResultDTO<?> pageResultDTO = given()
-                .queryParams(queryParams)
-                .get()
+                .when()
+                .get("applications")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
-                .extract().body().as(PageResultDTO.class);
+                .contentType(APPLICATION_JSON)
+                .extract()
+                .body().as(PageResultDTO.class);
+        Assertions.assertEquals(4, pageResultDTO.getStream().size());
+    }
 
-        Assertions.assertEquals(size, pageResultDTO.getStream().size());
-        Assertions.assertEquals(Long.valueOf(size), pageResultDTO.getTotalElements());
+    @Test
+    @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
+    void searchAllKeysTest() {
+        var pageResultDTO = given()
+                .when()
+                .get("keys")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .contentType(APPLICATION_JSON)
+                .extract()
+                .body().as(PageResultDTO.class);
+        Assertions.assertEquals(9, pageResultDTO.getStream().size());
+
+        pageResultDTO = given()
+                .when()
+                .queryParams("applicationId", "app1")
+                .get("keys")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .contentType(APPLICATION_JSON)
+                .extract()
+                .body().as(PageResultDTO.class);
+        Assertions.assertEquals(5, pageResultDTO.getStream().size());
     }
 
     static Stream<Arguments> findByCriteriaTestData() {

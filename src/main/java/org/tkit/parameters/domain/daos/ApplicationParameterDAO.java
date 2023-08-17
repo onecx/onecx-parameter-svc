@@ -12,6 +12,7 @@ import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
 
 import org.tkit.parameters.domain.criteria.ApplicationParameterSearchCriteria;
+import org.tkit.parameters.domain.criteria.KeysSearchCriteria;
 import org.tkit.parameters.domain.models.ApplicationParameter;
 import org.tkit.parameters.domain.models.ApplicationParameter_;
 import org.tkit.quarkus.jpa.daos.AbstractDAO;
@@ -125,32 +126,35 @@ public class ApplicationParameterDAO extends AbstractDAO<ApplicationParameter> {
         }
     }
 
-    public PageResult<ApplicationParameter> searchDistinctByCriteria(ApplicationParameterSearchCriteria criteria) {
+    public PageResult<String> searchAllKeys(KeysSearchCriteria criteria) {
+        try {
+            var cb = getEntityManager().getCriteriaBuilder();
+            CriteriaQuery<String> cq = cb.createQuery(String.class);
+            Root<ApplicationParameter> root = cq.from(ApplicationParameter.class);
+            cq.select(root.get(ApplicationParameter_.KEY)).distinct(true);
 
-        String selectQuery = "SELECT DISTINCT ON (application_id) * FROM apm_app_param";
-        StringBuilder whereClause = new StringBuilder(" WHERE 1=1");
+            if (criteria.getApplicationId() != null && !criteria.getApplicationId().isEmpty()) {
+                cq.where(cb.equal(root.get(ApplicationParameter_.APPLICATION_ID), criteria.getApplicationId()));
+            }
 
-        if (criteria.getApplicationId() != null && !criteria.getApplicationId().isEmpty()) {
-            whereClause.append(" AND application_id LIKE :applicationId");
+            var results = getEntityManager().createQuery(cq).getResultList();
+            return new PageResult<>(results.size(), results.stream(), Page.of(0, 1));
+        } catch (Exception exception) {
+            throw new DAOException(ErrorKeys.FIND_ALL_KEYS_FAILED, exception);
         }
+    }
 
-        if (criteria.getKey() != null && !criteria.getKey().isEmpty()) {
-            whereClause.append(" AND param_key LIKE :key");
+    public PageResult<String> searchAllApplications() {
+        try {
+            var cb = getEntityManager().getCriteriaBuilder();
+            CriteriaQuery<String> cq = cb.createQuery(String.class);
+            Root<ApplicationParameter> root = cq.from(ApplicationParameter.class);
+            cq.select(root.get(ApplicationParameter_.APPLICATION_ID)).distinct(true);
+            var results = getEntityManager().createQuery(cq).getResultList();
+            return new PageResult<>(results.size(), results.stream(), Page.of(0, 1));
+        } catch (Exception exception) {
+            throw new DAOException(ErrorKeys.FIND_ALL_APPLICATIONS_FAILED, exception);
         }
-
-        Query query = getEntityManager().createNativeQuery(selectQuery + whereClause, ApplicationParameter.class);
-
-        if (criteria.getApplicationId() != null && !criteria.getApplicationId().isEmpty()) {
-            query.setParameter("applicationId", criteria.getApplicationId() + "%");
-        }
-
-        if (criteria.getKey() != null && !criteria.getKey().isEmpty()) {
-            query.setParameter("key", criteria.getKey() + "%");
-        }
-
-        List<ApplicationParameter> results = (List<ApplicationParameter>) query.getResultList();
-
-        return new PageResult<>(results.size(), results.stream(), Page.of(0, 1));
     }
 
     private static String stringPattern(String value) {
@@ -163,6 +167,9 @@ public class ApplicationParameterDAO extends AbstractDAO<ApplicationParameter> {
         FIND_PARAMETER_BY_APPLICATION_ID_AND_PARAMETER_KEY_FAILED,
         FIND_PARAMETERS_BY_APPLICATION_AND_PARAMETER_KEYS_FAILED,
         FIND_PARAMETERS_BY_APPLICATION_AND_PARAMETER_KEY_TYPE_FAILED,
+        FIND_ALL_APPLICATIONS_FAILED,
+
+        FIND_ALL_KEYS_FAILED,
         FIND_ALL_PARAMETERS_FAILED;
     }
 }

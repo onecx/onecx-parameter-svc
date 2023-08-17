@@ -5,6 +5,7 @@ import java.util.List;
 import org.mapstruct.*;
 import org.tkit.parameters.domain.criteria.ApplicationParameterHistorySearchCriteria;
 import org.tkit.parameters.domain.criteria.ApplicationParameterSearchCriteria;
+import org.tkit.parameters.domain.criteria.KeysSearchCriteria;
 import org.tkit.parameters.domain.models.ApplicationParameter;
 import org.tkit.parameters.domain.models.ApplicationParameterHistory;
 import org.tkit.parameters.domain.models.ParameterHistoryCountTuple;
@@ -14,6 +15,12 @@ import org.tkit.quarkus.rs.mappers.OffsetDateTimeMapper;
 
 @Mapper(injectionStrategy = InjectionStrategy.CONSTRUCTOR, uses = { OffsetDateTimeMapper.class })
 public interface ApplicationParameterInternalMapper {
+
+    KeysSearchCriteria map(KeysSearchCriteriaDTO dto);
+
+    KeysPageResultDTO keys(PageResult<String> page);
+
+    ApplicationsPageResultDTO apps(PageResult<String> page);
 
     ApplicationParameterHistorySearchCriteria map(ApplicationParameterHistorySearchCriteriaDTO dto);
 

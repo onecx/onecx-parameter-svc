@@ -114,52 +114,6 @@
         </dependency>
     </dependencies>
 
-<!--    <build>-->
-<!--        <plugins>-->
-<!--            <plugin>-->
-<!--                <groupId>org.openapitools</groupId>-->
-<!--                <artifactId>openapi-generator-maven-plugin</artifactId>-->
-<!--                <version>6.6.0</version>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>default</id>-->
-<!--                        <goals>-->
-<!--                            <goal>generate</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <inputSpec>${project.basedir}/src/main/openapi/openapi-internal.yaml</inputSpec>-->
-<!--                            <generatorName>jaxrs-spec</generatorName>-->
-
-<!--                            <generateApiTests>false</generateApiTests>-->
-<!--                            <generateApiDocumentation>false</generateApiDocumentation>-->
-<!--                            <generateModelTests>false</generateModelTests>-->
-<!--                            <generateModelDocumentation>false</generateModelDocumentation>-->
-<!--                            <generateSupportingFiles>false</generateSupportingFiles>-->
-<!--                            <apiPackage>gen.org.tkit.parameters.rs.internal.api</apiPackage>-->
-<!--                            <modelPackage>gen.org.tkit.parameters.rs.internal.model</modelPackage>-->
-<!--                            <library>quarkus</library>-->
-<!--                            <configOptions>-->
-<!--                                <returnResponse>true</returnResponse>-->
-<!--                                <interfaceOnly>true</interfaceOnly>-->
-<!--                                <useMicroProfileOpenAPIAnnotations>true</useMicroProfileOpenAPIAnnotations>-->
-<!--                                <useJakartaEe>true</useJakartaEe>-->
-<!--                                <useSwaggerAnnotations>false</useSwaggerAnnotations>-->
-<!--                                <java17>true</java17>-->
-<!--                                <sourceFolder>/</sourceFolder>-->
-<!--                            </configOptions>-->
-<!--                            <typeMappings>-->
-<!--                                <typeMapping>Date=OffsetDateTime</typeMapping>-->
-<!--                            </typeMappings>-->
-<!--                            <importMappings>-->
-<!--                                <importMapping>java.util.Date=java.time.OffsetDateTime</importMapping>-->
-<!--                            </importMappings>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                </executions>-->
-<!--            </plugin>-->
-<!--        </plugins>-->
-<!--    </build>-->
-
     <profiles>
         <profile>
             <id>openapi</id>
@@ -176,10 +130,10 @@
                                 </goals>
                                 <configuration>
                                     <schemaFilename>openapi-internal</schemaFilename>
-                                    <servers>http://tkit-parameters:8080/</servers>
+                                    <servers>http://onecx-parameters-svc:8080/</servers>
                                     <scanPackages>org.tkit.parameters.rs.internal</scanPackages>
-                                    <infoTitle>tkit-parameters</infoTitle>
-                                    <infoDescription>1000kit parameters</infoDescription>
+                                    <infoTitle>onecx-parameters</infoTitle>
+                                    <infoDescription>OneCx parameters</infoDescription>
                                     <infoVersion>2.0</infoVersion>
                                 </configuration>
                             </execution>
@@ -190,10 +144,10 @@
                                 </goals>
                                 <configuration>
                                     <schemaFilename>openapi-v2</schemaFilename>
-                                    <servers>http://tkit-parameters:8080/</servers>
+                                    <servers>http://onecx-parameters-svc:8080/</servers>
                                     <scanPackages>org.tkit.parameters.rs.external.v2</scanPackages>
-                                    <infoTitle>tkit-parameters</infoTitle>
-                                    <infoDescription>1000kit parameters</infoDescription>
+                                    <infoTitle>onecx-parameters</infoTitle>
+                                    <infoDescription>OneCx parameters</infoDescription>
                                     <infoVersion>2.0</infoVersion>
                                 </configuration>
                             </execution>
@@ -204,11 +158,11 @@
                                 </goals>
                                 <configuration>
                                     <schemaFilename>openapi-v3</schemaFilename>
-                                    <servers>http://tkit-parameters:8080/</servers>
+                                    <servers>http://onecx-parameters-svc:8080/</servers>
                                     <scanPackages>org.tkit.parameters.rs.external.v3</scanPackages>
-                                    <infoTitle>tkit-parameters</infoTitle>
-                                    <infoDescription>1000kit parameters</infoDescription>
-                                    <infoVersion>2.0</infoVersion>
+                                    <infoTitle>onecx-parameters</infoTitle>
+                                    <infoDescription>OneCx parameters</infoDescription>
+                                    <infoVersion>3.0</infoVersion>
                                 </configuration>
                             </execution>
                         </executions>
