@@ -66,33 +66,25 @@ class ApplicationParameterHistoryRestControllerTest extends AbstractTest {
         Assertions.assertEquals(expectedArraySize, pageResultDTO.getStream().size());
     }
 
-    static Stream<Arguments> findByCriteriaTestDataQuery() {
+    static Stream<Arguments> findByCriteriaTestDataQueryLatest() {
         return Stream.of(
-                Arguments.of(Map.of("distinct", true), 3),
-                Arguments.of(Map.of("applicationId", "access-mgmt", "distinct", true), 1),
-                Arguments.of(Map.of("applicationId", "", "key", "", "distinct", true), 3),
-                Arguments.of(Map.of("applicationId", "", "key", "key1", "distinct", true), 1),
-                Arguments.of(Map.of("applicationId", "", "distinct", true), 3),
-                Arguments.of(Map.of("applicationId", "app0", "distinct", true), 0),
-                Arguments.of(Map.of("applicationId", "app1", "distinct", true), 1),
-                Arguments.of(Map.of("applicationId", "app2", "distinct", true), 1),
-                Arguments.of(Map.of("latest", true), 0),
-                Arguments.of(Map.of("applicationId", "access-mgmt", "latest", true), 0),
-                Arguments.of(Map.of("applicationId", "", "key", "", "latest", true), 0),
-                Arguments.of(Map.of("applicationId", "", "key", "key1", "latest", true), 0),
-                Arguments.of(Map.of("applicationId", "", "latest", true), 0),
-                Arguments.of(Map.of("applicationId", "app0", "latest", true), 0),
-                Arguments.of(Map.of("applicationId", "app1", "latest", true), 0),
-                Arguments.of(Map.of("applicationId", "app2", "latest", true), 0));
+                Arguments.of(Map.of(), 0),
+                Arguments.of(Map.of("applicationId", "access-mgmt"), 0),
+                Arguments.of(Map.of("applicationId", "", "key", ""), 0),
+                Arguments.of(Map.of("applicationId", "", "key", "key1"), 0),
+                Arguments.of(Map.of("applicationId", ""), 0),
+                Arguments.of(Map.of("applicationId", "app0"), 0),
+                Arguments.of(Map.of("applicationId", "app1"), 0),
+                Arguments.of(Map.of("applicationId", "app2"), 0));
     }
 
     @ParameterizedTest
-    @MethodSource("findByCriteriaTestDataQuery")
-    void shouldFindParametersHistoryByCriteriaQuery(Map<String, String> queryParams, Integer expectedArraySize) {
+    @MethodSource("findByCriteriaTestDataQueryLatest")
+    void shouldFindParametersHistoryByCriteriaQueryLatest(Map<String, String> queryParams, Integer expectedArraySize) {
         var pageResultDTO = given()
                 .when()
                 .queryParams(queryParams)
-                .get()
+                .get("latest")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)

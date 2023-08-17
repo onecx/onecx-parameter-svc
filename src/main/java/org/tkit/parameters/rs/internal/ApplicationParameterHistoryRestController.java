@@ -18,7 +18,6 @@ import org.tkit.parameters.domain.daos.ApplicationParameterHistoryDAO;
 import org.tkit.parameters.domain.models.ApplicationParameterHistory;
 import org.tkit.parameters.rs.internal.dtos.*;
 import org.tkit.parameters.rs.internal.mappers.ApplicationParameterInternalMapper;
-import org.tkit.quarkus.jpa.daos.PageResult;
 
 @ApplicationScoped
 @Tag(name = "internal")
@@ -35,23 +34,25 @@ public class ApplicationParameterHistoryRestController {
     ApplicationParameterHistoryDAO historyDAO;
 
     @GET
+    @Path("latest")
+    @Operation(operationId = "getAllApplicationParametersHistoryLatest", description = "Find all parameters history latest")
+    @APIResponse(responseCode = "200", description = "OK", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ApplicationParameterHistoryPageResultDTO.class)))
+    @APIResponse(responseCode = "400", description = "Bad request")
+    @APIResponse(responseCode = "500", description = "Internal Server Error")
+    public Response getAllApplicationParametersHistoryLatest(@BeanParam ApplicationParameterHistorySearchCriteriaDTO dto) {
+        var criteria = applicationParameterInternalMapper.map(dto);
+        var parametersHistories = historyDAO.searchOnlyLatestByCriteria(criteria);
+        return Response.ok(applicationParameterInternalMapper.mapHistory(parametersHistories)).build();
+    }
+
+    @GET
     @Operation(operationId = "getAllApplicationParametersHistory", description = "Find all parameters history")
     @APIResponse(responseCode = "200", description = "OK", content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema(implementation = ApplicationParameterHistoryPageResultDTO.class)))
     @APIResponse(responseCode = "400", description = "Bad request")
     @APIResponse(responseCode = "500", description = "Internal Server Error")
-    public Response getAllApplicationParametersHistory(@BeanParam ApplicationParameterHistorySearchCriteriaDTO dto,
-            @QueryParam("latest") Boolean latest,
-            @QueryParam("distinct") Boolean distinct) {
-        ApplicationParameterHistorySearchCriteria criteria = applicationParameterInternalMapper.map(dto);
-        PageResult<ApplicationParameterHistory> parametersHistories;
-        // TODO: fix this
-        if (Boolean.TRUE.equals(latest)) {
-            parametersHistories = historyDAO.searchOnlyLatestByCriteria(criteria);
-        } else if (Boolean.TRUE.equals(distinct)) {
-            parametersHistories = historyDAO.searchDistinctByCriteria(criteria);
-        } else {
-            parametersHistories = historyDAO.searchByCriteria(criteria);
-        }
+    public Response getAllApplicationParametersHistory(@BeanParam ApplicationParameterHistorySearchCriteriaDTO dto) {
+        var criteria = applicationParameterInternalMapper.map(dto);
+        var parametersHistories = historyDAO.searchByCriteria(criteria);
         return Response.ok(applicationParameterInternalMapper.mapHistory(parametersHistories)).build();
     }
 

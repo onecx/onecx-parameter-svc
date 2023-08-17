@@ -7,7 +7,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.persistence.Query;
 import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
 

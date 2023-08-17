@@ -3,10 +3,8 @@ package org.tkit.parameters.domain.daos;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.persistence.Query;
 import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
 
@@ -63,35 +61,6 @@ public class ApplicationParameterHistoryDAO extends AbstractDAO<ApplicationParam
         } catch (Exception exception) {
             throw new DAOException(ErrorKeys.FIND_ALL_PARAMETERS_HISTORY_FAILED, exception);
         }
-    }
-
-    public PageResult<ApplicationParameterHistory> searchDistinctByCriteria(
-            ApplicationParameterHistorySearchCriteria criteria) {
-
-        String selectQuery = "SELECT DISTINCT ON (application_id) * FROM apm_app_param_history";
-        StringBuilder whereClause = new StringBuilder(" WHERE 1=1");
-
-        if (criteria.getApplicationId() != null && !criteria.getApplicationId().isEmpty()) {
-            whereClause.append(" AND application_id LIKE :applicationId");
-        }
-
-        if (criteria.getKey() != null && !criteria.getKey().isEmpty()) {
-            whereClause.append(" AND param_key LIKE :key");
-        }
-
-        Query query = getEntityManager().createNativeQuery(selectQuery + whereClause, ApplicationParameterHistory.class);
-
-        if (criteria.getApplicationId() != null && !criteria.getApplicationId().isEmpty()) {
-            query.setParameter("applicationId", criteria.getApplicationId() + "%");
-        }
-
-        if (criteria.getKey() != null && !criteria.getKey().isEmpty()) {
-            query.setParameter("key", criteria.getKey() + "%");
-        }
-
-        Stream results = query.getResultStream();
-
-        return new PageResult<>(1, query.getResultStream(), Page.of(0, 1));
     }
 
     public PageResult<ApplicationParameterHistory> searchOnlyLatestByCriteria(

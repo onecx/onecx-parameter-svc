@@ -60,29 +60,27 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
         Assertions.assertEquals(4, pageResultDTO.getStream().size());
     }
 
-    @Test
+    static Stream<Arguments> findAllKeys() {
+        return Stream.of(
+                Arguments.of(Map.of(), 9),
+                Arguments.of(Map.of("applicationId", ""), 9),
+                Arguments.of(Map.of("applicationId", "app1"), 5));
+    }
+
+    @ParameterizedTest
+    @MethodSource("findAllKeys")
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
-    void searchAllKeysTest() {
+    void searchAllKeysTest(Map<String, String> queryParams, int expectedArraySize) {
         var pageResultDTO = given()
                 .when()
+                .queryParams(queryParams)
                 .get("keys")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
                 .body().as(PageResultDTO.class);
-        Assertions.assertEquals(9, pageResultDTO.getStream().size());
-
-        pageResultDTO = given()
-                .when()
-                .queryParams("applicationId", "app1")
-                .get("keys")
-                .then()
-                .statusCode(Response.Status.OK.getStatusCode())
-                .contentType(APPLICATION_JSON)
-                .extract()
-                .body().as(PageResultDTO.class);
-        Assertions.assertEquals(5, pageResultDTO.getStream().size());
+        Assertions.assertEquals(expectedArraySize, pageResultDTO.getStream().size());
     }
 
     static Stream<Arguments> findByCriteriaTestData() {
