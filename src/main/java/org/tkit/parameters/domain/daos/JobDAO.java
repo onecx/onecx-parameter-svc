@@ -8,7 +8,6 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 
-import org.hibernate.LockOptions;
 import org.tkit.parameters.domain.di.models.Job;
 import org.tkit.quarkus.jpa.daos.AbstractDAO;
 import org.tkit.quarkus.jpa.exceptions.DAOException;
@@ -29,7 +28,7 @@ public class JobDAO extends AbstractDAO<Job> {
                     .createQuery(cq)
                     .setMaxResults(1)
                     .setLockMode(LockModeType.PESSIMISTIC_WRITE)
-                    .setHint("javax.persistence.lock.timeout", LockOptions.SKIP_LOCKED)
+                    .setHint("javax.persistence.lock.timeout", -2)
                     .getSingleResult();
 
         } catch (NoResultException ex) {

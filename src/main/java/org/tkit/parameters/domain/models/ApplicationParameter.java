@@ -15,6 +15,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "APM_APP_PARAM", uniqueConstraints = {
         @UniqueConstraint(columnNames = { "APPLICATION_ID", "PARAM_KEY" }) })
+@SuppressWarnings("java:S2160")
 public class ApplicationParameter extends TraceableEntity {
 
     /**
@@ -64,6 +65,7 @@ public class ApplicationParameter extends TraceableEntity {
      *
      * @deprecated use only in v2 API
      */
+    @SuppressWarnings("java:S1133")
     @Deprecated(forRemoval = true, since = "1.0.0")
     @Column(name = "VALUE_TYPE")
     private String type;

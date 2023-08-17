@@ -76,11 +76,8 @@ public class TraceableDTO {
             } else {
                 return super.equals(obj);
             }
-        } else if (!guid.equals(otherGuid)) {
-            return false;
-        }
-
-        return true;
+        } else
+            return guid.equals(otherGuid);
     }
 
     /**

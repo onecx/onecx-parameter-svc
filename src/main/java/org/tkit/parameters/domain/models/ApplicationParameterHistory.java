@@ -15,6 +15,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "APM_APP_PARAM_HISTORY")
+@SuppressWarnings("java:S2160")
 public class ApplicationParameterHistory extends TraceableEntity {
     /**
      * The UID for this class.

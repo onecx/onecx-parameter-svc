@@ -10,6 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @RegisterForReflection
+
 public class ApplicationParameterDTOV2 extends AbstractEntityDTOV2 {
 
     private String key;

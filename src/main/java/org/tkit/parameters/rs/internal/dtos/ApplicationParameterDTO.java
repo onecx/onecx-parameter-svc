@@ -9,6 +9,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @RegisterForReflection
+@SuppressWarnings("java:S2160")
 public class ApplicationParameterDTO extends TraceableDTO {
 
     private String name;
