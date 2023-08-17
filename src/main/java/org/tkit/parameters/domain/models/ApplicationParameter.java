@@ -61,8 +61,10 @@ public class ApplicationParameter extends TraceableEntity {
 
     /**
      * The application parameter type.
+     *
+     * @deprecated use only in v2 API
      */
-    @Deprecated
+    @Deprecated(forRemoval = true, since = "1.0.0")
     @Column(name = "VALUE_TYPE")
     private String type;
 }

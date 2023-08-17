@@ -1,10 +1,12 @@
 package org.tkit.parameters.rs.external.v2.dtos;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class AbstractEntityDTOV2 {
 
     /**
@@ -15,6 +17,7 @@ public class AbstractEntityDTOV2 {
     /**
      * The ID.
      */
+    @EqualsAndHashCode.Include
     private String id;
 
     /**

@@ -5,16 +5,20 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @RegisterForReflection
 public class ParametersBucketDTO {
 
-    public Map<String, ParameterInfoDTO> parameters = new ConcurrentHashMap<>();
+    private Map<String, ParameterInfoDTO> parameters = new ConcurrentHashMap<>();
 
-    public String instanceId;
+    private String instanceId;
 
-    public OffsetDateTime start;
+    private OffsetDateTime start;
 
-    public OffsetDateTime end;
+    private OffsetDateTime end;
 
 }

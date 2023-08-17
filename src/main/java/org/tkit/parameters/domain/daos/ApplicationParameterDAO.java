@@ -23,7 +23,6 @@ import org.tkit.quarkus.jpa.exceptions.DAOException;
 @Transactional(value = Transactional.TxType.NOT_SUPPORTED, rollbackOn = DAOException.class)
 public class ApplicationParameterDAO extends AbstractDAO<ApplicationParameter> {
 
-    // TODO: index, rewrite this method (c1,c2) in (....)
     // keys in format <app><separator><key>
     public Map<String, ApplicationParameter> findApplicationParametersByKeys(Set<String> keys, String separator) {
         try {

@@ -9,12 +9,12 @@ import lombok.Setter;
 @RegisterForReflection
 public class ParameterInfoDTO {
 
-    public Long count;
+    private Long count;
 
-    public String type;
+    private String type;
 
-    public String defaultValue;
+    private String defaultValue;
 
-    public String currentValue;
+    private String currentValue;
 
 }

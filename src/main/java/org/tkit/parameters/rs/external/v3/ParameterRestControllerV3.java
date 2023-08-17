@@ -62,12 +62,13 @@ public class ParameterRestControllerV3 {
     @APIResponse(responseCode = "404", description = "Not Found")
     @APIResponse(responseCode = "500", description = "Internal Server Error")
     public Response bucketRequest(@PathParam(value = "appId") String appId, ParametersBucketDTO dto) {
-        if (dto == null || dto.parameters.isEmpty()) {
+        if (dto == null || dto.getParameters().isEmpty()) {
             return Response.status(Response.Status.OK).build();
         }
         List<ApplicationParameterHistory> items = new ArrayList<>();
-        dto.parameters.forEach((key, value) -> items
-                .add(mapper.mapItem(value, key, dto.start, dto.end, dto.instanceId, appId, value.getCurrentValue())));
+        dto.getParameters().forEach((key, value) -> items
+                .add(mapper.mapItem(value, key, dto.getStart(), dto.getEnd(), dto.getInstanceId(), appId,
+                        value.getCurrentValue())));
         historyDAO.create(items);
         return Response.status(Response.Status.OK).build();
     }

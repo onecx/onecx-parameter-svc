@@ -90,11 +90,11 @@ class ParameterRestControllerV3Test extends AbstractTest {
     void shouldCreateNewParameter() {
         ParametersBucketDTO parametersBucketDTO = new ParametersBucketDTO();
         ParameterInfoDTO parameterInfoDTO1 = new ParameterInfoDTO();
-        parameterInfoDTO1.count = 1L;
-        parameterInfoDTO1.currentValue = "DefaultValue";
-        parameterInfoDTO1.defaultValue = "DefaultValue";
-        parameterInfoDTO1.type = "STRING";
-        parametersBucketDTO.parameters.put("testKey", parameterInfoDTO1);
+        parameterInfoDTO1.setCount(1L);
+        parameterInfoDTO1.setCurrentValue("DefaultValue");
+        parameterInfoDTO1.setDefaultValue("DefaultValue");
+        parameterInfoDTO1.setType("STRING");
+        parametersBucketDTO.getParameters().put("testKey", parameterInfoDTO1);
         given()
                 .contentType(APPLICATION_JSON)
                 .body(parametersBucketDTO)
@@ -119,11 +119,11 @@ class ParameterRestControllerV3Test extends AbstractTest {
     void shouldUpdateParameters() {
         ParametersBucketDTO parametersBucketDTO = new ParametersBucketDTO();
         ParameterInfoDTO parameterInfoDTO1 = new ParameterInfoDTO();
-        parameterInfoDTO1.count = 2L;
-        parameterInfoDTO1.currentValue = "10";
-        parameterInfoDTO1.defaultValue = "10";
-        parameterInfoDTO1.type = "INTEGER";
-        parametersBucketDTO.parameters.put("COUNTER", parameterInfoDTO1);
+        parameterInfoDTO1.setCount(2L);
+        parameterInfoDTO1.setCurrentValue("10");
+        parameterInfoDTO1.setDefaultValue("10");
+        parameterInfoDTO1.setType("INTEGER");
+        parametersBucketDTO.getParameters().put("COUNTER", parameterInfoDTO1);
         given()
                 .contentType(APPLICATION_JSON)
                 .body(parametersBucketDTO)
