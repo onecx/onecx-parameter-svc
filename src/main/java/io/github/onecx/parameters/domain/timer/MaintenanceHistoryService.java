@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Singleton
 public class MaintenanceHistoryService {
 
-    @ConfigProperty(name = "maintenance.history.scheduler.duration", defaultValue = "P7D")
+    @ConfigProperty(name = "onecx.parameters.history.scheduler.duration", defaultValue = "P7D")
     Duration duration;
 
     @Inject
@@ -32,7 +32,7 @@ public class MaintenanceHistoryService {
     static final String JOB_ID = "maintenance.history";
 
     // find older items and delete it
-    @Scheduled(identity = "maintenance.history", cron = "${maintenance.history.scheduler.expr}")
+    @Scheduled(identity = "maintenance.history", cron = "${onecx.parameters.history.scheduler.expr}")
     @Transactional(value = Transactional.TxType.REQUIRES_NEW, rollbackOn = DAOException.class)
     void maintenanceHistoryData() {
         LocalDateTime dt = LocalDateTime.now().minus(duration);
