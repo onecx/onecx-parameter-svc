@@ -5,9 +5,4 @@
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
         <include relativeToChangelogFile="true" file="createTables.xml"/>
-        <include relativeToChangelogFile="true" file="createApplicationParametersTable.xml"/>
-        <include relativeToChangelogFile="true" file="data-import-tables.xml"/>
-        <include relativeToChangelogFile="true" file="refactoring-model.xml"/>
-        <include relativeToChangelogFile="true" file="job-table.xml"/>
-        <include relativeToChangelogFile="true" file="createApplicationParameterDataTable.xml"/>
 </databaseChangeLog>
