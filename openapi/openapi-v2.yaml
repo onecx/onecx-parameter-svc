@@ -1,0 +1,245 @@
+---
+openapi: 3.0.3
+info:
+  title: onecx-parameters
+  description: OneCx parameters
+  version: "2.0"
+servers:
+- url: http://onecx-parameters-svc:8080/
+tags:
+- name: external
+paths:
+  /v2/booleanParameters:
+    get:
+      tags:
+      - external
+      description: Get application parameter as Boolean by application id and parameter
+        key
+      operationId: getBoolean
+      parameters:
+      - name: applicationId
+        in: query
+        schema:
+          type: string
+      - name: parameterKey
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: boolean
+        "400":
+          description: Bad request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+  /v2/integerParameters:
+    get:
+      tags:
+      - external
+      description: Get application parameter as Integer by application id and parameter
+        key
+      operationId: getInteger
+      parameters:
+      - name: applicationId
+        in: query
+        schema:
+          type: string
+      - name: parameterKey
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  format: int32
+                  type: integer
+        "400":
+          description: Bad request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+  /v2/longParameters:
+    get:
+      tags:
+      - external
+      description: Get application parameter as Long by application id and parameter
+        key
+      operationId: getLong
+      parameters:
+      - name: applicationId
+        in: query
+        schema:
+          type: string
+      - name: parameterKey
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  format: int64
+                  type: integer
+        "400":
+          description: Bad request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+  /v2/parameters:
+    get:
+      tags:
+      - external
+      description: Get application parameter by application id and parameter key
+      operationId: getParameter
+      parameters:
+      - name: applicationId
+        in: query
+        schema:
+          type: string
+      - name: parameterKey
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationParameterDTOV2'
+        "400":
+          description: Bad request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+    post:
+      tags:
+      - external
+      description: Get all application parameters by application id and/or parameter
+        key
+      operationId: getAllParameters
+      parameters:
+      - name: applicationId
+        in: query
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ApplicationParameterDTOV2'
+        "400":
+          description: Bad request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+  /v2/stringParameters:
+    get:
+      tags:
+      - external
+      description: Get application parameter as String by application id and parameter
+        key
+      operationId: getString
+      parameters:
+      - name: applicationId
+        in: query
+        schema:
+          type: string
+      - name: parameterKey
+        in: query
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        "400":
+          description: Bad request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+components:
+  schemas:
+    ApplicationParameterDTOV2:
+      type: object
+      properties:
+        persisted:
+          type: boolean
+        id:
+          type: string
+        version:
+          format: int32
+          type: integer
+        key:
+          type: string
+        name:
+          type: string
+        value:
+          type: string
+        description:
+          type: string
+        type:
+          $ref: '#/components/schemas/ApplicationParameterTypeDTOV2'
+        applicationId:
+          type: string
+        roleType:
+          $ref: '#/components/schemas/ApplicationParameterRoleTypeDTOV2'
+        unit:
+          type: string
+        valueRangeFrom:
+          format: int32
+          type: integer
+        valueRangeTo:
+          format: int32
+          type: integer
+    ApplicationParameterRoleTypeDTOV2:
+      enum:
+      - BUSINESS
+      - SYSTEM
+      type: string
+    ApplicationParameterTypeDTOV2:
+      enum:
+      - NUMBER
+      - STRING
+      - BOOLEAN
+      - TEXT_PASSWORD
+      - DATE
+      type: string

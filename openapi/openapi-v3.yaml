@@ -1,0 +1,96 @@
+---
+openapi: 3.0.3
+info:
+  title: onecx-parameters
+  description: OneCx parameters
+  version: "3.0"
+servers:
+- url: http://onecx-parameters-svc:8080/
+tags:
+- name: external
+paths:
+  /v3/{appId}/history:
+    post:
+      tags:
+      - external
+      description: Update or create parameters for specific application
+      operationId: createOrUpdateParameters
+      parameters:
+      - name: appId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParametersBucketDTO'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParametersBucketDTO'
+        "400":
+          description: Bad request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+  /v3/{appId}/parameters:
+    get:
+      tags:
+      - external
+      description: Get parameters by application id
+      operationId: getApplicationParameters
+      parameters:
+      - name: appId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: {}
+        "400":
+          description: Bad request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+components:
+  schemas:
+    ParameterInfoDTO:
+      type: object
+      properties:
+        count:
+          format: int64
+          type: integer
+        type:
+          type: string
+        defaultValue:
+          type: string
+        currentValue:
+          type: string
+    ParametersBucketDTO:
+      type: object
+      properties:
+        parameters:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/ParameterInfoDTO'
+        instanceId:
+          type: string
+        start:
+          format: date-time
+          type: string
+          example: 2022-03-10T12:15:50-04:00
+        end:
+          format: date-time
+          type: string
+          example: 2022-03-10T12:15:50-04:00

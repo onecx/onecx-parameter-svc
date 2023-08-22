@@ -1,0 +1,32 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <changeSet author="dev (generated)" id="1630065596941-1">
+        <createTable tableName="application_parameters">
+            <column name="bid" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="application_parameters_pkey"/>
+            </column>
+            <column name="creationdate" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="creationuser" type="VARCHAR(255)"/>
+            <column name="modificationdate" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="modificationuser" type="VARCHAR(255)"/>
+            <column name="optlock" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="app_id" type="VARCHAR(255)"/>
+            <column name="count" type="BIGINT"/>
+            <column name="default_value" type="VARCHAR(255)"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="key" type="VARCHAR(255)"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="set_value" type="VARCHAR(255)"/>
+            <column name="type" type="VARCHAR(255)"/>
+            <column name="used_value" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dev (generated)" id="1630065596941-2">
+        <addUniqueConstraint columnNames="app_id, key" constraintName="ukp21v4giibljn7g5ud3g9ekskv" tableName="application_parameters"/>
+    </changeSet>
+    <changeSet author="dev (generated)" id="1630065596941-3">
+        <createSequence cacheSize="1" cycle="false" incrementBy="50" maxValue="9223372036854775807" minValue="1" sequenceName="gen_business_id" startValue="1"/>
+    </changeSet>
+</databaseChangeLog>

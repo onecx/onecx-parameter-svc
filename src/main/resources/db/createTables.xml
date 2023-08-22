@@ -1,0 +1,30 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+    <changeSet author="dev (generated)" id="1605788432439-1">
+        <createTable tableName="apm_app_param">
+            <column name="guid" type="VARCHAR(255)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="apm_app_param_pkey"/>
+            </column>
+            <column name="creationdate" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="creationuser" type="VARCHAR(255)"/>
+            <column name="modificationdate" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="modificationuser" type="VARCHAR(255)"/>
+            <column name="optlock" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="application_id" type="VARCHAR(255)"/>
+            <column name="param_description" type="VARCHAR(255)"/>
+            <column name="param_key" type="VARCHAR(255)"/>
+            <column name="param_name" type="VARCHAR(255)"/>
+            <column name="role_type" type="VARCHAR(255)"/>
+            <column name="param_type" type="VARCHAR(255)"/>
+            <column name="param_unit" type="VARCHAR(255)"/>
+            <column name="param_value" type="VARCHAR(255)"/>
+            <column name="range_from" type="INTEGER"/>
+            <column name="range_to" type="INTEGER"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="dev (generated)" id="1605788432439-2">
+        <addUniqueConstraint columnNames="application_id, param_key" constraintName="ukdaqlpysgk1bxwt2xuqd3w1qh" tableName="apm_app_param"/>
+    </changeSet>
+</databaseChangeLog>

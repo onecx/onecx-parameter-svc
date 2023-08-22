@@ -1,0 +1,27 @@
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd"
+                   objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+
+        <changeSet author="dev (generated)" id="1648130474422-1">
+            <createTable tableName="apm_job">
+                <column name="guid" type="VARCHAR(255)">
+                    <constraints nullable="false" primaryKey="true" primaryKeyName="apm_job_pkey"/>
+                </column>
+                <column name="creationdate" type="TIMESTAMP WITHOUT TIME ZONE"/>
+                <column name="creationuser" type="VARCHAR(255)"/>
+                <column name="modificationdate" type="TIMESTAMP WITHOUT TIME ZONE"/>
+                <column name="modificationuser" type="VARCHAR(255)"/>
+                <column name="optlock" type="INTEGER">
+                    <constraints nullable="false"/>
+                </column>
+            </createTable>
+
+            <insert tableName="apm_job">
+                <column  name="guid"  value="maintenance.history"/>
+                <column  name="optlock"  value="1"/>
+            </insert>
+        </changeSet>
+
+</databaseChangeLog>
