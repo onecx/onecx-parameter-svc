@@ -58,6 +58,7 @@ public class ApplicationParameterDataImportService implements DataImportService 
     @Override
     @Transactional(Transactional.TxType.REQUIRES_NEW)
     public void importData(DataImportConfig config) {
+        log.info("Import parameters from configuration {}", config);
         try {
             String operation = config.getMetadata().getOrDefault("operation", "NONE");
 
