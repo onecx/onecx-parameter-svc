@@ -1,4 +1,4 @@
-package io.github.onecx.parameters.domain.di.models;
+package io.github.onecx.parameters.domain.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

@@ -13,8 +13,8 @@ paths:
     post:
       tags:
       - external
-      description: Update or create parameters for specific application
-      operationId: createOrUpdateParameters
+      description: Create Bucket request
+      operationId: bucketRequest
       parameters:
       - name: appId
         in: path
@@ -25,14 +25,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ParametersBucketDTO'
+              $ref: '#/components/schemas/ParametersBucket'
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ParametersBucketDTO'
+                $ref: '#/components/schemas/ParametersBucket'
         "400":
           description: Bad request
         "404":
@@ -65,7 +65,7 @@ paths:
           description: Internal Server Error
 components:
   schemas:
-    ParameterInfoDTO:
+    ParameterInfo:
       type: object
       properties:
         count:
@@ -77,13 +77,13 @@ components:
           type: string
         currentValue:
           type: string
-    ParametersBucketDTO:
+    ParametersBucket:
       type: object
       properties:
         parameters:
           type: object
           additionalProperties:
-            $ref: '#/components/schemas/ParameterInfoDTO'
+            $ref: '#/components/schemas/ParameterInfo'
         instanceId:
           type: string
         start:

@@ -11,15 +11,16 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.tkit.quarkus.test.WithDBData;
 
-import io.github.onecx.parameters.rs.external.v3.models.ParameterInfoDTO;
-import io.github.onecx.parameters.rs.external.v3.models.ParametersBucketDTO;
+import gen.io.github.onecx.parameters.rs.v3.ExternalApi;
+import gen.io.github.onecx.parameters.rs.v3.model.ParameterInfoDTOV3;
+import gen.io.github.onecx.parameters.rs.v3.model.ParametersBucketDTOV3;
 import io.github.onecx.parameters.test.AbstractTest;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.path.json.JsonPath;
 
 @QuarkusTest
-@TestHTTPEndpoint(ParameterRestControllerV3.class)
+@TestHTTPEndpoint(ExternalApi.class)
 class ParameterRestControllerV3Test extends AbstractTest {
 
     @Test
@@ -27,7 +28,7 @@ class ParameterRestControllerV3Test extends AbstractTest {
         Map<String, String> applicationParameters = given()
                 .when()
                 .pathParam("appId", "not-exist")
-                .get("{appId}/parameters")
+                .get("parameters")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
@@ -43,7 +44,7 @@ class ParameterRestControllerV3Test extends AbstractTest {
                 .when()
                 .contentType(APPLICATION_JSON)
                 .pathParam("appId", "import-app")
-                .get("{appId}/parameters")
+                .get("parameters")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
@@ -59,7 +60,7 @@ class ParameterRestControllerV3Test extends AbstractTest {
         Map<String, String> applicationParameters = given()
                 .when()
                 .pathParam("appId", "access-mgmt")
-                .get("{appId}/parameters")
+                .get("parameters")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
@@ -75,7 +76,7 @@ class ParameterRestControllerV3Test extends AbstractTest {
         JsonPath applicationParameters = given()
                 .when()
                 .pathParam("appId", "access-mgmt")
-                .get("{appId}/parameters")
+                .get("parameters")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
@@ -88,8 +89,8 @@ class ParameterRestControllerV3Test extends AbstractTest {
     @Test
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
     void shouldCreateNewParameter() {
-        ParametersBucketDTO parametersBucketDTO = new ParametersBucketDTO();
-        ParameterInfoDTO parameterInfoDTO1 = new ParameterInfoDTO();
+        ParametersBucketDTOV3 parametersBucketDTO = new ParametersBucketDTOV3();
+        ParameterInfoDTOV3 parameterInfoDTO1 = new ParameterInfoDTOV3();
         parameterInfoDTO1.setCount(1L);
         parameterInfoDTO1.setCurrentValue("DefaultValue");
         parameterInfoDTO1.setDefaultValue("DefaultValue");
@@ -99,13 +100,13 @@ class ParameterRestControllerV3Test extends AbstractTest {
                 .contentType(APPLICATION_JSON)
                 .body(parametersBucketDTO)
                 .pathParam("appId", "new-application")
-                .post("{appId}/history")
+                .post("history")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode());
         Map<String, String> applicationParameters = given()
                 .when()
                 .pathParam("appId", "new-application")
-                .get("{appId}/parameters")
+                .get("parameters")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
@@ -117,8 +118,8 @@ class ParameterRestControllerV3Test extends AbstractTest {
     @Test
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
     void shouldUpdateParameters() {
-        ParametersBucketDTO parametersBucketDTO = new ParametersBucketDTO();
-        ParameterInfoDTO parameterInfoDTO1 = new ParameterInfoDTO();
+        ParametersBucketDTOV3 parametersBucketDTO = new ParametersBucketDTOV3();
+        ParameterInfoDTOV3 parameterInfoDTO1 = new ParameterInfoDTOV3();
         parameterInfoDTO1.setCount(2L);
         parameterInfoDTO1.setCurrentValue("10");
         parameterInfoDTO1.setDefaultValue("10");
@@ -128,7 +129,7 @@ class ParameterRestControllerV3Test extends AbstractTest {
                 .contentType(APPLICATION_JSON)
                 .body(parametersBucketDTO)
                 .pathParam("appId", "access-mgmt")
-                .post("{appId}/history")
+                .post("history")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode());
     }
@@ -138,19 +139,19 @@ class ParameterRestControllerV3Test extends AbstractTest {
         given()
                 .contentType(APPLICATION_JSON)
                 .pathParam("appId", "test")
-                .post("{appId}/history")
+                .post("history")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode());
     }
 
     @Test
     void bucketRequestNoParametersDTO() {
-        ParametersBucketDTO parametersBucketDTO = new ParametersBucketDTO();
+        ParametersBucketDTOV3 parametersBucketDTO = new ParametersBucketDTOV3();
         given()
                 .contentType(APPLICATION_JSON)
                 .body(parametersBucketDTO)
                 .pathParam("appId", "test")
-                .post("{appId}/history")
+                .post("history")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode());
     }

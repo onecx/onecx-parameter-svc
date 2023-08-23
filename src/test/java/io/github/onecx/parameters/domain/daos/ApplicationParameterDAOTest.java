@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.tkit.quarkus.test.WithDBData;
 
-import io.github.onecx.parameters.domain.di.ApplicationParameterDataImportService;
+import io.github.onecx.parameters.domain.di.v1.ParameterDataImportService;
 import io.github.onecx.parameters.domain.models.ApplicationParameter;
 import io.quarkus.test.junit.QuarkusTest;
 
@@ -24,7 +24,7 @@ class ApplicationParameterDAOTest {
     void findApplicationParametersByKeysTest() {
         Set<String> data = Set.of("app1__param", "app1__integer_param");
         Map<String, ApplicationParameter> result = dao.findApplicationParametersByKeys(data,
-                ApplicationParameterDataImportService.KEY_SEPARATOR);
+                ParameterDataImportService.KEY_SEPARATOR);
         Assertions.assertNotNull(result);
         Assertions.assertEquals(2, result.size());
     }
@@ -34,7 +34,7 @@ class ApplicationParameterDAOTest {
     void findApplicationParametersByKeysNoResultTest() {
         Set<String> data = Set.of("appx__paramx");
         Map<String, ApplicationParameter> result = dao.findApplicationParametersByKeys(data,
-                ApplicationParameterDataImportService.KEY_SEPARATOR);
+                ParameterDataImportService.KEY_SEPARATOR);
         Assertions.assertNotNull(result);
         Assertions.assertEquals(0, result.size());
     }

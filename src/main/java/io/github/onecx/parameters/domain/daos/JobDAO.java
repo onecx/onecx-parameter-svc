@@ -12,7 +12,7 @@ import org.tkit.quarkus.jpa.daos.AbstractDAO;
 import org.tkit.quarkus.jpa.exceptions.DAOException;
 import org.tkit.quarkus.jpa.models.TraceableEntity_;
 
-import io.github.onecx.parameters.domain.di.models.Job;
+import io.github.onecx.parameters.domain.models.Job;
 
 @ApplicationScoped
 public class JobDAO extends AbstractDAO<Job> {

@@ -15,8 +15,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.tkit.quarkus.test.WithDBData;
 
-import io.github.onecx.parameters.rs.internal.dtos.ApplicationParameterHistoryDTO;
-import io.github.onecx.parameters.rs.internal.dtos.PageResultDTO;
+import gen.io.github.onecx.parameters.rs.internal.model.ApplicationParameterHistoryDTO;
+import gen.io.github.onecx.parameters.rs.internal.model.ApplicationParameterHistoryPageResultDTO;
 import io.github.onecx.parameters.test.AbstractTest;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
@@ -33,7 +33,7 @@ class ApplicationParameterHistoryRestControllerTest extends AbstractTest {
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
-                .extract().body().as(PageResultDTO.class);
+                .extract().body().as(ApplicationParameterHistoryPageResultDTO.class);
 
         Assertions.assertEquals(6, pageResultDTO.getStream().size());
         Assertions.assertEquals(Long.valueOf(6), pageResultDTO.getTotalElements());
@@ -62,7 +62,7 @@ class ApplicationParameterHistoryRestControllerTest extends AbstractTest {
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
-                .body().as(PageResultDTO.class);
+                .body().as(ApplicationParameterHistoryPageResultDTO.class);
         Assertions.assertEquals(expectedArraySize, pageResultDTO.getStream().size());
     }
 
@@ -89,7 +89,7 @@ class ApplicationParameterHistoryRestControllerTest extends AbstractTest {
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
-                .body().as(PageResultDTO.class);
+                .body().as(ApplicationParameterHistoryPageResultDTO.class);
         Assertions.assertEquals(expectedArraySize, pageResultDTO.getStream().size());
     }
 
