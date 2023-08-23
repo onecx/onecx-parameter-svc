@@ -17,10 +17,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.tkit.quarkus.test.WithDBData;
 
-import io.github.onecx.parameters.rs.internal.dtos.ApplicationParameterCreateDTO;
-import io.github.onecx.parameters.rs.internal.dtos.ApplicationParameterDTO;
-import io.github.onecx.parameters.rs.internal.dtos.ApplicationParameterUpdateDTO;
-import io.github.onecx.parameters.rs.internal.dtos.PageResultDTO;
+import gen.io.github.onecx.parameters.rs.internal.model.*;
 import io.github.onecx.parameters.test.AbstractTest;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
@@ -35,11 +32,11 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
     @Test
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
     void shouldFindAllParametersWithoutCriteria() {
-        PageResultDTO<?> pageResultDTO = given()
+        ApplicationParameterPageResultDTO pageResultDTO = given()
                 .get()
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
-                .extract().body().as(PageResultDTO.class);
+                .extract().body().as(ApplicationParameterPageResultDTO.class);
 
         Assertions.assertEquals(9, pageResultDTO.getStream().size());
         Assertions.assertEquals(Long.valueOf(9), pageResultDTO.getTotalElements());
@@ -49,14 +46,14 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
     @Test
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
     void searchAllApplicationsTest() {
-        PageResultDTO<?> pageResultDTO = given()
+        ApplicationsPageResultDTO pageResultDTO = given()
                 .when()
                 .get("applications")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
-                .body().as(PageResultDTO.class);
+                .body().as(ApplicationsPageResultDTO.class);
         Assertions.assertEquals(4, pageResultDTO.getStream().size());
     }
 
@@ -79,7 +76,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
-                .body().as(PageResultDTO.class);
+                .body().as(KeysPageResultDTO.class);
         Assertions.assertEquals(expectedArraySize, pageResultDTO.getStream().size());
     }
 
@@ -98,7 +95,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
     @MethodSource("findByCriteriaTestData")
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
     void shouldFindParametersByCriteria(Map<String, String> queryParams, Integer expectedArraySize) {
-        PageResultDTO<?> pageResultDTO = given()
+        ApplicationParameterPageResultDTO pageResultDTO = given()
                 .when()
                 .queryParams(queryParams)
                 .get()
@@ -106,7 +103,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
-                .body().as(PageResultDTO.class);
+                .body().as(ApplicationParameterPageResultDTO.class);
         Assertions.assertEquals(expectedArraySize, pageResultDTO.getStream().size());
     }
 

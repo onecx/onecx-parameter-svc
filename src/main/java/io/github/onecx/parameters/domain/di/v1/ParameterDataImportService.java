@@ -1,4 +1,4 @@
-package io.github.onecx.parameters.domain.di;
+package io.github.onecx.parameters.domain.di.v1;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,37 +15,43 @@ import org.tkit.quarkus.dataimport.DataImport;
 import org.tkit.quarkus.dataimport.DataImportConfig;
 import org.tkit.quarkus.dataimport.DataImportService;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import gen.io.github.onecx.parameters.di.v1.model.DataImportDTOV1;
+import gen.io.github.onecx.parameters.di.v1.model.DataImportParamDTOV1;
 import io.github.onecx.parameters.domain.daos.ApplicationParameterDAO;
-import io.github.onecx.parameters.domain.di.models.ApplicationParameterDataImport;
 import io.github.onecx.parameters.domain.models.ApplicationParameter;
 
 /**
- * Import format
+ * Import JSON format. Openapi: ./src/main/openapi/di-v1.yaml
+ *
+ * <pre>
  * {
- * "appId" : {
- * "key1": {
- * "description": "description_1",
- * "name": "name_1",
- * "value": "value_1"
- * },
- * "key2": {
- * "description": "description_2",
- * "name": "name_2",
- * "value": "value_2"
+ *   "appId" : {
+ *     "key1": {
+ *       "description": "description_1",
+ *       "name": "name_1",
+ *       "value": "value_1"
+ *     },
+ *     "key2": {
+ *       "description": "description_2",
+ *       "name": "name_2",
+ *       "value": "value_2"
+ *     }
+ *   }
  * }
- * }
- * }
+ * </pre>
+ *
+ * <pre>
  * operation:
  * - CLEAN_INSERT - delete all data and import new set
  * - UPDATE - update existing data from file or create new parameters
+ * </pre>
  */
 @DataImport("parameters")
-public class ApplicationParameterDataImportService implements DataImportService {
+public class ParameterDataImportService implements DataImportService {
 
-    private static final Logger log = LoggerFactory.getLogger(ApplicationParameterDataImportService.class);
+    private static final Logger log = LoggerFactory.getLogger(ParameterDataImportService.class);
 
     public static final String KEY_SEPARATOR = "__";
 
@@ -62,7 +68,7 @@ public class ApplicationParameterDataImportService implements DataImportService 
         try {
             String operation = config.getMetadata().getOrDefault("operation", "NONE");
 
-            Consumer<Map<String, Map<String, ApplicationParameterDataImport>>> action = switch (operation) {
+            Consumer<DataImportDTOV1> action = switch (operation) {
                 case "CLEAN_INSERT" -> this::cleanInsert;
                 case "UPDATE" -> this::update;
                 default -> null;
@@ -78,9 +84,7 @@ public class ApplicationParameterDataImportService implements DataImportService 
                 return;
             }
 
-            Map<String, Map<String, ApplicationParameterDataImport>> data = mapper.readValue(config.getData(),
-                    new TypeReference<Map<String, Map<String, ApplicationParameterDataImport>>>() {
-                    });
+            DataImportDTOV1 data = mapper.readValue(config.getData(), DataImportDTOV1.class);
             if (data.isEmpty()) {
                 log.warn("Import configuration key {} does not contains any JSON data to import", config.getKey());
                 return;
@@ -97,7 +101,7 @@ public class ApplicationParameterDataImportService implements DataImportService 
         }
     }
 
-    private void cleanInsert(Map<String, Map<String, ApplicationParameterDataImport>> data) {
+    private void cleanInsert(DataImportDTOV1 data) {
 
         // convert import model to list of parameters
         List<ApplicationParameter> params = new ArrayList<>();
@@ -114,11 +118,11 @@ public class ApplicationParameterDataImportService implements DataImportService 
         dao.create(params);
     }
 
-    private void update(Map<String, Map<String, ApplicationParameterDataImport>> data) {
-        Map<String, ApplicationParameterDataImport> values = new HashMap<>();
-        data.forEach((app, keys) -> {
-            if (keys != null && !keys.isEmpty()) {
-                keys.forEach((key, value) -> values.put(id(app, key), value));
+    private void update(DataImportDTOV1 data) {
+        Map<String, DataImportParamDTOV1> values = new HashMap<>();
+        data.forEach((appId, app) -> {
+            if (app != null) {
+                app.forEach((paramId, param) -> values.put(id(appId, paramId), param));
             }
         });
 
@@ -148,7 +152,7 @@ public class ApplicationParameterDataImportService implements DataImportService 
         dao.create(created);
     }
 
-    private ApplicationParameter update(ApplicationParameter param, ApplicationParameterDataImport value) {
+    private ApplicationParameter update(ApplicationParameter param, DataImportParamDTOV1 value) {
         if (isValue(value.getName())) {
             param.setName(value.getName());
         }
@@ -161,7 +165,7 @@ public class ApplicationParameterDataImportService implements DataImportService 
         return param;
     }
 
-    private ApplicationParameter create(String app, String key, ApplicationParameterDataImport value) {
+    private ApplicationParameter create(String app, String key, DataImportParamDTOV1 value) {
         ApplicationParameter param = new ApplicationParameter();
         param.setApplicationId(app);
         param.setKey(key);

@@ -6,26 +6,31 @@ import org.mapstruct.*;
 import org.tkit.quarkus.jpa.daos.PageResult;
 import org.tkit.quarkus.rs.mappers.OffsetDateTimeMapper;
 
+import gen.io.github.onecx.parameters.rs.internal.model.*;
 import io.github.onecx.parameters.domain.criteria.ApplicationParameterHistorySearchCriteria;
 import io.github.onecx.parameters.domain.criteria.ApplicationParameterSearchCriteria;
 import io.github.onecx.parameters.domain.criteria.KeysSearchCriteria;
 import io.github.onecx.parameters.domain.models.ApplicationParameter;
 import io.github.onecx.parameters.domain.models.ApplicationParameterHistory;
 import io.github.onecx.parameters.domain.models.ParameterHistoryCountTuple;
-import io.github.onecx.parameters.rs.internal.dtos.*;
 
-@Mapper(injectionStrategy = InjectionStrategy.CONSTRUCTOR, uses = { OffsetDateTimeMapper.class })
+@Mapper(uses = { OffsetDateTimeMapper.class })
 public interface ApplicationParameterInternalMapper {
 
-    KeysSearchCriteria map(KeysSearchCriteriaDTO dto);
+    @BeanMapping(nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
+    KeysSearchCriteria map(String applicationId);
 
     KeysPageResultDTO keys(PageResult<String> page);
 
     ApplicationsPageResultDTO apps(PageResult<String> page);
 
-    ApplicationParameterHistorySearchCriteria map(ApplicationParameterHistorySearchCriteriaDTO dto);
+    @BeanMapping(nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
+    ApplicationParameterHistorySearchCriteria map(String applicationId, String key, Integer pageNumber, Integer pageSize,
+            List<String> type);
 
-    ApplicationParameterSearchCriteria map(ApplicationParameterSearchCriteriaDTO dto);
+    @BeanMapping(nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
+    ApplicationParameterSearchCriteria map(String applicationId, String key, String name, Integer pageNumber, Integer pageSize,
+            List<String> type);
 
     ApplicationParameterHistoryPageResultDTO mapHistory(PageResult<ApplicationParameterHistory> page);
 

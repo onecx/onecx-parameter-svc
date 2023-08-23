@@ -2,13 +2,10 @@ package io.github.onecx.parameters.rs.external.v2.mappers;
 
 import java.util.List;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.MapperConfig;
-import org.mapstruct.Mapping;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
 
+import gen.io.github.onecx.parameters.rs.v2.model.ApplicationParameterDTOV2;
 import io.github.onecx.parameters.domain.models.ApplicationParameter;
-import io.github.onecx.parameters.rs.external.v2.dtos.ApplicationParameterDTOV2;
 
 @Mapper
 @MapperConfig(unmappedTargetPolicy = ReportingPolicy.ERROR)

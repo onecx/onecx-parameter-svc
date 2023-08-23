@@ -1,4 +1,4 @@
-package io.github.onecx.parameters.domain.di;
+package io.github.onecx.parameters.domain.di.v1;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,18 +14,20 @@ import org.tkit.quarkus.test.WithDBData;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import gen.io.github.onecx.parameters.di.v1.model.DataImportAppDTOV1;
+import gen.io.github.onecx.parameters.di.v1.model.DataImportDTOV1;
+import gen.io.github.onecx.parameters.di.v1.model.DataImportParamDTOV1;
 import io.github.onecx.parameters.domain.daos.ApplicationParameterDAO;
-import io.github.onecx.parameters.domain.di.models.ApplicationParameterDataImport;
 import io.github.onecx.parameters.domain.models.ApplicationParameter;
 import io.github.onecx.parameters.test.AbstractTest;
 import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
 @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
-class ApplicationParameterDataImportServiceTest extends AbstractTest {
+class ParameterDataImportServiceTest extends AbstractTest {
 
     @Inject
-    ApplicationParameterDataImportService service;
+    ParameterDataImportService service;
 
     @Inject
     ApplicationParameterDAO dao;
@@ -59,13 +61,16 @@ class ApplicationParameterDataImportServiceTest extends AbstractTest {
     @Test
     void importCleanInsertTest() {
 
-        ApplicationParameterDataImport param = new ApplicationParameterDataImport();
-        param.setDescription("desc");
-        param.setName("name-of-name");
+        DataImportParamDTOV1 k1 = new DataImportParamDTOV1();
+        k1.setDescription("desc");
+        k1.setName("name-of-name");
 
-        var data = new HashMap<String, Map<String, ApplicationParameterDataImport>>();
-        data.put("app1", Map.of("key1", param));
-        data.put("empty", Map.of());
+        DataImportAppDTOV1 a1 = new DataImportAppDTOV1();
+        a1.put("key1", k1);
+
+        DataImportDTOV1 data = new DataImportDTOV1();
+        data.put("app1", a1);
+        data.put("empty", new DataImportAppDTOV1());
         data.put("null", null);
 
         service.importData(new DataImportConfig() {
@@ -93,24 +98,28 @@ class ApplicationParameterDataImportServiceTest extends AbstractTest {
     @Test
     void importUpdateTest() {
 
-        ApplicationParameterDataImport param = new ApplicationParameterDataImport();
+        DataImportParamDTOV1 param = new DataImportParamDTOV1();
         param.setDescription("desc");
         param.setName("name-of-name");
         param.setValue("123");
 
-        ApplicationParameterDataImport emptyValueParam = new ApplicationParameterDataImport();
+        DataImportParamDTOV1 emptyValueParam = new DataImportParamDTOV1();
         emptyValueParam.setDescription("");
         emptyValueParam.setName("");
         emptyValueParam.setValue("");
 
-        var data = new HashMap<String, Map<String, ApplicationParameterDataImport>>();
-        data.put("app1",
-                Map.of(
-                        "param", param,
-                        "integer_param", new ApplicationParameterDataImport(),
-                        "boolean_param", emptyValueParam));
-        data.put("app_new", Map.of("key_new", param));
-        data.put("empty", Map.of());
+        DataImportAppDTOV1 appNew = new DataImportAppDTOV1();
+        appNew.put("key_new", param);
+
+        DataImportAppDTOV1 app1 = new DataImportAppDTOV1();
+        app1.put("param", param);
+        app1.put("integer_param", new DataImportParamDTOV1());
+        app1.put("boolean_param", emptyValueParam);
+
+        DataImportDTOV1 data = new DataImportDTOV1();
+        data.put("app1", app1);
+        data.put("app_new", appNew);
+        data.put("empty", new DataImportAppDTOV1());
         data.put("null", null);
 
         service.importData(new DataImportConfig() {
@@ -149,8 +158,8 @@ class ApplicationParameterDataImportServiceTest extends AbstractTest {
     @Test
     void importUpdateNoDataToUpdateTest() {
 
-        var data = new HashMap<String, Map<String, ApplicationParameterDataImport>>();
-        data.put("empty", Map.of());
+        DataImportDTOV1 data = new DataImportDTOV1();
+        data.put("empty", new DataImportAppDTOV1());
         data.put("null", null);
 
         service.importData(new DataImportConfig() {

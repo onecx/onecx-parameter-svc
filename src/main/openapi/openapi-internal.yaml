@@ -7,12 +7,13 @@ info:
 servers:
 - url: http://onecx-parameters-svc:8080/
 tags:
-- name: internal
+- name: histories
+- name: parameters
 paths:
   /histories:
     get:
       tags:
-      - internal
+      - histories
       description: Find all parameters history
       operationId: getAllApplicationParametersHistory
       parameters:
@@ -31,14 +32,14 @@ paths:
         schema:
           format: int32
           description: The number of page.
-          default: "0"
+          default: 0
           type: integer
       - name: pageSize
         in: query
         schema:
           format: int32
           description: The size of page
-          default: "100"
+          default: 100
           type: integer
       - name: type
         in: query
@@ -53,7 +54,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApplicationParameterHistoryPageResultDTO'
+                $ref: '#/components/schemas/ApplicationParameterHistoryPageResult'
         "400":
           description: Bad request
         "500":
@@ -61,7 +62,7 @@ paths:
   /histories/counts:
     get:
       tags:
-      - internal
+      - histories
       description: Get creation dates and counts by criteria
       operationId: getCountsByCriteria
       parameters:
@@ -80,14 +81,14 @@ paths:
         schema:
           format: int32
           description: The number of page.
-          default: "0"
+          default: 0
           type: integer
       - name: pageSize
         in: query
         schema:
           format: int32
           description: The size of page
-          default: "100"
+          default: 100
           type: integer
       - name: type
         in: query
@@ -104,7 +105,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ParameterHistoryCountDTO'
+                  $ref: '#/components/schemas/ParameterHistoryCount'
         "400":
           description: Bad request
         "500":
@@ -112,7 +113,7 @@ paths:
   /histories/latest:
     get:
       tags:
-      - internal
+      - histories
       description: Find all parameters history latest
       operationId: getAllApplicationParametersHistoryLatest
       parameters:
@@ -131,14 +132,14 @@ paths:
         schema:
           format: int32
           description: The number of page.
-          default: "0"
+          default: 0
           type: integer
       - name: pageSize
         in: query
         schema:
           format: int32
           description: The size of page
-          default: "100"
+          default: 100
           type: integer
       - name: type
         in: query
@@ -153,7 +154,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApplicationParameterHistoryPageResultDTO'
+                $ref: '#/components/schemas/ApplicationParameterHistoryPageResult'
         "400":
           description: Bad request
         "500":
@@ -161,7 +162,7 @@ paths:
   /histories/{id}:
     get:
       tags:
-      - internal
+      - histories
       description: Find parameters history by Id
       operationId: getApplicationParametersHistoryById
       parameters:
@@ -176,7 +177,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApplicationParameterHistoryDTO'
+                $ref: '#/components/schemas/ApplicationParameterHistory'
         "400":
           description: Bad request
         "404":
@@ -186,7 +187,7 @@ paths:
   /parameters:
     get:
       tags:
-      - internal
+      - parameters
       description: Find all parameters
       operationId: getAllApplicationParameters
       parameters:
@@ -210,41 +211,43 @@ paths:
         schema:
           format: int32
           description: The number of page.
-          default: "0"
+          default: 0
           type: integer
       - name: pageSize
         in: query
         schema:
           format: int32
           description: The size of page
-          default: "100"
+          default: 100
           type: integer
       - name: type
         in: query
         schema:
           description: The application parameter type.
-          type: object
+          type: array
+          items:
+            type: string
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApplicationParameterPageResultDTO'
+                $ref: '#/components/schemas/ApplicationParameterPageResult'
         "400":
           description: Bad request
         "500":
           description: Internal Server Error
     post:
       tags:
-      - internal
+      - parameters
       description: Create parameter
       operationId: createParameterValue
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApplicationParameterCreateDTO'
+              $ref: '#/components/schemas/ApplicationParameterCreate'
       responses:
         "204":
           description: No Content
@@ -253,7 +256,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestExceptionDTO'
+                $ref: '#/components/schemas/RestException'
         "404":
           description: Not Found
         "500":
@@ -261,7 +264,7 @@ paths:
   /parameters/applications:
     get:
       tags:
-      - internal
+      - parameters
       description: Find all parameters
       operationId: getAllApplications
       responses:
@@ -270,7 +273,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApplicationsPageResultDTO'
+                $ref: '#/components/schemas/ApplicationsPageResult'
         "400":
           description: Bad request
         "500":
@@ -278,7 +281,7 @@ paths:
   /parameters/keys:
     get:
       tags:
-      - internal
+      - parameters
       description: Find all parameters
       operationId: getAllKeys
       parameters:
@@ -293,7 +296,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/KeysPageResultDTO'
+                $ref: '#/components/schemas/KeysPageResult'
         "400":
           description: Bad request
         "500":
@@ -301,7 +304,7 @@ paths:
   /parameters/{id}:
     get:
       tags:
-      - internal
+      - parameters
       description: Find parameter by id
       operationId: getParameterById
       parameters:
@@ -316,7 +319,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApplicationParameterDTO'
+                $ref: '#/components/schemas/ApplicationParameter'
         "400":
           description: Bad request
         "404":
@@ -325,7 +328,7 @@ paths:
           description: Internal Server Error
     put:
       tags:
-      - internal
+      - parameters
       description: Update parameter
       operationId: updateParameterValue
       parameters:
@@ -338,7 +341,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApplicationParameterUpdateDTO'
+              $ref: '#/components/schemas/ApplicationParameterUpdate'
       responses:
         "204":
           description: No Content
@@ -347,14 +350,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestExceptionDTO'
+                $ref: '#/components/schemas/RestException'
         "404":
           description: Not Found
         "500":
           description: Internal Server Error
     delete:
       tags:
-      - internal
+      - parameters
       description: Delete parameter
       operationId: deleteParameter
       parameters:
@@ -371,12 +374,12 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestExceptionDTO'
+                $ref: '#/components/schemas/RestException'
         "500":
           description: Internal Server Error
 components:
   schemas:
-    ApplicationParameterCreateDTO:
+    ApplicationParameterCreate:
       type: object
       properties:
         key:
@@ -397,7 +400,7 @@ components:
         rangeTo:
           format: int32
           type: integer
-    ApplicationParameterDTO:
+    ApplicationParameter:
       type: object
       properties:
         id:
@@ -439,7 +442,7 @@ components:
         rangeTo:
           format: int32
           type: integer
-    ApplicationParameterHistoryDTO:
+    ApplicationParameterHistory:
       type: object
       properties:
         id:
@@ -471,7 +474,7 @@ components:
           type: string
         instanceId:
           type: string
-    ApplicationParameterHistoryPageResultDTO:
+    ApplicationParameterHistoryPageResult:
       type: object
       properties:
         totalElements:
@@ -490,8 +493,8 @@ components:
         stream:
           type: array
           items:
-            $ref: '#/components/schemas/ApplicationParameterHistoryDTO'
-    ApplicationParameterPageResultDTO:
+            $ref: '#/components/schemas/ApplicationParameterHistory'
+    ApplicationParameterPageResult:
       type: object
       properties:
         totalElements:
@@ -510,8 +513,8 @@ components:
         stream:
           type: array
           items:
-            $ref: '#/components/schemas/ApplicationParameterDTO'
-    ApplicationParameterUpdateDTO:
+            $ref: '#/components/schemas/ApplicationParameter'
+    ApplicationParameterUpdate:
       type: object
       properties:
         value: {}
@@ -525,7 +528,7 @@ components:
         rangeTo:
           format: int32
           type: integer
-    ApplicationsPageResultDTO:
+    ApplicationsPageResult:
       type: object
       properties:
         totalElements:
@@ -545,7 +548,7 @@ components:
           type: array
           items:
             type: string
-    KeysPageResultDTO:
+    KeysPageResult:
       type: object
       properties:
         totalElements:
@@ -565,7 +568,7 @@ components:
           type: array
           items:
             type: string
-    ParameterHistoryCountDTO:
+    ParameterHistoryCount:
       type: object
       properties:
         creationDate:
@@ -575,7 +578,7 @@ components:
         count:
           format: int64
           type: integer
-    RestExceptionDTO:
+    RestException:
       type: object
       properties:
         errorCode:

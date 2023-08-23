@@ -125,7 +125,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApplicationParameterDTOV2'
+                $ref: '#/components/schemas/ApplicationParameter'
         "400":
           description: Bad request
         "404":
@@ -158,7 +158,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ApplicationParameterDTOV2'
+                  $ref: '#/components/schemas/ApplicationParameter'
         "400":
           description: Bad request
         "404":
@@ -198,7 +198,7 @@ paths:
           description: Internal Server Error
 components:
   schemas:
-    ApplicationParameterDTOV2:
+    ApplicationParameter:
       type: object
       properties:
         persisted:
@@ -217,11 +217,11 @@ components:
         description:
           type: string
         type:
-          $ref: '#/components/schemas/ApplicationParameterTypeDTOV2'
+          $ref: '#/components/schemas/ApplicationParameterType'
         applicationId:
           type: string
         roleType:
-          $ref: '#/components/schemas/ApplicationParameterRoleTypeDTOV2'
+          $ref: '#/components/schemas/ApplicationParameterRoleType'
         unit:
           type: string
         valueRangeFrom:
@@ -230,12 +230,12 @@ components:
         valueRangeTo:
           format: int32
           type: integer
-    ApplicationParameterRoleTypeDTOV2:
+    ApplicationParameterRoleType:
       enum:
       - BUSINESS
       - SYSTEM
       type: string
-    ApplicationParameterTypeDTOV2:
+    ApplicationParameterType:
       enum:
       - NUMBER
       - STRING

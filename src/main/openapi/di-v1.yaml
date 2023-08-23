@@ -1,0 +1,28 @@
+---
+openapi: 3.0.3
+paths:
+components:
+  schemas:
+    DataImport:
+      type: object
+      properties:
+        default:
+          type: string
+      additionalProperties:
+        $ref: '#/components/schemas/DataImportApp'
+    DataImportApp:
+      type: object
+      properties:
+        default:
+          type: string
+      additionalProperties:
+        $ref: '#/components/schemas/DataImportParam'
+    DataImportParam:
+      type: object
+      properties:
+        description:
+          type: string
+        name:
+          type: string
+        value:
+          type: string

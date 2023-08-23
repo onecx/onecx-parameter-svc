@@ -1,17 +1,17 @@
 package io.github.onecx.parameters.rs.internal.mappers;
 
 import org.apache.commons.lang3.StringUtils;
-import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
+import gen.io.github.onecx.parameters.rs.internal.model.ApplicationParameterCreateDTO;
+import gen.io.github.onecx.parameters.rs.internal.model.ApplicationParameterDTO;
+import gen.io.github.onecx.parameters.rs.internal.model.ApplicationParameterUpdateDTO;
+import io.github.onecx.parameters.domain.models.ApplicationParameter;
 import io.github.onecx.parameters.domain.models.ApplicationParameterData;
-import io.github.onecx.parameters.rs.internal.dtos.ApplicationParameterCreateDTO;
-import io.github.onecx.parameters.rs.internal.dtos.ApplicationParameterDTO;
-import io.github.onecx.parameters.rs.internal.dtos.ApplicationParameterUpdateDTO;
 
-@Mapper(injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+@Mapper
 public interface ApplicationParameterDataMapper {
 
     default ApplicationParameterData update(ApplicationParameterUpdateDTO dto, ApplicationParameterData entity) {
@@ -26,6 +26,9 @@ public interface ApplicationParameterDataMapper {
         }
         return entity;
     }
+
+    @Mapping(target = "setValue", source = "value")
+    ApplicationParameter create(ApplicationParameterCreateDTO dto);
 
     default ApplicationParameterData create(ApplicationParameterUpdateDTO dto, String applicationParameterId) {
         ApplicationParameterData entity = new ApplicationParameterData();

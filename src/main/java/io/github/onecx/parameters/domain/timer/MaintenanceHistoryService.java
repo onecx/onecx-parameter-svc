@@ -12,7 +12,7 @@ import org.tkit.quarkus.jpa.exceptions.DAOException;
 
 import io.github.onecx.parameters.domain.daos.ApplicationParameterHistoryDAO;
 import io.github.onecx.parameters.domain.daos.JobDAO;
-import io.github.onecx.parameters.domain.di.models.Job;
+import io.github.onecx.parameters.domain.models.Job;
 import io.quarkus.scheduler.Scheduled;
 import lombok.extern.slf4j.Slf4j;
 
