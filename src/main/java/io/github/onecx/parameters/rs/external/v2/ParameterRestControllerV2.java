@@ -37,7 +37,6 @@ public class ParameterRestControllerV2 implements ExternalApi {
 
     @Override
     public Response getParameter(String applicationId, String parameterKey) {
-        System.out.println("########## " + applicationId + " ## " + parameterKey);
         if (applicationId == null || applicationId.isEmpty() || parameterKey == null || parameterKey.isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST).entity("ApplicationId and parameterKey are mandatory.").build();
         }
