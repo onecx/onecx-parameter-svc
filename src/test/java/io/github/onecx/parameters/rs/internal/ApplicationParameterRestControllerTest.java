@@ -2,7 +2,6 @@ package io.github.onecx.parameters.rs.internal;
 
 import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-import static org.jboss.resteasy.util.HttpHeaderNames.CONTENT_TYPE;
 
 import java.util.Map;
 import java.util.stream.Stream;
@@ -195,7 +194,6 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
                 .get(PATH_PARAM_ID_PATH)
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
-                .header(CONTENT_TYPE, APPLICATION_JSON)
                 .extract()
                 .body().as(ApplicationParameterDTO.class);
         Assertions.assertNotNull(dto);
