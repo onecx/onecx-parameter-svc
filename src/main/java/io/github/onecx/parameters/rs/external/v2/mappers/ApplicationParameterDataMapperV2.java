@@ -14,5 +14,13 @@ public interface ApplicationParameterDataMapperV2 {
     @Mapping(target = "roleType", constant = "SYSTEM")
     @Mapping(target = "valueRangeFrom", source = "rangeFrom")
     @Mapping(target = "valueRangeTo", source = "rangeTo")
+    @Mapping(target = "key", ignore = true)
+    @Mapping(target = "name", ignore = true)
+    @Mapping(target = "value", ignore = true)
+    @Mapping(target = "description", ignore = true)
+    @Mapping(target = "type", ignore = true)
+    @Mapping(target = "applicationId", ignore = true)
+    @Mapping(target = "persisted", ignore = true)
+    @Mapping(target = "version", ignore = true)
     ApplicationParameterDTOV2 map(ApplicationParameterData entity, @MappingTarget ApplicationParameterDTOV2 dto);
 }

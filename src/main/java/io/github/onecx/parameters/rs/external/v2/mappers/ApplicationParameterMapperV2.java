@@ -21,6 +21,10 @@ public abstract class ApplicationParameterMapperV2 {
 
     @Mapping(target = "value", source = "setValue")
     @Mapping(target = "version", source = "modificationCount")
+    @Mapping(target = "roleType", ignore = true)
+    @Mapping(target = "unit", ignore = true)
+    @Mapping(target = "valueRangeFrom", ignore = true)
+    @Mapping(target = "valueRangeTo", ignore = true)
     public abstract ApplicationParameterDTOV2 map(ApplicationParameter data);
 
 }

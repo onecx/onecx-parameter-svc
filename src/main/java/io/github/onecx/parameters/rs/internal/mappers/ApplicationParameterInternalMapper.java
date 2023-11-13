@@ -20,8 +20,10 @@ public interface ApplicationParameterInternalMapper {
     @BeanMapping(nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
     KeysSearchCriteria map(String applicationId);
 
+    @Mapping(target = "removeStreamItem", ignore = true)
     KeysPageResultDTO keys(PageResult<String> page);
 
+    @Mapping(target = "removeStreamItem", ignore = true)
     ApplicationsPageResultDTO apps(PageResult<String> page);
 
     @BeanMapping(nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
@@ -32,14 +34,20 @@ public interface ApplicationParameterInternalMapper {
     ApplicationParameterSearchCriteria map(String applicationId, String key, String name, Integer pageNumber, Integer pageSize,
             List<String> type);
 
+    @Mapping(target = "removeStreamItem", ignore = true)
     ApplicationParameterHistoryPageResultDTO mapHistory(PageResult<ApplicationParameterHistory> page);
 
     ApplicationParameterHistoryDTO mapHistory(ApplicationParameterHistory applicationParameterHistory);
 
     List<ParameterHistoryCountDTO> mapCountList(List<ParameterHistoryCountTuple> count);
 
+    @Mapping(target = "removeStreamItem", ignore = true)
     ApplicationParameterPageResultDTO map(PageResult<ApplicationParameter> page);
 
+    @Mapping(target = "value", ignore = true)
+    @Mapping(target = "unit", ignore = true)
+    @Mapping(target = "rangeFrom", ignore = true)
+    @Mapping(target = "rangeTo", ignore = true)
     ApplicationParameterDTO map(ApplicationParameter applicationParameter);
 
     @Named("setValue")
@@ -62,5 +70,9 @@ public interface ApplicationParameterInternalMapper {
         }
     }
 
+    @Mapping(target = "parameters", ignore = true)
+    @Mapping(target = "removeParametersItem", ignore = true)
+    @Mapping(target = "namedParameters", ignore = true)
+    @Mapping(target = "removeNamedParametersItem", ignore = true)
     RestExceptionDTO createRestException(String errorCode, String message);
 }

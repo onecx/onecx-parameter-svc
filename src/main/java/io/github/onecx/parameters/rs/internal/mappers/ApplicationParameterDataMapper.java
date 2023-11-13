@@ -28,6 +28,16 @@ public interface ApplicationParameterDataMapper {
     }
 
     @Mapping(target = "setValue", source = "value")
+    @Mapping(target = "creationDate", ignore = true)
+    @Mapping(target = "creationUser", ignore = true)
+    @Mapping(target = "modificationDate", ignore = true)
+    @Mapping(target = "modificationUser", ignore = true)
+    @Mapping(target = "controlTraceabilityManual", ignore = true)
+    @Mapping(target = "modificationCount", ignore = true)
+    @Mapping(target = "persisted", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "name", ignore = true)
+    @Mapping(target = "importValue", ignore = true)
     ApplicationParameter create(ApplicationParameterCreateDTO dto);
 
     default ApplicationParameterData create(ApplicationParameterUpdateDTO dto, String applicationParameterId) {
@@ -49,5 +59,18 @@ public interface ApplicationParameterDataMapper {
     }
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "creationDate", ignore = true)
+    @Mapping(target = "creationUser", ignore = true)
+    @Mapping(target = "modificationDate", ignore = true)
+    @Mapping(target = "modificationUser", ignore = true)
+    @Mapping(target = "name", ignore = true)
+    @Mapping(target = "modificationCount", ignore = true)
+    @Mapping(target = "description", ignore = true)
+    @Mapping(target = "applicationId", ignore = true)
+    @Mapping(target = "key", ignore = true)
+    @Mapping(target = "value", ignore = true)
+    @Mapping(target = "setValue", ignore = true)
+    @Mapping(target = "importValue", ignore = true)
+    @Mapping(target = "type", ignore = true)
     ApplicationParameterDTO map(ApplicationParameterData entity, @MappingTarget ApplicationParameterDTO dto);
 }
