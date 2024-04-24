@@ -69,10 +69,4 @@ public interface ApplicationParameterInternalMapper {
             applicationParameter.setSetValue(objectToSetValue(dto.getValue()));
         }
     }
-
-    @Mapping(target = "parameters", ignore = true)
-    @Mapping(target = "removeParametersItem", ignore = true)
-    @Mapping(target = "namedParameters", ignore = true)
-    @Mapping(target = "removeNamedParametersItem", ignore = true)
-    RestExceptionDTO createRestException(String errorCode, String message);
 }

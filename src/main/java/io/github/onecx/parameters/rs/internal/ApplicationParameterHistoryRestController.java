@@ -7,11 +7,15 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 
+import org.tkit.quarkus.log.cdi.LogService;
+
 import gen.io.github.onecx.parameters.rs.internal.HistoriesApi;
 import io.github.onecx.parameters.domain.daos.ApplicationParameterHistoryDAO;
 import io.github.onecx.parameters.domain.models.ApplicationParameterHistory;
 import io.github.onecx.parameters.rs.internal.mappers.ApplicationParameterInternalMapper;
+import io.github.onecx.parameters.rs.internal.mappers.ExceptionMapper;
 
+@LogService
 @ApplicationScoped
 @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
 public class ApplicationParameterHistoryRestController implements HistoriesApi {
@@ -21,6 +25,9 @@ public class ApplicationParameterHistoryRestController implements HistoriesApi {
 
     @Inject
     ApplicationParameterHistoryDAO historyDAO;
+
+    @Inject
+    ExceptionMapper exceptionMapper;
 
     @Override
     public Response getAllApplicationParametersHistoryLatest(String applicationId, String key, Integer pageNumber,
@@ -55,5 +62,4 @@ public class ApplicationParameterHistoryRestController implements HistoriesApi {
         var results = applicationParameterInternalMapper.mapCountList(counts);
         return Response.ok(results).build();
     }
-
 }

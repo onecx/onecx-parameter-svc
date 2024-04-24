@@ -55,10 +55,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApplicationParameterHistoryPageResult'
-        "400":
-          description: Bad request
-        "500":
-          description: Internal Server Error
   /histories/counts:
     get:
       tags:
@@ -106,10 +102,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ParameterHistoryCount'
-        "400":
-          description: Bad request
-        "500":
-          description: Internal Server Error
   /histories/latest:
     get:
       tags:
@@ -155,10 +147,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApplicationParameterHistoryPageResult'
-        "400":
-          description: Bad request
-        "500":
-          description: Internal Server Error
   /histories/{id}:
     get:
       tags:
@@ -178,12 +166,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApplicationParameterHistory'
-        "400":
-          description: Bad request
         "404":
           description: Not Found
-        "500":
-          description: Internal Server Error
   /parameters:
     get:
       tags:
@@ -236,14 +220,13 @@ paths:
                 $ref: '#/components/schemas/ApplicationParameterPageResult'
         "400":
           description: Bad request
-        "500":
-          description: Internal Server Error
     post:
       tags:
       - parameters
       description: Create parameter
       operationId: createParameterValue
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -256,11 +239,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestException'
+                $ref: '#/components/schemas/ProblemDetailResponse'
         "404":
           description: Not Found
-        "500":
-          description: Internal Server Error
   /parameters/applications:
     get:
       tags:
@@ -276,8 +257,6 @@ paths:
                 $ref: '#/components/schemas/ApplicationsPageResult'
         "400":
           description: Bad request
-        "500":
-          description: Internal Server Error
   /parameters/keys:
     get:
       tags:
@@ -299,8 +278,6 @@ paths:
                 $ref: '#/components/schemas/KeysPageResult'
         "400":
           description: Bad request
-        "500":
-          description: Internal Server Error
   /parameters/{id}:
     get:
       tags:
@@ -324,8 +301,6 @@ paths:
           description: Bad request
         "404":
           description: Not Found
-        "500":
-          description: Internal Server Error
     put:
       tags:
       - parameters
@@ -338,6 +313,7 @@ paths:
         schema:
           type: string
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -350,11 +326,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestException'
+                $ref: '#/components/schemas/ProblemDetailResponse'
         "404":
           description: Not Found
-        "500":
-          description: Internal Server Error
     delete:
       tags:
       - parameters
@@ -374,9 +348,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/RestException'
-        "500":
-          description: Internal Server Error
+                $ref: '#/components/schemas/ProblemDetailResponse'
 components:
   schemas:
     ApplicationParameterCreate:
@@ -578,16 +550,32 @@ components:
         count:
           format: int64
           type: integer
-    RestException:
+    ProblemDetailResponse:
       type: object
       properties:
         errorCode:
           type: string
+        detail:
+          type: string
+        params:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProblemDetailParam'
+        invalidParams:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProblemDetailInvalidParam'
+    ProblemDetailParam:
+      type: object
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+    ProblemDetailInvalidParam:
+      type: object
+      properties:
+        name:
+          type: string
         message:
           type: string
-        parameters:
-          type: array
-          items: {}
-        namedParameters:
-          type: object
-          additionalProperties: {}

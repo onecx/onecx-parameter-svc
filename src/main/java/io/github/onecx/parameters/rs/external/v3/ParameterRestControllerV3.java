@@ -9,15 +9,17 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 
+import org.tkit.quarkus.log.cdi.LogService;
+
 import gen.io.github.onecx.parameters.rs.v3.ExternalApi;
 import gen.io.github.onecx.parameters.rs.v3.model.ParametersBucketDTOV3;
 import io.github.onecx.parameters.domain.daos.ApplicationParameterDAO;
 import io.github.onecx.parameters.domain.daos.ApplicationParameterHistoryDAO;
 import io.github.onecx.parameters.domain.models.ApplicationParameterHistory;
 import io.github.onecx.parameters.rs.external.v3.mappers.ApplicationParameterHistoryMapper;
-import lombok.extern.slf4j.Slf4j;
+import io.github.onecx.parameters.rs.internal.mappers.ExceptionMapper;
 
-@Slf4j
+@LogService
 @ApplicationScoped
 @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
 public class ParameterRestControllerV3 implements ExternalApi {
@@ -30,6 +32,9 @@ public class ParameterRestControllerV3 implements ExternalApi {
 
     @Inject
     ApplicationParameterHistoryMapper mapper;
+
+    @Inject
+    ExceptionMapper exceptionMapper;
 
     @Override
     public Response getApplicationParameters(String appId) {

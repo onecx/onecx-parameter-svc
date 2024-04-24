@@ -205,6 +205,19 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
         Assertions.assertEquals(to, dto.getRangeTo());
     }
 
+    @Test
+    @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
+    void update_without_body_test() {
+
+        given()
+                .contentType(APPLICATION_JSON)
+                .when()
+                .pathParam(PATH_PARAM_ID, "GUID1")
+                .put(PATH_PARAM_ID_PATH)
+                .then()
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
+    }
+
     static Stream<Arguments> incorrectValueForStringParameter() {
         return Stream.of(
                 Arguments.of("111", 1000, "Test description"),
@@ -365,6 +378,25 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
         Assertions.assertEquals(dto.getRangeFrom(), dto2.getRangeFrom());
         Assertions.assertEquals(dto.getRangeTo(), dto2.getRangeTo());
 
+    }
+
+    @Test
+    void createTwice_Bad_Request_Test() {
+        ApplicationParameterCreateDTO dto = new ApplicationParameterCreateDTO();
+        dto.setApplicationId("app1");
+        dto.setKey("key1");
+        given()
+                .body(dto)
+                .contentType(APPLICATION_JSON)
+                .post()
+                .then()
+                .statusCode(Response.Status.CREATED.getStatusCode());
+        given()
+                .body(dto)
+                .contentType(APPLICATION_JSON)
+                .post()
+                .then()
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
     }
 
     static Stream<Arguments> deleteParameterTestInput() {
