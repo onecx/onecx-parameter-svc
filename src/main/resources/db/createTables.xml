@@ -23,7 +23,9 @@
             <column name="import_value" type="VARCHAR(255)"/>
             <column name="set_value" type="VARCHAR(255)"/>
             <column name="value_type" type="VARCHAR(255)"/>
-            <column name="tenant_id" type="VARCHAR(255)"/>
+            <column name="tenant_id" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
         <createTable tableName="apm_app_param_data">
             <column name="guid" type="VARCHAR(255)">
