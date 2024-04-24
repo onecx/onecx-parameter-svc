@@ -1,0 +1,8 @@
+include::onecx-parameter-svc-attributes.adoc[opts=optional]
+
+== onecx-parameter-svc
+
+include::docs.adoc[opts=optional]
+
+
+include::onecx-parameter-svc-docs.adoc[opts=optional]
