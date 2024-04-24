@@ -23,6 +23,7 @@
             <column name="import_value" type="VARCHAR(255)"/>
             <column name="set_value" type="VARCHAR(255)"/>
             <column name="value_type" type="VARCHAR(255)"/>
+            <column name="tenant_id" type="VARCHAR(255)"/>
         </createTable>
         <createTable tableName="apm_app_param_data">
             <column name="guid" type="VARCHAR(255)">
@@ -75,7 +76,7 @@
     </changeSet>
 
     <changeSet author="dev (generated)" id="create-constraints">
-        <addUniqueConstraint columnNames="application_id, param_key" constraintName="app_id_param_key" tableName="apm_app_param"/>
+        <addUniqueConstraint columnNames="application_id, param_key, tenant_id" constraintName="app_id_param_key" tableName="apm_app_param"/>
         <addUniqueConstraint columnNames="parameter_guid" constraintName="param_guid" tableName="apm_app_param_data"/>
     </changeSet>
 

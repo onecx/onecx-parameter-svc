@@ -15,10 +15,12 @@ quarkus.hibernate-orm.jdbc.timezone=UTC
 quarkus.hibernate-orm.log.sql=false
 quarkus.banner.enabled=false
 quarkus.hibernate-orm.database.generation=validate
+quarkus.hibernate-orm.multitenant=DISCRIMINATOR
 quarkus.liquibase.migrate-at-start=true
 quarkus.liquibase.validate-on-migrate=true
 onecx.parameters.history.scheduler.duration=P7D
 onecx.parameters.history.scheduler.expr=0 15 2 * * ?
+tkit.rs.context.tenant-id.enabled=true
 %prod.quarkus.datasource.jdbc.url=${DB_URL:jdbc:postgresql://postgresdb:5432/onecx-parameter?sslmode=disable}
 %prod.quarkus.datasource.username=${DB_USER:onecx-parameter}
 %prod.quarkus.datasource.password=${DB_PWD:onecx-parameter}

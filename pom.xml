@@ -41,6 +41,20 @@
             <artifactId>tkit-quarkus-rest</artifactId>
         </dependency>
 
+        <!-- TENANT -->
+        <dependency>
+            <groupId>org.tkit.onecx.quarkus</groupId>
+            <artifactId>onecx-tenant</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.tkit.quarkus.lib</groupId>
+            <artifactId>tkit-quarkus-jpa-tenant</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.tkit.quarkus.lib</groupId>
+            <artifactId>tkit-quarkus-rest-context</artifactId>
+        </dependency>
+
         <!-- QUARKUS -->
         <dependency>
             <groupId>io.quarkus</groupId>
@@ -58,10 +72,7 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-liquibase</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.github.blagerweij</groupId>
-            <artifactId>liquibase-sessionlock</artifactId>
-        </dependency>
+
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-smallrye-health</artifactId>
