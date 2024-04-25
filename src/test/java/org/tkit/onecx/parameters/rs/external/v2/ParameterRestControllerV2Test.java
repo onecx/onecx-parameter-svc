@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.tkit.onecx.parameters.rs.external.v2.controllers.ParameterRestControllerV2;
 import org.tkit.onecx.parameters.test.AbstractTest;
 import org.tkit.quarkus.test.WithDBData;
 

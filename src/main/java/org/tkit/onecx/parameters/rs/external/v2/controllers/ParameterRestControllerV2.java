@@ -1,4 +1,4 @@
-package org.tkit.onecx.parameters.rs.external.v2;
+package org.tkit.onecx.parameters.rs.external.v2.controllers;
 
 import java.util.List;
 import java.util.function.Function;

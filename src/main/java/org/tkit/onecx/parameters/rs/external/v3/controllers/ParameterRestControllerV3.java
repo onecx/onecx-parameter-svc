@@ -1,4 +1,4 @@
-package org.tkit.onecx.parameters.rs.external.v3;
+package org.tkit.onecx.parameters.rs.external.v3.controllers;
 
 import java.util.ArrayList;
 import java.util.List;

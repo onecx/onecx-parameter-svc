@@ -1,4 +1,4 @@
-package org.tkit.onecx.parameters.rs.internal;
+package org.tkit.onecx.parameters.rs.internal.controllers;
 
 import java.util.List;
 
