@@ -6,24 +6,27 @@ import java.util.stream.Collectors;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 
+import org.jboss.resteasy.reactive.RestResponse;
+import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
+import org.tkit.quarkus.jpa.exceptions.ConstraintException;
+import org.tkit.quarkus.log.cdi.LogService;
+
 import gen.io.github.onecx.parameters.rs.internal.ParametersApi;
-import gen.io.github.onecx.parameters.rs.internal.model.ApplicationParameterCreateDTO;
-import gen.io.github.onecx.parameters.rs.internal.model.ApplicationParameterDTO;
-import gen.io.github.onecx.parameters.rs.internal.model.ApplicationParameterPageResultDTO;
-import gen.io.github.onecx.parameters.rs.internal.model.ApplicationParameterUpdateDTO;
+import gen.io.github.onecx.parameters.rs.internal.model.*;
 import io.github.onecx.parameters.domain.daos.ApplicationParameterDAO;
 import io.github.onecx.parameters.domain.daos.ApplicationParameterDataDAO;
 import io.github.onecx.parameters.domain.models.ApplicationParameter;
 import io.github.onecx.parameters.domain.models.ApplicationParameterData;
 import io.github.onecx.parameters.rs.internal.mappers.ApplicationParameterDataMapper;
 import io.github.onecx.parameters.rs.internal.mappers.ApplicationParameterInternalMapper;
-import lombok.extern.slf4j.Slf4j;
+import io.github.onecx.parameters.rs.internal.mappers.ExceptionMapper;
 
-@Slf4j
+@LogService
 @ApplicationScoped
 @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
 public class ApplicationParameterRestController implements ParametersApi {
@@ -42,6 +45,9 @@ public class ApplicationParameterRestController implements ParametersApi {
 
     @Context
     UriInfo uriInfo;
+
+    @Inject
+    ExceptionMapper exceptionMapper;
 
     @Override
     public Response getAllApplications() {
@@ -85,7 +91,7 @@ public class ApplicationParameterRestController implements ParametersApi {
         ApplicationParameter param = applicationParameterDAO.findById(id);
         if (param == null) {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(applicationParameterInternalMapper.createRestException(Response.Status.NOT_FOUND.name(),
+                    .entity(exceptionMapper.exception(Response.Status.NOT_FOUND.name(),
                             "Parameter with id" + id + " not found."))
                     .build();
         }
@@ -105,7 +111,7 @@ public class ApplicationParameterRestController implements ParametersApi {
         ApplicationParameter applicationParameter = applicationParameterDAO.findById(id);
         if (applicationParameter == null) {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity(applicationParameterInternalMapper.createRestException(Response.Status.NOT_FOUND.name(),
+                    .entity(exceptionMapper.exception(Response.Status.NOT_FOUND.name(),
                             "Parameter with id" + id + " not found."))
                     .build();
         }
@@ -164,4 +170,13 @@ public class ApplicationParameterRestController implements ParametersApi {
         return Response.status(Response.Status.NO_CONTENT.getStatusCode()).build();
     }
 
+    @ServerExceptionMapper
+    public RestResponse<ProblemDetailResponseDTO> exception(ConstraintException ex) {
+        return exceptionMapper.exception(ex);
+    }
+
+    @ServerExceptionMapper
+    public RestResponse<ProblemDetailResponseDTO> constraint(ConstraintViolationException ex) {
+        return exceptionMapper.constraint(ex);
+    }
 }

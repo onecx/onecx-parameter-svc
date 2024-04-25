@@ -33,12 +33,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ParametersBucket'
-        "400":
-          description: Bad request
         "404":
           description: Not Found
-        "500":
-          description: Internal Server Error
   /v3/{appId}/parameters:
     get:
       tags:
@@ -57,12 +53,8 @@ paths:
           content:
             application/json:
               schema: {}
-        "400":
-          description: Bad request
         "404":
           description: Not Found
-        "500":
-          description: Internal Server Error
 components:
   schemas:
     ParameterInfo:

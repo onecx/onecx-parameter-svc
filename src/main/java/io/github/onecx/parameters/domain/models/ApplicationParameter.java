@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 
+import org.hibernate.annotations.TenantId;
 import org.tkit.quarkus.jpa.models.TraceableEntity;
 
 import lombok.Getter;
@@ -14,9 +15,13 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "APM_APP_PARAM", uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "APPLICATION_ID", "PARAM_KEY" }) })
+        @UniqueConstraint(columnNames = { "APPLICATION_ID", "PARAM_KEY", "TENANT_ID" }) })
 @SuppressWarnings("java:S2160")
 public class ApplicationParameter extends TraceableEntity {
+
+    @TenantId
+    @Column(name = "TENANT_ID")
+    private String tenantId;
 
     /**
      * The UID for this class.

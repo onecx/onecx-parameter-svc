@@ -27,6 +27,7 @@ public interface ApplicationParameterDataMapper {
         return entity;
     }
 
+    @Mapping(target = "tenantId", ignore = true)
     @Mapping(target = "setValue", source = "value")
     @Mapping(target = "creationDate", ignore = true)
     @Mapping(target = "creationUser", ignore = true)
