@@ -1,6 +1,22 @@
 ---
 openapi: 3.0.3
+info:
+  title: onecx-parameter data import
+  version: 1.0.0
+servers:
+  - url: "http://localhost"
 paths:
+  /import/parameter:
+    post:
+      operationId: importParameter
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DataImport'
+      responses:
+        200:
+          description: ok
 components:
   schemas:
     DataImport:
