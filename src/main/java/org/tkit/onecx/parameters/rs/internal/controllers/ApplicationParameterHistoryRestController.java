@@ -1,7 +1,5 @@
 package org.tkit.onecx.parameters.rs.internal.controllers;
 
-import java.util.List;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -12,6 +10,8 @@ import org.tkit.onecx.parameters.domain.models.ApplicationParameterHistory;
 import org.tkit.onecx.parameters.rs.internal.mappers.ApplicationParameterInternalMapper;
 import org.tkit.quarkus.log.cdi.LogService;
 
+import gen.org.tki.onecx.parameters.rs.internal.model.ApplicationParameterHistoryCriteriaDTO;
+import gen.org.tki.onecx.parameters.rs.internal.model.ParameterHistoryCountCriteriaDTO;
 import gen.org.tkit.onecx.parameters.rs.internal.HistoriesApi;
 
 @LogService
@@ -26,19 +26,15 @@ public class ApplicationParameterHistoryRestController implements HistoriesApi {
     ApplicationParameterHistoryDAO historyDAO;
 
     @Override
-    public Response getAllApplicationParametersHistoryLatest(String applicationId, String productName, String key,
-            Integer pageNumber,
-            Integer pageSize, List<String> type) {
-        var criteria = applicationParameterInternalMapper.map(productName, applicationId, key, pageNumber, pageSize, type);
+    public Response getAllApplicationParametersHistoryLatest(ApplicationParameterHistoryCriteriaDTO criteriaDTO) {
+        var criteria = applicationParameterInternalMapper.map(criteriaDTO);
         var parametersHistories = historyDAO.searchOnlyLatestByCriteria(criteria);
         return Response.ok(applicationParameterInternalMapper.mapHistory(parametersHistories)).build();
     }
 
     @Override
-    public Response getAllApplicationParametersHistory(String applicationId, String productName, String key, Integer pageNumber,
-            Integer pageSize,
-            List<String> type) {
-        var criteria = applicationParameterInternalMapper.map(productName, applicationId, key, pageNumber, pageSize, type);
+    public Response getAllApplicationParametersHistory(ApplicationParameterHistoryCriteriaDTO criteriaDTO) {
+        var criteria = applicationParameterInternalMapper.map(criteriaDTO);
         var parametersHistories = historyDAO.searchByCriteria(criteria);
         return Response.ok(applicationParameterInternalMapper.mapHistory(parametersHistories)).build();
     }
@@ -53,10 +49,8 @@ public class ApplicationParameterHistoryRestController implements HistoriesApi {
     }
 
     @Override
-    public Response getCountsByCriteria(String applicationId, String productName, String key, Integer pageNumber,
-            Integer pageSize,
-            List<String> type) {
-        var criteria = applicationParameterInternalMapper.map(productName, applicationId, key, pageNumber, pageSize, type);
+    public Response getCountsByCriteria(ParameterHistoryCountCriteriaDTO criteriaDTO) {
+        var criteria = applicationParameterInternalMapper.map(criteriaDTO);
         var counts = historyDAO.searchCountsByCriteria(criteria);
         var results = applicationParameterInternalMapper.mapCountList(counts);
         return Response.ok(results).build();

@@ -27,9 +27,10 @@ public interface ApplicationParameterInternalMapper {
     ApplicationsPageResultDTO apps(PageResult<String> page);
 
     @BeanMapping(nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
-    ApplicationParameterHistorySearchCriteria map(String productName, String applicationId, String key, Integer pageNumber,
-            Integer pageSize,
-            List<String> type);
+    ApplicationParameterHistorySearchCriteria map(ApplicationParameterHistoryCriteriaDTO criteriaDTO);
+
+    @BeanMapping(nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
+    ApplicationParameterHistorySearchCriteria map(ParameterHistoryCountCriteriaDTO criteriaDTO);
 
     @BeanMapping(nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
     ApplicationParameterSearchCriteria map(String productName, String applicationId, String key, String name,

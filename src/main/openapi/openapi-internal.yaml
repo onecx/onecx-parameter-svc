@@ -11,48 +11,16 @@ tags:
 - name: parameters
 paths:
   /histories:
-    get:
+    post:
       tags:
       - histories
       description: Find all parameters history
       operationId: getAllApplicationParametersHistory
-      parameters:
-      - name: applicationId
-        in: query
-        schema:
-          description: The application parameter id.
-          type: string
-      - name: productName
-        in: query
-        schema:
-          description: The product name.
-          type: string
-      - name: key
-        in: query
-        schema:
-          description: The application parameter key.
-          type: string
-      - name: pageNumber
-        in: query
-        schema:
-          format: int32
-          description: The number of page.
-          default: 0
-          type: integer
-      - name: pageSize
-        in: query
-        schema:
-          format: int32
-          description: The size of page
-          default: 100
-          type: integer
-      - name: type
-        in: query
-        schema:
-          description: The application parameter type.
-          type: array
-          items:
-            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationParameterHistoryCriteria'
       responses:
         "200":
           description: OK
@@ -61,48 +29,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApplicationParameterHistoryPageResult'
   /histories/counts:
-    get:
+    post:
       tags:
       - histories
       description: Get creation dates and counts by criteria
       operationId: getCountsByCriteria
-      parameters:
-      - name: applicationId
-        in: query
-        schema:
-          description: The application parameter id.
-          type: string
-      - name: productName
-        in: query
-        schema:
-          description: The product name.
-          type: string
-      - name: key
-        in: query
-        schema:
-          description: The application parameter key.
-          type: string
-      - name: pageNumber
-        in: query
-        schema:
-          format: int32
-          description: The number of page.
-          default: 0
-          type: integer
-      - name: pageSize
-        in: query
-        schema:
-          format: int32
-          description: The size of page
-          default: 100
-          type: integer
-      - name: type
-        in: query
-        schema:
-          description: The application parameter type.
-          type: array
-          items:
-            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParameterHistoryCountCriteria'
       responses:
         "200":
           description: OK
@@ -113,48 +49,16 @@ paths:
                 items:
                   $ref: '#/components/schemas/ParameterHistoryCount'
   /histories/latest:
-    get:
+    post:
       tags:
       - histories
       description: Find all parameters history latest
       operationId: getAllApplicationParametersHistoryLatest
-      parameters:
-      - name: applicationId
-        in: query
-        schema:
-          description: The application parameter id.
-          type: string
-      - name: productName
-        in: query
-        schema:
-          description: The product name.
-          type: string
-      - name: key
-        in: query
-        schema:
-          description: The application parameter key.
-          type: string
-      - name: pageNumber
-        in: query
-        schema:
-          format: int32
-          description: The number of page.
-          default: 0
-          type: integer
-      - name: pageSize
-        in: query
-        schema:
-          format: int32
-          description: The size of page
-          default: 100
-          type: integer
-      - name: type
-        in: query
-        schema:
-          description: The application parameter type.
-          type: array
-          items:
-            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApplicationParameterHistoryCriteria'
       responses:
         "200":
           description: OK
@@ -477,6 +381,27 @@ components:
           type: string
         instanceId:
           type: string
+    ApplicationParameterHistoryCriteria:
+      type: object
+      properties:
+        applicationId:
+          type: string
+        productName:
+          type: string
+        key:
+          type: string
+        pageNumber:
+          type: integer
+          format: int32
+          default: 0
+        pageSize:
+          type: integer
+          format: int32
+          default: 100
+        type:
+          type: array
+          items:
+            type: string
     ApplicationParameterHistoryPageResult:
       type: object
       properties:
@@ -568,6 +493,27 @@ components:
           format: int64
           type: integer
         stream:
+          type: array
+          items:
+            type: string
+    ParameterHistoryCountCriteria:
+      type: object
+      properties:
+        applicationId:
+          type: string
+        productName:
+          type: string
+        key:
+          type: string
+        pageNumber:
+          format: int32
+          default: 0
+          type: integer
+        pageSize:
+          format: int32
+          default: 100
+          type: integer
+        type:
           type: array
           items:
             type: string

@@ -3,7 +3,7 @@ package org.tkit.onecx.parameters.rs.internal;
 import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
-import java.util.Map;
+import java.util.List;
 import java.util.stream.Stream;
 
 import jakarta.ws.rs.core.Response;
@@ -17,8 +17,10 @@ import org.tkit.onecx.parameters.rs.internal.controllers.ApplicationParameterHis
 import org.tkit.onecx.parameters.test.AbstractTest;
 import org.tkit.quarkus.test.WithDBData;
 
+import gen.org.tki.onecx.parameters.rs.internal.model.ApplicationParameterHistoryCriteriaDTO;
 import gen.org.tki.onecx.parameters.rs.internal.model.ApplicationParameterHistoryDTO;
 import gen.org.tki.onecx.parameters.rs.internal.model.ApplicationParameterHistoryPageResultDTO;
+import gen.org.tki.onecx.parameters.rs.internal.model.ParameterHistoryCountCriteriaDTO;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 
@@ -30,7 +32,9 @@ class ApplicationParameterHistoryRestControllerTest extends AbstractTest {
     @Test
     void shouldFindAllParametersHistoryWithoutCriteria() {
         var pageResultDTO = given()
-                .get()
+                .body(new ApplicationParameterHistoryCriteriaDTO())
+                .contentType(APPLICATION_JSON)
+                .post()
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
@@ -43,22 +47,26 @@ class ApplicationParameterHistoryRestControllerTest extends AbstractTest {
 
     static Stream<Arguments> findByCriteriaTestData() {
         return Stream.of(
-                Arguments.of(Map.of(), 6),
-                Arguments.of(Map.of("applicationId", "", "productName", "", "key", "", "type", ""), 0),
-                Arguments.of(Map.of("applicationId", "app0", "productName", "p0", "key", "key0", "type", "type0"), 0),
-                Arguments.of(Map.of("applicationId", "access-mgmt", "productName", "access-mgmt-product"), 2),
-                Arguments.of(Map.of("applicationId", "app0", "productName", "p0"), 0),
-                Arguments.of(Map.of("applicationId", "app1", "productName", "p1"), 1),
-                Arguments.of(Map.of("applicationId", "app2", "productName", "p2"), 3));
+                Arguments.of(new ApplicationParameterHistoryCriteriaDTO(), 6),
+                Arguments.of(new ApplicationParameterHistoryCriteriaDTO().applicationId("").productName("").key("")
+                        .type(List.of("")), 0),
+                Arguments.of(new ApplicationParameterHistoryCriteriaDTO().applicationId("app0").productName("p0").key("key0")
+                        .type(List.of("type0")), 0),
+                Arguments.of(new ApplicationParameterHistoryCriteriaDTO().applicationId("access-mgmt")
+                        .productName("access-mgmt-product"), 2),
+                Arguments.of(new ApplicationParameterHistoryCriteriaDTO().applicationId("app0").productName("p0"), 0),
+                Arguments.of(new ApplicationParameterHistoryCriteriaDTO().applicationId("app1").productName("p1"), 1),
+                Arguments.of(new ApplicationParameterHistoryCriteriaDTO().applicationId("app2").productName("p2"), 3));
     }
 
     @ParameterizedTest
     @MethodSource("findByCriteriaTestData")
-    void shouldFindParametersHistoryByCriteria(Map<String, String> queryParams, Integer expectedArraySize) {
+    void shouldFindParametersHistoryByCriteria(ApplicationParameterHistoryCriteriaDTO criteriaDTO, Integer expectedArraySize) {
         var pageResultDTO = given()
                 .when()
-                .queryParams(queryParams)
-                .get()
+                .body(criteriaDTO)
+                .contentType(APPLICATION_JSON)
+                .post()
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
@@ -69,23 +77,26 @@ class ApplicationParameterHistoryRestControllerTest extends AbstractTest {
 
     static Stream<Arguments> findByCriteriaTestDataQueryLatest() {
         return Stream.of(
-                Arguments.of(Map.of(), 0),
-                Arguments.of(Map.of("applicationId", "access-mgmt", "productName", "access-mgmt-product"), 0),
-                Arguments.of(Map.of("applicationId", "", "productName", "", "key", ""), 0),
-                Arguments.of(Map.of("applicationId", "", "productName", "", "key", "key1"), 0),
-                Arguments.of(Map.of("applicationId", "", "productName", ""), 0),
-                Arguments.of(Map.of("applicationId", "app0", "productName", "p0"), 0),
-                Arguments.of(Map.of("applicationId", "app1", "productName", "p1"), 0),
-                Arguments.of(Map.of("applicationId", "app2", "productName", "p2"), 0));
+                Arguments.of(new ApplicationParameterHistoryCriteriaDTO(), 0),
+                Arguments.of(new ApplicationParameterHistoryCriteriaDTO().applicationId("access-mgmt")
+                        .productName("access-mgmt-product"), 0),
+                Arguments.of(new ApplicationParameterHistoryCriteriaDTO().applicationId("").productName("").key(""), 0),
+                Arguments.of(new ApplicationParameterHistoryCriteriaDTO().applicationId("").productName("").key("key1"), 0),
+                Arguments.of(new ApplicationParameterHistoryCriteriaDTO().applicationId("").productName(""), 0),
+                Arguments.of(new ApplicationParameterHistoryCriteriaDTO().applicationId("app0").productName("p0"), 0),
+                Arguments.of(new ApplicationParameterHistoryCriteriaDTO().applicationId("app1").productName("p1"), 0),
+                Arguments.of(new ApplicationParameterHistoryCriteriaDTO().applicationId("app2").productName("p2"), 0));
     }
 
     @ParameterizedTest
     @MethodSource("findByCriteriaTestDataQueryLatest")
-    void shouldFindParametersHistoryByCriteriaQueryLatest(Map<String, String> queryParams, Integer expectedArraySize) {
+    void shouldFindParametersHistoryByCriteriaQueryLatest(ApplicationParameterHistoryCriteriaDTO criteriaDTO,
+            Integer expectedArraySize) {
         var pageResultDTO = given()
                 .when()
-                .queryParams(queryParams)
-                .get("latest")
+                .body(criteriaDTO)
+                .contentType(APPLICATION_JSON)
+                .post("latest")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
@@ -133,22 +144,25 @@ class ApplicationParameterHistoryRestControllerTest extends AbstractTest {
 
     static Stream<Arguments> findCountByCriteriaTestData() {
         return Stream.of(
-                Arguments.of(Map.of(), 6),
-                Arguments.of(Map.of("applicationId", "", "productName", "", "key", ""), 6),
-                Arguments.of(Map.of("applicationId", "", "productName", "", "key", "key1"), 1),
-                Arguments.of(Map.of("applicationId", "access-mgmt", "productName", "access-mgmt-product"), 2),
-                Arguments.of(Map.of("applicationId", "app0", "productName", "p0"), 0),
-                Arguments.of(Map.of("applicationId", "app1", "productName", "p1"), 1),
-                Arguments.of(Map.of("applicationId", "app2", "productName", "p2"), 3));
+                Arguments.of(new ParameterHistoryCountCriteriaDTO(), 6),
+                Arguments.of(new ParameterHistoryCountCriteriaDTO().applicationId("").productName("").key(""), 6),
+                Arguments.of(new ParameterHistoryCountCriteriaDTO().applicationId("").productName("").key("key1"), 1),
+                Arguments.of(
+                        new ParameterHistoryCountCriteriaDTO().applicationId("access-mgmt").productName("access-mgmt-product"),
+                        2),
+                Arguments.of(new ParameterHistoryCountCriteriaDTO().applicationId("app0").productName("p0"), 0),
+                Arguments.of(new ParameterHistoryCountCriteriaDTO().applicationId("app1").productName("p1"), 1),
+                Arguments.of(new ParameterHistoryCountCriteriaDTO().applicationId("app2").productName("p2"), 3));
     }
 
     @ParameterizedTest
     @MethodSource("findCountByCriteriaTestData")
-    void getCountsByCriteriaTest(Map<String, String> queryParams, Integer expectedArraySize) {
+    void getCountsByCriteriaTest(ParameterHistoryCountCriteriaDTO criteria, Integer expectedArraySize) {
         var tmp = given()
                 .when()
-                .queryParams(queryParams)
-                .get("counts")
+                .body(criteria)
+                .contentType(APPLICATION_JSON)
+                .post("counts")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .extract().jsonPath();
