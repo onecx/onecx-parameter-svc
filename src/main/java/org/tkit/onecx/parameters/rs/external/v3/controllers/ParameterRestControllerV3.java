@@ -46,7 +46,7 @@ public class ParameterRestControllerV3 implements ExternalApi {
         }
         List<ApplicationParameterHistory> items = new ArrayList<>();
         dto.getParameters().forEach((key, value) -> items
-                .add(mapper.mapItem(value, key, dto.getStart(), dto.getEnd(), dto.getInstanceId(), productName, appId,
+                .add(mapper.mapItem(value, key, dto, productName, appId,
                         value.getCurrentValue())));
         historyDAO.create(items);
         return Response.status(Response.Status.OK).build();
