@@ -56,17 +56,19 @@ public class ApplicationParameterRestController implements ParametersApi {
     }
 
     @Override
-    public Response getAllKeys(String applicationId) {
-        var criteria = applicationParameterInternalMapper.map(applicationId);
+    public Response getAllKeys(String applicationId, String productName) {
+        var criteria = applicationParameterInternalMapper.map(productName, applicationId);
         var keys = applicationParameterDAO.searchAllKeys(criteria);
         return Response.ok(applicationParameterInternalMapper.keys(keys)).build();
     }
 
     @Override
-    public Response getAllApplicationParameters(String applicationId, String key, String name, Integer pageNumber,
+    public Response getAllApplicationParameters(String applicationId, String productName, String key, String name,
+            Integer pageNumber,
             Integer pageSize, List<String> type) {
 
-        var criteria = applicationParameterInternalMapper.map(applicationId, key, name, pageNumber, pageSize, type);
+        var criteria = applicationParameterInternalMapper.map(productName, applicationId, key, name, pageNumber, pageSize,
+                type);
         var parameters = applicationParameterDAO.searchByCriteria(criteria);
         ApplicationParameterPageResultDTO results = applicationParameterInternalMapper.map(parameters);
 

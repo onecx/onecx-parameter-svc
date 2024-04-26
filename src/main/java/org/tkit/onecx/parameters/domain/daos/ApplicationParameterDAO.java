@@ -74,12 +74,13 @@ public class ApplicationParameterDAO extends AbstractDAO<ApplicationParameter> {
         }
     }
 
-    public Map<String, String> findAllByApplicationId(String applicationId) {
+    public Map<String, String> findAllByProductNameAndApplicationId(String productName, String applicationId) {
         try {
             CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
             CriteriaQuery<ApplicationParameter> cq = cb.createQuery(ApplicationParameter.class);
             Root<ApplicationParameter> root = cq.from(ApplicationParameter.class);
             cq.where(cb.and(
+                    cb.equal(root.get(ApplicationParameter_.PRODUCT_NAME), productName),
                     cb.equal(root.get(ApplicationParameter_.APPLICATION_ID), applicationId),
                     cb.or(
                             cb.isNotNull(root.get(ApplicationParameter_.SET_VALUE)),
@@ -102,6 +103,10 @@ public class ApplicationParameterDAO extends AbstractDAO<ApplicationParameter> {
             Root<ApplicationParameter> root = cq.from(ApplicationParameter.class);
             List<Predicate> predicates = new ArrayList<>();
             CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+            if (criteria.getProductName() != null && !criteria.getProductName().isEmpty()) {
+                predicates.add(cb.like(cb.lower(root.get(ApplicationParameter_.PRODUCT_NAME)),
+                        stringPattern(criteria.getProductName())));
+            }
             if (criteria.getApplicationId() != null && !criteria.getApplicationId().isEmpty()) {
                 predicates.add(cb.like(cb.lower(root.get(ApplicationParameter_.APPLICATION_ID)),
                         stringPattern(criteria.getApplicationId())));
@@ -130,6 +135,10 @@ public class ApplicationParameterDAO extends AbstractDAO<ApplicationParameter> {
             CriteriaQuery<String> cq = cb.createQuery(String.class);
             Root<ApplicationParameter> root = cq.from(ApplicationParameter.class);
             cq.select(root.get(ApplicationParameter_.KEY)).distinct(true);
+
+            if (criteria.getProductName() != null && !criteria.getProductName().isEmpty()) {
+                cq.where(cb.equal(root.get(ApplicationParameter_.PRODUCT_NAME), criteria.getProductName()));
+            }
 
             if (criteria.getApplicationId() != null && !criteria.getApplicationId().isEmpty()) {
                 cq.where(cb.equal(root.get(ApplicationParameter_.APPLICATION_ID), criteria.getApplicationId()));

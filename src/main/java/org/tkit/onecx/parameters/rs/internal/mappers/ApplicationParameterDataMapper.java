@@ -59,6 +59,7 @@ public interface ApplicationParameterDataMapper {
         return entity;
     }
 
+    @Mapping(target = "productName", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "creationDate", ignore = true)
     @Mapping(target = "creationUser", ignore = true)

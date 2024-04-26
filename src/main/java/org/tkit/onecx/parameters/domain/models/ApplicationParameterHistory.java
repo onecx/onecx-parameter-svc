@@ -35,6 +35,12 @@ public class ApplicationParameterHistory extends TraceableEntity {
     private String applicationId;
 
     /**
+     * The product
+     */
+    @Column(name = "PRODUCT_NAME")
+    private String productName;
+
+    /**
      * The application parameter type.
      */
     @Column(name = "VALUE_TYPE")

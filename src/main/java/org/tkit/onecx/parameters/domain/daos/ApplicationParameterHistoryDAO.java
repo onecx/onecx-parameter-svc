@@ -43,6 +43,12 @@ public class ApplicationParameterHistoryDAO extends AbstractDAO<ApplicationParam
             Root<ApplicationParameterHistory> root = cq.from(ApplicationParameterHistory.class);
             List<Predicate> predicates = new ArrayList<>();
             CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+
+            if (criteria.getProductName() != null && !criteria.getProductName().isEmpty()) {
+                predicates.add(cb.like(cb.lower(root.get(ApplicationParameter_.PRODUCT_NAME)),
+                        stringPattern(criteria.getProductName())));
+            }
+
             if (criteria.getApplicationId() != null && !criteria.getApplicationId().isEmpty()) {
                 predicates.add(cb.like(cb.lower(root.get(ApplicationParameter_.APPLICATION_ID)),
                         stringPattern(criteria.getApplicationId())));
@@ -78,6 +84,10 @@ public class ApplicationParameterHistoryDAO extends AbstractDAO<ApplicationParam
             List<Predicate> predicates = new ArrayList<>();
             predicates.add(root.get(AbstractTraceableEntity_.CREATION_DATE).in(maxDateSubquery));
 
+            if (criteria.getProductName() != null && !criteria.getProductName().isEmpty()) {
+                predicates.add(cb.equal(cb.lower(root.get(ApplicationParameter_.PRODUCT_NAME)),
+                        criteria.getProductName().toLowerCase()));
+            }
             if (criteria.getApplicationId() != null && !criteria.getApplicationId().isEmpty()) {
                 predicates.add(cb.equal(cb.lower(root.get(ApplicationParameter_.APPLICATION_ID)),
                         criteria.getApplicationId().toLowerCase()));
@@ -105,6 +115,11 @@ public class ApplicationParameterHistoryDAO extends AbstractDAO<ApplicationParam
                     cb.construct(ParameterHistoryCountTuple.class, root.get(AbstractTraceableEntity_.CREATION_DATE),
                             root.get(ApplicationParameterHistory_.COUNT)));
             List<Predicate> predicates = new ArrayList<>();
+
+            if (criteria.getProductName() != null && !criteria.getProductName().isEmpty()) {
+                predicates.add(cb.like(cb.lower(root.get(ApplicationParameter_.PRODUCT_NAME)),
+                        stringPattern(criteria.getProductName())));
+            }
 
             if (criteria.getApplicationId() != null && !criteria.getApplicationId().isEmpty()) {
                 predicates.add(cb.like(cb.lower(root.get(ApplicationParameter_.APPLICATION_ID)),

@@ -18,6 +18,11 @@ public class ApplicationParameterHistorySearchCriteria {
     private String applicationId;
 
     /**
+     * The product name
+     */
+    private String productName;
+
+    /**
      * The application parameter key.
      */
     private String key;

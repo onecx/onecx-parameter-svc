@@ -9,4 +9,6 @@ public class KeysSearchCriteria {
 
     private String applicationId;
 
+    private String productName;
+
 }

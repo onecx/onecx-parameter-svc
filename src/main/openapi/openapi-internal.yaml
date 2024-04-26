@@ -22,6 +22,11 @@ paths:
         schema:
           description: The application parameter id.
           type: string
+      - name: productName
+        in: query
+        schema:
+          description: The product name.
+          type: string
       - name: key
         in: query
         schema:
@@ -66,6 +71,11 @@ paths:
         in: query
         schema:
           description: The application parameter id.
+          type: string
+      - name: productName
+        in: query
+        schema:
+          description: The product name.
           type: string
       - name: key
         in: query
@@ -113,6 +123,11 @@ paths:
         in: query
         schema:
           description: The application parameter id.
+          type: string
+      - name: productName
+        in: query
+        schema:
+          description: The product name.
           type: string
       - name: key
         in: query
@@ -179,6 +194,11 @@ paths:
         in: query
         schema:
           description: The application parameter id.
+          type: string
+      - name: productName
+        in: query
+        schema:
+          description: The product name.
           type: string
       - name: key
         in: query
@@ -269,6 +289,11 @@ paths:
         schema:
           description: The application parameter id.
           type: string
+      - name: productName
+        in: query
+        schema:
+          description: The product name.
+          type: string
       responses:
         "200":
           description: OK
@@ -358,6 +383,8 @@ components:
           type: string
         applicationId:
           type: string
+        productName:
+          type: string
         value:
           type: string
         type:
@@ -398,6 +425,8 @@ components:
           type: string
         applicationId:
           type: string
+        productName:
+          type: string
         key:
           type: string
         setValue:
@@ -435,6 +464,8 @@ components:
         modificationUser:
           type: string
         applicationId:
+          type: string
+        productName:
           type: string
         key:
           type: string

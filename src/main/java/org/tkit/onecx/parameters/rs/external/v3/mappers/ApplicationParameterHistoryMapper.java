@@ -24,5 +24,5 @@ public interface ApplicationParameterHistoryMapper {
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "id", ignore = true)
     ApplicationParameterHistory mapItem(ParameterInfoDTOV3 dto, String key, OffsetDateTime start,
-            OffsetDateTime end, String instanceId, String applicationId, String usedValue);
+            OffsetDateTime end, String instanceId, String productName, String applicationId, String usedValue);
 }

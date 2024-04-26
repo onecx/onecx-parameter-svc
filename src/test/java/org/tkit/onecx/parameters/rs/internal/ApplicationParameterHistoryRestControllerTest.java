@@ -44,12 +44,12 @@ class ApplicationParameterHistoryRestControllerTest extends AbstractTest {
     static Stream<Arguments> findByCriteriaTestData() {
         return Stream.of(
                 Arguments.of(Map.of(), 6),
-                Arguments.of(Map.of("applicationId", "", "key", "", "type", ""), 0),
-                Arguments.of(Map.of("applicationId", "app0", "key", "key0", "type", "type0"), 0),
-                Arguments.of(Map.of("applicationId", "access-mgmt"), 2),
-                Arguments.of(Map.of("applicationId", "app0"), 0),
-                Arguments.of(Map.of("applicationId", "app1"), 1),
-                Arguments.of(Map.of("applicationId", "app2"), 3));
+                Arguments.of(Map.of("applicationId", "", "productName", "", "key", "", "type", ""), 0),
+                Arguments.of(Map.of("applicationId", "app0", "productName", "p0", "key", "key0", "type", "type0"), 0),
+                Arguments.of(Map.of("applicationId", "access-mgmt", "productName", "access-mgmt-product"), 2),
+                Arguments.of(Map.of("applicationId", "app0", "productName", "p0"), 0),
+                Arguments.of(Map.of("applicationId", "app1", "productName", "p1"), 1),
+                Arguments.of(Map.of("applicationId", "app2", "productName", "p2"), 3));
     }
 
     @ParameterizedTest
@@ -70,13 +70,13 @@ class ApplicationParameterHistoryRestControllerTest extends AbstractTest {
     static Stream<Arguments> findByCriteriaTestDataQueryLatest() {
         return Stream.of(
                 Arguments.of(Map.of(), 0),
-                Arguments.of(Map.of("applicationId", "access-mgmt"), 0),
-                Arguments.of(Map.of("applicationId", "", "key", ""), 0),
-                Arguments.of(Map.of("applicationId", "", "key", "key1"), 0),
-                Arguments.of(Map.of("applicationId", ""), 0),
-                Arguments.of(Map.of("applicationId", "app0"), 0),
-                Arguments.of(Map.of("applicationId", "app1"), 0),
-                Arguments.of(Map.of("applicationId", "app2"), 0));
+                Arguments.of(Map.of("applicationId", "access-mgmt", "productName", "access-mgmt-product"), 0),
+                Arguments.of(Map.of("applicationId", "", "productName", "", "key", ""), 0),
+                Arguments.of(Map.of("applicationId", "", "productName", "", "key", "key1"), 0),
+                Arguments.of(Map.of("applicationId", "", "productName", ""), 0),
+                Arguments.of(Map.of("applicationId", "app0", "productName", "p0"), 0),
+                Arguments.of(Map.of("applicationId", "app1", "productName", "p1"), 0),
+                Arguments.of(Map.of("applicationId", "app2", "productName", "p2"), 0));
     }
 
     @ParameterizedTest
@@ -106,15 +106,15 @@ class ApplicationParameterHistoryRestControllerTest extends AbstractTest {
 
     static Stream<Arguments> getApplicationParametersHistoryByIds() {
         return Stream.of(
-                Arguments.of("1", "access-mgmt"),
-                Arguments.of("2", "access-mgmt"),
-                Arguments.of("h1", "app1"),
-                Arguments.of("h2", "app2"));
+                Arguments.of("1", "access-mgmt", "access-mgmt-product"),
+                Arguments.of("2", "access-mgmt", "access-mgmt-product"),
+                Arguments.of("h1", "app1", "p1"),
+                Arguments.of("h2", "app2", "p2"));
     }
 
     @ParameterizedTest
     @MethodSource("getApplicationParametersHistoryByIds")
-    void getApplicationParametersHistoryById(String id, String applicationId) {
+    void getApplicationParametersHistoryById(String id, String applicationId, String productName) {
         var result = given()
                 .when()
                 .pathParam("id", id)
@@ -127,17 +127,19 @@ class ApplicationParameterHistoryRestControllerTest extends AbstractTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(id, result.getId());
         Assertions.assertEquals(applicationId, result.getApplicationId());
+        Assertions.assertEquals(productName, result.getProductName());
+
     }
 
     static Stream<Arguments> findCountByCriteriaTestData() {
         return Stream.of(
                 Arguments.of(Map.of(), 6),
-                Arguments.of(Map.of("applicationId", "", "key", ""), 6),
-                Arguments.of(Map.of("applicationId", "", "key", "key1"), 1),
-                Arguments.of(Map.of("applicationId", "access-mgmt"), 2),
-                Arguments.of(Map.of("applicationId", "app0"), 0),
-                Arguments.of(Map.of("applicationId", "app1"), 1),
-                Arguments.of(Map.of("applicationId", "app2"), 3));
+                Arguments.of(Map.of("applicationId", "", "productName", "", "key", ""), 6),
+                Arguments.of(Map.of("applicationId", "", "productName", "", "key", "key1"), 1),
+                Arguments.of(Map.of("applicationId", "access-mgmt", "productName", "access-mgmt-product"), 2),
+                Arguments.of(Map.of("applicationId", "app0", "productName", "p0"), 0),
+                Arguments.of(Map.of("applicationId", "app1", "productName", "p1"), 1),
+                Arguments.of(Map.of("applicationId", "app2", "productName", "p2"), 3));
     }
 
     @ParameterizedTest

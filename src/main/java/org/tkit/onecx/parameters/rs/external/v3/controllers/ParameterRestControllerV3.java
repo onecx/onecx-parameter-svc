@@ -13,7 +13,6 @@ import org.tkit.onecx.parameters.domain.daos.ApplicationParameterDAO;
 import org.tkit.onecx.parameters.domain.daos.ApplicationParameterHistoryDAO;
 import org.tkit.onecx.parameters.domain.models.ApplicationParameterHistory;
 import org.tkit.onecx.parameters.rs.external.v3.mappers.ApplicationParameterHistoryMapper;
-import org.tkit.onecx.parameters.rs.internal.mappers.ExceptionMapper;
 import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.org.tkit.onecx.parameters.rs.v3.ExternalApi;
@@ -33,23 +32,21 @@ public class ParameterRestControllerV3 implements ExternalApi {
     @Inject
     ApplicationParameterHistoryMapper mapper;
 
-    @Inject
-    ExceptionMapper exceptionMapper;
-
     @Override
-    public Response getApplicationParameters(String appId) {
-        Map<String, String> applicationParameters = applicationParameterDAO.findAllByApplicationId(appId);
+    public Response getApplicationParameters(String productName, String appId) {
+        Map<String, String> applicationParameters = applicationParameterDAO.findAllByProductNameAndApplicationId(productName,
+                appId);
         return Response.ok(applicationParameters).build();
     }
 
     @Override
-    public Response bucketRequest(String appId, ParametersBucketDTOV3 dto) {
+    public Response bucketRequest(String productName, String appId, ParametersBucketDTOV3 dto) {
         if (dto == null || dto.getParameters().isEmpty()) {
             return Response.status(Response.Status.OK).build();
         }
         List<ApplicationParameterHistory> items = new ArrayList<>();
         dto.getParameters().forEach((key, value) -> items
-                .add(mapper.mapItem(value, key, dto.getStart(), dto.getEnd(), dto.getInstanceId(), appId,
+                .add(mapper.mapItem(value, key, dto.getStart(), dto.getEnd(), dto.getInstanceId(), productName, appId,
                         value.getCurrentValue())));
         historyDAO.create(items);
         return Response.status(Response.Status.OK).build();

@@ -11,5 +11,13 @@
         </addColumn>
         <addUniqueConstraint columnNames="application_id, param_key, tenant_id" constraintName="app_id_param_key_tenant" tableName="apm_app_param"/>
         <dropUniqueConstraint constraintName="app_id_param_key" tableName="apm_app_param"/>
+            <addColumn tableName="apm_app_param">
+                <column name="product_name" type="varchar(255 BYTE)"/>
+            </addColumn>
+            <addColumn tableName="apm_app_param_history">
+                <column name="product_name" type="varchar(255 BYTE)"/>
+            </addColumn>
+            <dropUniqueConstraint constraintName="app_id_param_key_tenant" tableName="apm_app_param"/>
+        <addUniqueConstraint columnNames="application_id, product_name, param_key, tenant_id" constraintName="app_id_product_param_key_tenant" tableName="apm_app_param"/>
     </changeSet>
 </databaseChangeLog>
