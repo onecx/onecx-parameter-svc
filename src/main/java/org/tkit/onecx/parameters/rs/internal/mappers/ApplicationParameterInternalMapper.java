@@ -18,7 +18,7 @@ import gen.org.tki.onecx.parameters.rs.internal.model.*;
 public interface ApplicationParameterInternalMapper {
 
     @BeanMapping(nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
-    KeysSearchCriteria map(String applicationId);
+    KeysSearchCriteria map(String productName, String applicationId);
 
     @Mapping(target = "removeStreamItem", ignore = true)
     KeysPageResultDTO keys(PageResult<String> page);
@@ -27,11 +27,14 @@ public interface ApplicationParameterInternalMapper {
     ApplicationsPageResultDTO apps(PageResult<String> page);
 
     @BeanMapping(nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
-    ApplicationParameterHistorySearchCriteria map(String applicationId, String key, Integer pageNumber, Integer pageSize,
-            List<String> type);
+    ApplicationParameterHistorySearchCriteria map(ApplicationParameterHistoryCriteriaDTO criteriaDTO);
 
     @BeanMapping(nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
-    ApplicationParameterSearchCriteria map(String applicationId, String key, String name, Integer pageNumber, Integer pageSize,
+    ApplicationParameterHistorySearchCriteria map(ParameterHistoryCountCriteriaDTO criteriaDTO);
+
+    @BeanMapping(nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
+    ApplicationParameterSearchCriteria map(String productName, String applicationId, String key, String name,
+            Integer pageNumber, Integer pageSize,
             List<String> type);
 
     @Mapping(target = "removeStreamItem", ignore = true)

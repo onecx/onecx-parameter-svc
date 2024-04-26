@@ -15,7 +15,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "APM_APP_PARAM", uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "APPLICATION_ID", "PARAM_KEY", "TENANT_ID" }) })
+        @UniqueConstraint(columnNames = { "APPLICATION_ID", "PRODUCT_NAME", "PARAM_KEY", "TENANT_ID" }) })
 @SuppressWarnings("java:S2160")
 public class ApplicationParameter extends TraceableEntity {
 
@@ -52,6 +52,12 @@ public class ApplicationParameter extends TraceableEntity {
      */
     @Column(name = "APPLICATION_ID")
     private String applicationId;
+
+    /**
+     * The product
+     */
+    @Column(name = "PRODUCT_NAME")
+    private String productName;
 
     /**
      * The application parameter set value.

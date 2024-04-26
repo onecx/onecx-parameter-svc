@@ -9,13 +9,18 @@ servers:
 tags:
 - name: external
 paths:
-  /v3/{appId}/history:
+  /v3/{productName}/{appId}/history:
     post:
       tags:
       - external
       description: Create Bucket request
       operationId: bucketRequest
       parameters:
+      - name: productName
+        in: path
+        required: true
+        schema:
+          type: string
       - name: appId
         in: path
         required: true
@@ -35,13 +40,18 @@ paths:
                 $ref: '#/components/schemas/ParametersBucket'
         "404":
           description: Not Found
-  /v3/{appId}/parameters:
+  /v3/{productName}/{appId}/parameters:
     get:
       tags:
       - external
       description: Get parameters by application id
       operationId: getApplicationParameters
       parameters:
+      - name: productName
+        in: path
+        required: true
+        schema:
+          type: string
       - name: appId
         in: path
         required: true

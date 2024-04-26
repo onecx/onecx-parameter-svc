@@ -60,8 +60,8 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
     static Stream<Arguments> findAllKeys() {
         return Stream.of(
                 Arguments.of(Map.of(), 9),
-                Arguments.of(Map.of("applicationId", ""), 9),
-                Arguments.of(Map.of("applicationId", "app1"), 5));
+                Arguments.of(Map.of("applicationId", "", "productName", ""), 9),
+                Arguments.of(Map.of("applicationId", "app1", "productName", "p1"), 5));
     }
 
     @ParameterizedTest
@@ -82,10 +82,11 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
 
     static Stream<Arguments> findByCriteriaTestData() {
         return Stream.of(
-                Arguments.of(Map.of("applicationId", ""), 9),
-                Arguments.of(Map.of("applicationId", "access-mgmt"), 2),
-                Arguments.of(Map.of("applicationId", "incorrect_app"), 0),
-                Arguments.of(Map.of("applicationId", "incorrect_app", "key", "", "type", "", "name", ""), 0),
+                Arguments.of(Map.of("applicationId", "", "productName", ""), 9),
+                Arguments.of(Map.of("applicationId", "access-mgmt", "productName", "access-mgmt-product"), 2),
+                Arguments.of(Map.of("applicationId", "incorrect_app", "productName", "incorrect-product"), 0),
+                Arguments.of(Map.of("applicationId", "incorrect_app", "productName", "incorrect-product", "key", "", "type", "",
+                        "name", ""), 0),
                 Arguments.of(Map.of("type", "custom,custom2", "name", "custom"), 0),
                 Arguments.of(Map.of("key", "ENGINE"), 1),
                 Arguments.of(Map.of("key", "incorrect_key"), 0));
@@ -121,6 +122,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
                 .body().as(ApplicationParameterDTO.class);
         Assertions.assertNotNull(applicationParameterDTO);
         Assertions.assertEquals("access-mgmt", applicationParameterDTO.getApplicationId());
+        Assertions.assertEquals("access-mgmt-product", applicationParameterDTO.getProductName());
         Assertions.assertEquals("ENGINE", applicationParameterDTO.getKey());
         Assertions.assertEquals("KOGITO", applicationParameterDTO.getSetValue());
         Assertions.assertEquals("Engine", applicationParameterDTO.getName());
@@ -328,25 +330,27 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
 
     static Stream<Arguments> createParameterTestInput() {
         return Stream.of(
-                Arguments.of("app_10", "description", "key_10", "value_10", null, null, null, null),
-                Arguments.of("app_10", "description", "key_11", "value_10", "", null, null, null),
-                Arguments.of("app_10", "description", "key_12", "value_10", " ", null, null, null),
-                Arguments.of("app_10", "description", "key_13", "value_10", "DAYS", null, null, "DAYS"),
-                Arguments.of("app_10", "description", "key_14", "value_10", "DAYS", 0, null, "DAYS"),
-                Arguments.of("app_10", "description", "key_15", "value_10", "DAYS", null, 100, "DAYS"),
-                Arguments.of("app_10", "description", "key_16", "value_10", "DAYS", 0, 100, "DAYS"),
-                Arguments.of("app_10", "description", "key_17", "value_10", null, 0, null, null),
-                Arguments.of("app_10", "description", "key_18", "value_10", null, null, 100, null),
-                Arguments.of("app_10", "description", "key_19", "value_10", null, 0, 100, null));
+                Arguments.of("app_10", "p10", "description", "key_10", "value_10", null, null, null, null),
+                Arguments.of("app_10", "p10", "description", "key_11", "value_10", "", null, null, null),
+                Arguments.of("app_10", "p10", "description", "key_12", "value_10", " ", null, null, null),
+                Arguments.of("app_10", "p10", "description", "key_13", "value_10", "DAYS", null, null, "DAYS"),
+                Arguments.of("app_10", "p10", "description", "key_14", "value_10", "DAYS", 0, null, "DAYS"),
+                Arguments.of("app_10", "p10", "description", "key_15", "value_10", "DAYS", null, 100, "DAYS"),
+                Arguments.of("app_10", "p10", "description", "key_16", "value_10", "DAYS", 0, 100, "DAYS"),
+                Arguments.of("app_10", "p10", "description", "key_17", "value_10", null, 0, null, null),
+                Arguments.of("app_10", "p10", "description", "key_18", "value_10", null, null, 100, null),
+                Arguments.of("app_10", "p10", "description", "key_19", "value_10", null, 0, 100, null));
     }
 
     @ParameterizedTest
     @MethodSource("createParameterTestInput")
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
-    void createParameterTest(String appId, String desc, String key, String value, String unit, Integer from, Integer to,
+    void createParameterTest(String appId, String productName, String desc, String key, String value, String unit, Integer from,
+            Integer to,
             String checkUnit) {
         ApplicationParameterCreateDTO dto = new ApplicationParameterCreateDTO();
         dto.setApplicationId(appId);
+        dto.setProductName(productName);
         dto.setDescription(desc);
         dto.setKey(key);
         dto.setValue(value);
@@ -372,6 +376,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
 
         Assertions.assertNotNull(dto2);
         Assertions.assertEquals(dto.getApplicationId(), dto2.getApplicationId());
+        Assertions.assertEquals(dto.getProductName(), dto2.getProductName());
         Assertions.assertEquals(dto.getDescription(), dto2.getDescription());
         Assertions.assertEquals(dto.getKey(), dto2.getKey());
         Assertions.assertEquals(dto.getValue(), dto2.getSetValue());
@@ -385,6 +390,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
     void createTwice_Bad_Request_Test() {
         ApplicationParameterCreateDTO dto = new ApplicationParameterCreateDTO();
         dto.setApplicationId("app1");
+        dto.setProductName("productName1");
         dto.setKey("key1");
         given()
                 .body(dto)
