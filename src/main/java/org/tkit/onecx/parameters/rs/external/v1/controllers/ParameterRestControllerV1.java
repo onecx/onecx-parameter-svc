@@ -1,4 +1,4 @@
-package org.tkit.onecx.parameters.rs.external.v3.controllers;
+package org.tkit.onecx.parameters.rs.external.v1.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,16 +12,16 @@ import jakarta.ws.rs.core.Response;
 import org.tkit.onecx.parameters.domain.daos.ApplicationParameterDAO;
 import org.tkit.onecx.parameters.domain.daos.ApplicationParameterHistoryDAO;
 import org.tkit.onecx.parameters.domain.models.ApplicationParameterHistory;
-import org.tkit.onecx.parameters.rs.external.v3.mappers.ApplicationParameterHistoryMapper;
+import org.tkit.onecx.parameters.rs.external.v1.mappers.ApplicationParameterHistoryMapper;
 import org.tkit.quarkus.log.cdi.LogService;
 
-import gen.org.tkit.onecx.parameters.rs.v3.ExternalApi;
-import gen.org.tkit.onecx.parameters.rs.v3.model.ParametersBucketDTOV3;
+import gen.org.tkit.onecx.parameters.rs.v1.ExternalApi;
+import gen.org.tkit.onecx.parameters.rs.v1.model.ParametersBucketDTOV1;
 
 @LogService
 @ApplicationScoped
 @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
-public class ParameterRestControllerV3 implements ExternalApi {
+public class ParameterRestControllerV1 implements ExternalApi {
 
     @Inject
     ApplicationParameterDAO applicationParameterDAO;
@@ -40,7 +40,7 @@ public class ParameterRestControllerV3 implements ExternalApi {
     }
 
     @Override
-    public Response bucketRequest(String productName, String appId, ParametersBucketDTOV3 dto) {
+    public Response bucketRequest(String productName, String appId, ParametersBucketDTOV1 dto) {
         if (dto == null || dto.getParameters().isEmpty()) {
             return Response.status(Response.Status.OK).build();
         }

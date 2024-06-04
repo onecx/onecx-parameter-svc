@@ -1,4 +1,4 @@
-package org.tkit.onecx.parameters.rs.external.v3;
+package org.tkit.onecx.parameters.rs.external.v1;
 
 import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -9,19 +9,19 @@ import jakarta.ws.rs.core.Response;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.tkit.onecx.parameters.rs.external.v1.controllers.ParameterRestControllerV1;
 import org.tkit.onecx.parameters.test.AbstractTest;
 import org.tkit.quarkus.test.WithDBData;
 
-import gen.org.tkit.onecx.parameters.rs.v3.ExternalApi;
-import gen.org.tkit.onecx.parameters.rs.v3.model.ParameterInfoDTOV3;
-import gen.org.tkit.onecx.parameters.rs.v3.model.ParametersBucketDTOV3;
+import gen.org.tkit.onecx.parameters.rs.v1.model.ParameterInfoDTOV1;
+import gen.org.tkit.onecx.parameters.rs.v1.model.ParametersBucketDTOV1;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.path.json.JsonPath;
 
 @QuarkusTest
-@TestHTTPEndpoint(ExternalApi.class)
-class ParameterRestControllerV3Test extends AbstractTest {
+@TestHTTPEndpoint(ParameterRestControllerV1.class)
+class ParameterRestControllerV1Test extends AbstractTest {
 
     @Test
     void shouldNotFindParametersWithGivenApplicationId() {
@@ -93,8 +93,8 @@ class ParameterRestControllerV3Test extends AbstractTest {
     @Test
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
     void shouldCreateNewParameter() {
-        ParametersBucketDTOV3 parametersBucketDTO = new ParametersBucketDTOV3();
-        ParameterInfoDTOV3 parameterInfoDTO1 = new ParameterInfoDTOV3();
+        ParametersBucketDTOV1 parametersBucketDTO = new ParametersBucketDTOV1();
+        ParameterInfoDTOV1 parameterInfoDTO1 = new ParameterInfoDTOV1();
         parameterInfoDTO1.setCount(1L);
         parameterInfoDTO1.setCurrentValue("DefaultValue");
         parameterInfoDTO1.setDefaultValue("DefaultValue");
@@ -124,8 +124,8 @@ class ParameterRestControllerV3Test extends AbstractTest {
     @Test
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
     void shouldUpdateParameters() {
-        ParametersBucketDTOV3 parametersBucketDTO = new ParametersBucketDTOV3();
-        ParameterInfoDTOV3 parameterInfoDTO1 = new ParameterInfoDTOV3();
+        ParametersBucketDTOV1 parametersBucketDTO = new ParametersBucketDTOV1();
+        ParameterInfoDTOV1 parameterInfoDTO1 = new ParameterInfoDTOV1();
         parameterInfoDTO1.setCount(2L);
         parameterInfoDTO1.setCurrentValue("10");
         parameterInfoDTO1.setDefaultValue("10");
@@ -154,7 +154,7 @@ class ParameterRestControllerV3Test extends AbstractTest {
 
     @Test
     void bucketRequestNoParametersDTO() {
-        ParametersBucketDTOV3 parametersBucketDTO = new ParametersBucketDTOV3();
+        ParametersBucketDTOV1 parametersBucketDTO = new ParametersBucketDTOV1();
         given()
                 .contentType(APPLICATION_JSON)
                 .body(parametersBucketDTO)
