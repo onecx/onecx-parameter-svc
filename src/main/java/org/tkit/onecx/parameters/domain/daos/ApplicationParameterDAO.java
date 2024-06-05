@@ -1,9 +1,6 @@
 package org.tkit.onecx.parameters.domain.daos;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -12,8 +9,7 @@ import jakarta.transaction.Transactional;
 
 import org.tkit.onecx.parameters.domain.criteria.ApplicationParameterSearchCriteria;
 import org.tkit.onecx.parameters.domain.criteria.KeysSearchCriteria;
-import org.tkit.onecx.parameters.domain.models.ApplicationParameter;
-import org.tkit.onecx.parameters.domain.models.ApplicationParameter_;
+import org.tkit.onecx.parameters.domain.models.*;
 import org.tkit.quarkus.jpa.daos.AbstractDAO;
 import org.tkit.quarkus.jpa.daos.Page;
 import org.tkit.quarkus.jpa.daos.PageResult;
@@ -131,14 +127,16 @@ public class ApplicationParameterDAO extends AbstractDAO<ApplicationParameter> {
         }
     }
 
-    public PageResult<String> searchAllApplications() {
+    public List<ApplicationTuple> searchAllProductNamesAndApplicationIds() {
         try {
             var cb = getEntityManager().getCriteriaBuilder();
-            CriteriaQuery<String> cq = cb.createQuery(String.class);
+            CriteriaQuery<ApplicationTuple> cq = cb.createQuery(ApplicationTuple.class);
             Root<ApplicationParameter> root = cq.from(ApplicationParameter.class);
-            cq.select(root.get(ApplicationParameter_.APPLICATION_ID)).distinct(true);
-            var results = getEntityManager().createQuery(cq).getResultList();
-            return new PageResult<>(results.size(), results.stream(), Page.of(0, 1));
+            cq.select(
+                    cb.construct(ApplicationTuple.class, root.get(ApplicationParameter_.PRODUCT_NAME),
+                            root.get(ApplicationParameter_.APPLICATION_ID)))
+                    .distinct(true);
+            return getEntityManager().createQuery(cq).getResultList();
         } catch (Exception exception) {
             throw new DAOException(ErrorKeys.FIND_ALL_APPLICATIONS_FAILED, exception);
         }

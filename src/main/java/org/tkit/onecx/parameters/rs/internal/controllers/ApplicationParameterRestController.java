@@ -41,7 +41,7 @@ public class ApplicationParameterRestController implements ParametersApi {
 
     @Override
     public Response getAllApplications() {
-        var apps = applicationParameterDAO.searchAllApplications();
+        var apps = applicationParameterDAO.searchAllProductNamesAndApplicationIds();
         return Response.ok(applicationParameterInternalMapper.apps(apps)).build();
     }
 

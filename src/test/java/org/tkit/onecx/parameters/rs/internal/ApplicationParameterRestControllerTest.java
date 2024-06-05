@@ -46,15 +46,15 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
     @Test
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
     void searchAllApplicationsTest() {
-        ApplicationsPageResultDTO pageResultDTO = given()
+        var output = given()
                 .when()
                 .get("applications")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
-                .body().as(ApplicationsPageResultDTO.class);
-        Assertions.assertEquals(4, pageResultDTO.getStream().size());
+                .body().as(ProductDTO[].class);
+        Assertions.assertEquals(4, output.length);
     }
 
     static Stream<Arguments> findAllKeys() {
