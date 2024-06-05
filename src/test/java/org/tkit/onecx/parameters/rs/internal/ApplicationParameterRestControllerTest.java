@@ -54,7 +54,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
                 .contentType(APPLICATION_JSON)
                 .extract()
                 .body().as(ProductDTO[].class);
-        Assertions.assertEquals(output.length, 4);
+        Assertions.assertEquals(4, output.length);
     }
 
     static Stream<Arguments> findAllKeys() {
