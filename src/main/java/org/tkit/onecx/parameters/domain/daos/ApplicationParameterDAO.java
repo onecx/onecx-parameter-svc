@@ -42,23 +42,6 @@ public class ApplicationParameterDAO extends AbstractDAO<ApplicationParameter> {
         }
     }
 
-    public List<ApplicationParameter> findByApplicationIdAndParameterAndTypeKeys(String applicationId,
-            String parameterKey,
-            String parameterType) {
-        try {
-            CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-            CriteriaQuery<ApplicationParameter> cq = cb.createQuery(ApplicationParameter.class);
-            Root<ApplicationParameter> root = cq.from(ApplicationParameter.class);
-            cq.where(cb.and(
-                    cb.equal(root.get(ApplicationParameter_.APPLICATION_ID), applicationId),
-                    cb.equal(root.get(ApplicationParameter_.KEY), parameterKey),
-                    cb.equal(root.get(ApplicationParameter_.TYPE), parameterType)));
-            return getEntityManager().createQuery(cq).getResultList();
-        } catch (Exception e) {
-            throw new DAOException(ErrorKeys.FIND_PARAMETERS_BY_APPLICATION_AND_PARAMETER_KEY_TYPE_FAILED, e);
-        }
-    }
-
     public List<ApplicationParameter> findByApplicationIdAndParameterKeys(String applicationId, List<String> parametersKeys) {
 
         try {
@@ -116,9 +99,6 @@ public class ApplicationParameterDAO extends AbstractDAO<ApplicationParameter> {
             }
             if (criteria.getName() != null && !criteria.getName().isEmpty()) {
                 predicates.add(cb.like(cb.lower(root.get(ApplicationParameter_.NAME)), stringPattern(criteria.getName())));
-            }
-            if (!criteria.getType().isEmpty()) {
-                predicates.add(root.get(ApplicationParameter_.TYPE).in(criteria.getType()));
             }
             if (!predicates.isEmpty()) {
                 cq.where(cb.and(predicates.toArray(new Predicate[0])));

@@ -6,6 +6,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
+import org.hibernate.annotations.TenantId;
 import org.tkit.quarkus.jpa.models.TraceableEntity;
 
 import lombok.Getter;
@@ -17,6 +18,11 @@ import lombok.Setter;
 @Table(name = "APM_APP_PARAM_HISTORY")
 @SuppressWarnings("java:S2160")
 public class ApplicationParameterHistory extends TraceableEntity {
+
+    @TenantId
+    @Column(name = "TENANT_ID")
+    private String tenantId;
+
     /**
      * The UID for this class.
      */

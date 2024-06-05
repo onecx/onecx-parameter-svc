@@ -1,4 +1,4 @@
-package org.tkit.onecx.parameters.rs.external.v3.mappers;
+package org.tkit.onecx.parameters.rs.external.v1.mappers;
 
 import java.util.List;
 import java.util.Map;

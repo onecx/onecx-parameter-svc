@@ -1,7 +1,6 @@
 package org.tkit.onecx.parameters.rs.internal.controllers;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -14,10 +13,7 @@ import jakarta.ws.rs.core.UriInfo;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 import org.tkit.onecx.parameters.domain.daos.ApplicationParameterDAO;
-import org.tkit.onecx.parameters.domain.daos.ApplicationParameterDataDAO;
 import org.tkit.onecx.parameters.domain.models.ApplicationParameter;
-import org.tkit.onecx.parameters.domain.models.ApplicationParameterData;
-import org.tkit.onecx.parameters.rs.internal.mappers.ApplicationParameterDataMapper;
 import org.tkit.onecx.parameters.rs.internal.mappers.ApplicationParameterInternalMapper;
 import org.tkit.onecx.parameters.rs.internal.mappers.ExceptionMapper;
 import org.tkit.quarkus.jpa.exceptions.ConstraintException;
@@ -35,13 +31,7 @@ public class ApplicationParameterRestController implements ParametersApi {
     ApplicationParameterDAO applicationParameterDAO;
 
     @Inject
-    ApplicationParameterDataDAO applicationParameterDataDAO;
-
-    @Inject
     ApplicationParameterInternalMapper applicationParameterInternalMapper;
-
-    @Inject
-    ApplicationParameterDataMapper applicationParameterDataMapper;
 
     @Context
     UriInfo uriInfo;
@@ -71,20 +61,6 @@ public class ApplicationParameterRestController implements ParametersApi {
                 type);
         var parameters = applicationParameterDAO.searchByCriteria(criteria);
         ApplicationParameterPageResultDTO results = applicationParameterInternalMapper.map(parameters);
-
-        // map ApplicationParameterData to ApplicationParameter due to backward compatibility
-        if (!results.getStream().isEmpty()) {
-            List<ApplicationParameterDTO> data = results.getStream();
-            var parametersData = applicationParameterDataDAO
-                    .findByParameterIds(data.stream().map(ApplicationParameterDTO::getId).toList())
-                    .stream()
-                    .collect(Collectors.toMap(ApplicationParameterData::getApplicationParameterGuid, d -> d));
-
-            data.forEach(p -> applicationParameterDataMapper.map(parametersData.get(p.getId()), p));
-
-            results.setStream(data);
-        }
-
         return Response.ok(results).build();
     }
 
@@ -98,11 +74,6 @@ public class ApplicationParameterRestController implements ParametersApi {
                     .build();
         }
         ApplicationParameterDTO parameterDTO = applicationParameterInternalMapper.map(param);
-
-        // map ApplicationParameterData to ApplicationParameter due to backward compatibility
-        ApplicationParameterData parameterData = applicationParameterDataDAO.findByParameterId(id);
-        applicationParameterDataMapper.map(parameterData, parameterDTO);
-
         return Response.ok(parameterDTO).build();
     }
 
@@ -118,25 +89,7 @@ public class ApplicationParameterRestController implements ParametersApi {
                     .build();
         }
         applicationParameterInternalMapper.update(applicationParameterUpdateDTO, applicationParameter);
-        applicationParameter = applicationParameterDAO.update(applicationParameter);
-
-        // ApplicationParameterData update/creation due to backward compatibility
-        if ((applicationParameterUpdateDTO.getUnit() != null && !applicationParameterUpdateDTO.getUnit().isBlank())
-                || applicationParameterUpdateDTO.getRangeFrom() != null
-                || applicationParameterUpdateDTO.getRangeTo() != null) {
-            ApplicationParameterData applicationParameterData = applicationParameterDataDAO
-                    .findByParameterId(applicationParameter.getId());
-            if (applicationParameterData != null) {
-                applicationParameterData = applicationParameterDataMapper.update(applicationParameterUpdateDTO,
-                        applicationParameterData);
-                applicationParameterDataDAO.update(applicationParameterData);
-            } else {
-                applicationParameterData = applicationParameterDataMapper.create(applicationParameterUpdateDTO,
-                        applicationParameter.getId());
-                applicationParameterDataDAO.create(applicationParameterData);
-            }
-        }
-
+        applicationParameterDAO.update(applicationParameter);
         return Response.status(Response.Status.NO_CONTENT.getStatusCode()).build();
     }
 
@@ -144,17 +97,8 @@ public class ApplicationParameterRestController implements ParametersApi {
     @Transactional
     public Response createParameterValue(ApplicationParameterCreateDTO request) {
 
-        ApplicationParameter param = applicationParameterDataMapper.create(request);
+        ApplicationParameter param = applicationParameterInternalMapper.create(request);
         param = applicationParameterDAO.create(param);
-
-        // ApplicationParameterData creation due to backward compatibility
-        if ((request.getUnit() != null && !request.getUnit().isBlank())
-                || request.getRangeFrom() != null
-                || request.getRangeTo() != null) {
-            ApplicationParameterData applicationParameterData = applicationParameterDataMapper.create(request, param.getId());
-            applicationParameterDataDAO.create(applicationParameterData);
-        }
-
         return Response
                 .created(uriInfo.getAbsolutePathBuilder().path(param.getId()).build())
                 .build();
@@ -166,8 +110,6 @@ public class ApplicationParameterRestController implements ParametersApi {
         ApplicationParameter parameter = applicationParameterDAO.findById(id);
         if (parameter != null) {
             applicationParameterDAO.delete(parameter);
-            // ApplicationParameterData deletion due to backward compatibility
-            applicationParameterDataDAO.deleteByParameterId(parameter.getId());
         }
         return Response.status(Response.Status.NO_CONTENT.getStatusCode()).build();
     }

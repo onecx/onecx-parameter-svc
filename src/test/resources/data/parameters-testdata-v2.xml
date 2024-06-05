@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<dataset>
-    <APM_APP_PARAM guid="V2GUID1" optlock="1" application_id="app3" product_name="p3" param_name="string" param_key="string" set_value="string-value" param_description="param example" value_type="STRING" tenant_id="tenant-100" />
-    <APM_APP_PARAM guid="V2GUID2" optlock="1" application_id="app3" product_name="p3" param_name="long" param_key="long" set_value="2" param_description="long param example" value_type="NUMBER" tenant_id="tenant-100" />
-    <APM_APP_PARAM guid="V2GUID3" optlock="1" application_id="app3" product_name="p3" param_name="integer" param_key="integer" set_value="2" param_description="integer param example" value_type="NUMBER" tenant_id="tenant-100" />
-    <APM_APP_PARAM guid="V2GUID4" optlock="1" application_id="app3" product_name="p3" param_name="boolean" param_key="boolean" set_value="true" param_description="boolean param example" value_type="BOOLEAN" tenant_id="tenant-100" />
-    <APM_APP_PARAM guid="V2GUID5" optlock="1" application_id="app3" product_name="p3" param_name="type" param_key="type" set_value="string-value" param_description="param example" value_type="STRING" tenant_id="tenant-100" />
-
-</dataset>
