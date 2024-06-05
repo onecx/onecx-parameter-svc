@@ -170,7 +170,7 @@ paths:
     get:
       tags:
       - parameters
-      description: Find all parameters
+      description: Find all applications
       operationId: getAllApplications
       responses:
         "200":
@@ -178,7 +178,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApplicationsPageResult'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
         "400":
           description: Bad request
   /parameters/keys:
@@ -452,23 +454,12 @@ components:
         rangeTo:
           format: int32
           type: integer
-    ApplicationsPageResult:
+    Product:
       type: object
       properties:
-        totalElements:
-          format: int64
-          description: The total elements in the resource.
-          type: integer
-        number:
-          format: int32
-          type: integer
-        size:
-          format: int32
-          type: integer
-        totalPages:
-          format: int64
-          type: integer
-        stream:
+        productName:
+          type: string
+        applications:
           type: array
           items:
             type: string

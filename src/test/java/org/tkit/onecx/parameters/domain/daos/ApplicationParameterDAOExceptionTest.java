@@ -55,7 +55,7 @@ class ApplicationParameterDAOExceptionTest {
 
     @Test
     void searchAllApplicationsTest() {
-        var exc = Assertions.assertThrows(DAOException.class, () -> dao.searchAllApplications());
+        var exc = Assertions.assertThrows(DAOException.class, () -> dao.searchAllProductNamesAndApplicationIds());
         Assertions.assertEquals(ApplicationParameterDAO.ErrorKeys.FIND_ALL_APPLICATIONS_FAILED, exc.key);
     }
 
