@@ -1,0 +1,46 @@
+
+:summaryTableId: onecx-parameter-svc
+[.configuration-legend]
+icon:lock[title=Fixed at build time] Configuration property fixed at build time - All other configuration properties are overridable at runtime
+[.configuration-reference.searchable, cols="80,.^10,.^10"]
+|===
+
+h|[[onecx-parameter-svc_configuration]]link:#onecx-parameter-svc_configuration[Configuration property]
+
+h|Type
+h|Default
+
+a| [[onecx-parameter-svc_onecx-parameter-scheduler-duration]]`link:#onecx-parameter-svc_onecx-parameter-scheduler-duration[onecx.parameter.scheduler.duration]`
+
+
+[.description]
+--
+Scheduler duration
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++ONECX_PARAMETER_SCHEDULER_DURATION+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++ONECX_PARAMETER_SCHEDULER_DURATION+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|`P7D`
+
+
+a| [[onecx-parameter-svc_onecx-parameter-scheduler-expression]]`link:#onecx-parameter-svc_onecx-parameter-scheduler-expression[onecx.parameter.scheduler.expression]`
+
+
+[.description]
+--
+Scheduler expression
+
+ifdef::add-copy-button-to-env-var[]
+Environment variable: env_var_with_copy_button:+++ONECX_PARAMETER_SCHEDULER_EXPRESSION+++[]
+endif::add-copy-button-to-env-var[]
+ifndef::add-copy-button-to-env-var[]
+Environment variable: `+++ONECX_PARAMETER_SCHEDULER_EXPRESSION+++`
+endif::add-copy-button-to-env-var[]
+--|string 
+|`0 15 2 * * ?`
+
+|===

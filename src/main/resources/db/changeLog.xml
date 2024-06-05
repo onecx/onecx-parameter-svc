@@ -6,5 +6,5 @@
 
         <include relativeToChangelogFile="true" file="createTables.xml"/>
         <include relativeToChangelogFile="true" file="24-04-2024-multi-tenancy.xml"/>
-
+        <include relativeToChangelogFile="true" file="2024-06-05-drop-apm-param-data.xml"/>
 </databaseChangeLog>

@@ -72,4 +72,18 @@ public interface ApplicationParameterInternalMapper {
             applicationParameter.setSetValue(objectToSetValue(dto.getValue()));
         }
     }
+
+    @Mapping(target = "tenantId", ignore = true)
+    @Mapping(target = "setValue", source = "value")
+    @Mapping(target = "persisted", ignore = true)
+    @Mapping(target = "name", ignore = true)
+    @Mapping(target = "modificationUser", ignore = true)
+    @Mapping(target = "modificationDate", ignore = true)
+    @Mapping(target = "modificationCount", ignore = true)
+    @Mapping(target = "importValue", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "creationUser", ignore = true)
+    @Mapping(target = "creationDate", ignore = true)
+    @Mapping(target = "controlTraceabilityManual", ignore = true)
+    ApplicationParameter create(ApplicationParameterCreateDTO request);
 }

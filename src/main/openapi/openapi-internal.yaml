@@ -291,8 +291,6 @@ components:
           type: string
         value:
           type: string
-        type:
-          type: string
         description:
           type: string
         unit:
@@ -336,8 +334,6 @@ components:
         setValue:
           type: string
         importValue:
-          type: string
-        type:
           type: string
         unit:
           type: string

@@ -1,7 +1,5 @@
 package org.tkit.onecx.parameters.domain.criteria;
 
-import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,8 +26,6 @@ public class ApplicationParameterSearchCriteria {
     private String key;
 
     private String name;
-
-    private List<String> type;
 
     private Integer pageNumber;
 

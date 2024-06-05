@@ -157,17 +157,9 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
 
     static Stream<Arguments> updateParameterTestInput() {
         return Stream.of(
-                Arguments.of("app1", "Test description", "GUID1", "JBPM", "DAYS", 0, 100, "DAYS"),
                 Arguments.of("access-mgmt", "Test description", "111", "JBPM", null, null, null, null),
                 Arguments.of("access-mgmt", "Test description", "111", "JBPM", "", null, null, null),
-                Arguments.of("access-mgmt", "Test description", "111", "JBPM", " ", null, null, null),
-                Arguments.of("access-mgmt", "Test description", "111", "JBPM", "DAYS", null, null, "DAYS"),
-                Arguments.of("access-mgmt", "Test description", "111", "JBPM", "DAYS", 0, null, "DAYS"),
-                Arguments.of("access-mgmt", "Test description", "111", "JBPM", "DAYS", null, 100, "DAYS"),
-                Arguments.of("access-mgmt", "Test description", "111", "JBPM", "DAYS", 0, 100, "DAYS"),
-                Arguments.of("access-mgmt", "Test description", "111", "JBPM", null, 0, null, null),
-                Arguments.of("access-mgmt", "Test description", "111", "JBPM", null, null, 100, null),
-                Arguments.of("access-mgmt", "Test description", "111", "JBPM", null, 0, 100, null));
+                Arguments.of("access-mgmt", "Test description", "111", "JBPM", " ", null, null, null));
     }
 
     @ParameterizedTest
@@ -332,14 +324,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
         return Stream.of(
                 Arguments.of("app_10", "p10", "description", "key_10", "value_10", null, null, null, null),
                 Arguments.of("app_10", "p10", "description", "key_11", "value_10", "", null, null, null),
-                Arguments.of("app_10", "p10", "description", "key_12", "value_10", " ", null, null, null),
-                Arguments.of("app_10", "p10", "description", "key_13", "value_10", "DAYS", null, null, "DAYS"),
-                Arguments.of("app_10", "p10", "description", "key_14", "value_10", "DAYS", 0, null, "DAYS"),
-                Arguments.of("app_10", "p10", "description", "key_15", "value_10", "DAYS", null, 100, "DAYS"),
-                Arguments.of("app_10", "p10", "description", "key_16", "value_10", "DAYS", 0, 100, "DAYS"),
-                Arguments.of("app_10", "p10", "description", "key_17", "value_10", null, 0, null, null),
-                Arguments.of("app_10", "p10", "description", "key_18", "value_10", null, null, 100, null),
-                Arguments.of("app_10", "p10", "description", "key_19", "value_10", null, 0, 100, null));
+                Arguments.of("app_10", "p10", "description", "key_12", "value_10", " ", null, null, null));
     }
 
     @ParameterizedTest

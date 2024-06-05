@@ -3,13 +3,13 @@ openapi: 3.0.3
 info:
   title: onecx-parameters
   description: OneCx parameters
-  version: "3.0"
+  version: "1.0"
 servers:
 - url: http://onecx-parameters-svc:8080/
 tags:
 - name: external
 paths:
-  /v3/{productName}/{appId}/history:
+  /v1/{productName}/{appId}/history:
     post:
       tags:
       - external
@@ -40,7 +40,7 @@ paths:
                 $ref: '#/components/schemas/ParametersBucket'
         "404":
           description: Not Found
-  /v3/{productName}/{appId}/parameters:
+  /v1/{productName}/{appId}/parameters:
     get:
       tags:
       - external

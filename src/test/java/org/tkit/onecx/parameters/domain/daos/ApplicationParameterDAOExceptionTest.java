@@ -34,14 +34,6 @@ class ApplicationParameterDAOExceptionTest {
     }
 
     @Test
-    void findByApplicationIdAndParameterAndTypeKeysTest() {
-        var exc = Assertions.assertThrows(DAOException.class,
-                () -> dao.findByApplicationIdAndParameterAndTypeKeys(null, null, null));
-        Assertions.assertEquals(ApplicationParameterDAO.ErrorKeys.FIND_PARAMETERS_BY_APPLICATION_AND_PARAMETER_KEY_TYPE_FAILED,
-                exc.key);
-    }
-
-    @Test
     void findByApplicationIdAndParameterKeysTest() {
         var exc = Assertions.assertThrows(DAOException.class,
                 () -> dao.findByApplicationIdAndParameterKeys(null, null));

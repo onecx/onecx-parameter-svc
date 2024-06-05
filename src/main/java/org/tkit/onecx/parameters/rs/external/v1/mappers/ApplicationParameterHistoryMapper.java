@@ -14,6 +14,7 @@ import gen.org.tkit.onecx.parameters.rs.v1.model.ParametersBucketDTOV1;
 @MapperConfig(unmappedTargetPolicy = ReportingPolicy.ERROR)
 public interface ApplicationParameterHistoryMapper {
 
+    @Mapping(target = "tenantId", ignore = true)
     @Mapping(target = "creationDate", ignore = true)
     @Mapping(target = "creationUser", ignore = true)
     @Mapping(target = "modificationDate", ignore = true)

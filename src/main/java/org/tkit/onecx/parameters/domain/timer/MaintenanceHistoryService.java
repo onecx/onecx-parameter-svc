@@ -1,18 +1,17 @@
 package org.tkit.onecx.parameters.domain.timer;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.transaction.Transactional;
 
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.tkit.onecx.parameters.domain.daos.ApplicationParameterHistoryDAO;
 import org.tkit.onecx.parameters.domain.daos.JobDAO;
 import org.tkit.onecx.parameters.domain.models.Job;
 import org.tkit.quarkus.jpa.exceptions.DAOException;
 
+import io.quarkus.runtime.configuration.DurationConverter;
 import io.quarkus.scheduler.Scheduled;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,8 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 @Singleton
 public class MaintenanceHistoryService {
 
-    @ConfigProperty(name = "onecx.parameters.history.scheduler.duration", defaultValue = "P7D")
-    Duration duration;
+    @Inject
+    ParameterConfig parameterConfig;
 
     @Inject
     ApplicationParameterHistoryDAO dao;
@@ -32,10 +31,12 @@ public class MaintenanceHistoryService {
     static final String JOB_ID = "maintenance.history";
 
     // find older items and delete it
-    @Scheduled(identity = "maintenance.history", cron = "${onecx.parameters.history.scheduler.expr}")
+    @Scheduled(identity = "maintenance.history", cron = "${onecx.parameter.scheduler.expression}")
     @Transactional(value = Transactional.TxType.REQUIRES_NEW, rollbackOn = DAOException.class)
     void maintenanceHistoryData() {
-        LocalDateTime dt = LocalDateTime.now().minus(duration);
+        DurationConverter converter = new DurationConverter();
+        LocalDateTime dt = LocalDateTime.now()
+                .minus(converter.convert(parameterConfig.maintenanceHistoryScheduler().duration()));
         Job job = jobDAO.getJob(JOB_ID);
         if (job != null) {
             log.info("Scheduler for job id: '{}' started.", JOB_ID);

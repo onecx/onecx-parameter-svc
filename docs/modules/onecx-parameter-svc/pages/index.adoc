@@ -4,5 +4,7 @@ include::onecx-parameter-svc-attributes.adoc[opts=optional]
 
 include::docs.adoc[opts=optional]
 
+=== Configuration
+include::onecx-parameter-svc.adoc[opts=optional]
 
 include::onecx-parameter-svc-docs.adoc[opts=optional]

@@ -70,14 +70,4 @@ public class ApplicationParameter extends TraceableEntity {
      */
     @Column(name = "IMPORT_VALUE")
     private String importValue;
-
-    /**
-     * The application parameter type.
-     *
-     * @deprecated use only in v2 API
-     */
-    @SuppressWarnings("java:S1133")
-    @Deprecated(forRemoval = true, since = "1.0.0")
-    @Column(name = "VALUE_TYPE")
-    private String type;
 }
