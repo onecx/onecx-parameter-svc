@@ -89,7 +89,7 @@ public class ApplicationParameterRestController implements ParametersApi {
                     .build();
         }
         applicationParameterInternalMapper.update(applicationParameterUpdateDTO, applicationParameter);
-        applicationParameter = applicationParameterDAO.update(applicationParameter);
+        applicationParameterDAO.update(applicationParameter);
         return Response.status(Response.Status.NO_CONTENT.getStatusCode()).build();
     }
 

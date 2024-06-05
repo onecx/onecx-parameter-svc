@@ -15,7 +15,7 @@ a| [[onecx-parameter-svc_onecx-parameter-scheduler-duration]]`link:#onecx-parame
 
 [.description]
 --
-Scheduler duration
+Scheduler duration in days
 
 ifdef::add-copy-button-to-env-var[]
 Environment variable: env_var_with_copy_button:+++ONECX_PARAMETER_SCHEDULER_DURATION+++[]
@@ -24,7 +24,7 @@ ifndef::add-copy-button-to-env-var[]
 Environment variable: `+++ONECX_PARAMETER_SCHEDULER_DURATION+++`
 endif::add-copy-button-to-env-var[]
 --|string 
-|`P7D`
+|`7`
 
 
 a| [[onecx-parameter-svc_onecx-parameter-scheduler-expression]]`link:#onecx-parameter-svc_onecx-parameter-scheduler-expression[onecx.parameter.scheduler.expression]`
