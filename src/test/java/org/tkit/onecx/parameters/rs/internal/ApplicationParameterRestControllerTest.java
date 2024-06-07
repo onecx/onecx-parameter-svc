@@ -33,7 +33,9 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
     void shouldFindAllParametersWithoutCriteria() {
         ApplicationParameterPageResultDTO pageResultDTO = given()
-                .get()
+                .body(new ParameterSearchCriteriaDTO())
+                .contentType(APPLICATION_JSON)
+                .post("/search")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .extract().body().as(ApplicationParameterPageResultDTO.class);
@@ -82,24 +84,27 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
 
     static Stream<Arguments> findByCriteriaTestData() {
         return Stream.of(
-                Arguments.of(Map.of("applicationId", "", "productName", ""), 9),
-                Arguments.of(Map.of("applicationId", "access-mgmt", "productName", "access-mgmt-product"), 2),
-                Arguments.of(Map.of("applicationId", "incorrect_app", "productName", "incorrect-product"), 0),
-                Arguments.of(Map.of("applicationId", "incorrect_app", "productName", "incorrect-product", "key", "", "type", "",
-                        "name", ""), 0),
-                Arguments.of(Map.of("type", "custom,custom2", "name", "custom"), 0),
-                Arguments.of(Map.of("key", "ENGINE"), 1),
-                Arguments.of(Map.of("key", "incorrect_key"), 0));
+                Arguments.of(new ParameterSearchCriteriaDTO().applicationId("").productName(""), 9),
+                Arguments.of(new ParameterSearchCriteriaDTO().applicationId("access-mgmt").productName("access-mgmt-product"),
+                        2),
+                Arguments.of(new ParameterSearchCriteriaDTO().applicationId("incorrect_app").productName("incorrect-product"),
+                        0),
+                Arguments.of(new ParameterSearchCriteriaDTO().applicationId("incorrect_app").productName("incorrect-product")
+                        .key("").name(""), 0),
+                Arguments.of(new ParameterSearchCriteriaDTO().name("custom"), 0),
+                Arguments.of(new ParameterSearchCriteriaDTO().key("ENGINE"), 1),
+                Arguments.of(new ParameterSearchCriteriaDTO().key("incorrect_key"), 0));
     }
 
     @ParameterizedTest
     @MethodSource("findByCriteriaTestData")
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
-    void shouldFindParametersByCriteria(Map<String, String> queryParams, Integer expectedArraySize) {
+    void shouldFindParametersByCriteria(ParameterSearchCriteriaDTO criteriaDTO, Integer expectedArraySize) {
         ApplicationParameterPageResultDTO pageResultDTO = given()
                 .when()
-                .queryParams(queryParams)
-                .get()
+                .body(criteriaDTO)
+                .contentType(APPLICATION_JSON)
+                .post("/search")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)

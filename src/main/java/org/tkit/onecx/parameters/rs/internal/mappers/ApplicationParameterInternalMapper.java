@@ -51,9 +51,7 @@ public interface ApplicationParameterInternalMapper {
     ApplicationParameterHistorySearchCriteria map(ParameterHistoryCountCriteriaDTO criteriaDTO);
 
     @BeanMapping(nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
-    ApplicationParameterSearchCriteria map(String productName, String applicationId, String key, String name,
-            Integer pageNumber, Integer pageSize,
-            List<String> type);
+    ApplicationParameterSearchCriteria map(ParameterSearchCriteriaDTO criteriaDTO);
 
     @Mapping(target = "removeStreamItem", ignore = true)
     ApplicationParameterHistoryPageResultDTO mapHistory(PageResult<ApplicationParameterHistory> page);

@@ -87,54 +87,22 @@ paths:
                 $ref: '#/components/schemas/ApplicationParameterHistory'
         "404":
           description: Not Found
-  /parameters:
-    get:
+  /parameters/search:
+    post:
+      x-onecx:
+        permissions:
+          parameter:
+            - read
       tags:
-      - parameters
-      description: Find all parameters
-      operationId: getAllApplicationParameters
-      parameters:
-      - name: applicationId
-        in: query
-        schema:
-          description: The application parameter id.
-          type: string
-      - name: productName
-        in: query
-        schema:
-          description: The product name.
-          type: string
-      - name: key
-        in: query
-        schema:
-          description: The application parameter key.
-          type: string
-      - name: name
-        in: query
-        schema:
-          description: The application parameter name.
-          type: string
-      - name: pageNumber
-        in: query
-        schema:
-          format: int32
-          description: The number of page.
-          default: 0
-          type: integer
-      - name: pageSize
-        in: query
-        schema:
-          format: int32
-          description: The size of page
-          default: 100
-          type: integer
-      - name: type
-        in: query
-        schema:
-          description: The application parameter type.
-          type: array
-          items:
-            type: string
+        - parameters
+      description: Find all parameters by criteria
+      operationId: searchApplicationParametersByCriteria
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParameterSearchCriteria'
       responses:
         "200":
           description: OK
@@ -143,7 +111,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApplicationParameterPageResult'
         "400":
-          description: Bad request
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
+  /parameters:
     post:
       tags:
       - parameters
@@ -513,6 +486,27 @@ components:
           example: 2022-03-10T12:15:50
         count:
           format: int64
+          type: integer
+    ParameterSearchCriteria:
+      type: object
+      properties:
+        applicationId:
+          type: string
+        productName:
+          type: string
+        key:
+          type: string
+        name:
+          type: string
+        pageNumber:
+          format: int32
+          description: The number of page
+          default: 0
+          type: integer
+        pageSize:
+          format: int32
+          description: The size of page
+          default: 100
           type: integer
     ProblemDetailResponse:
       type: object
