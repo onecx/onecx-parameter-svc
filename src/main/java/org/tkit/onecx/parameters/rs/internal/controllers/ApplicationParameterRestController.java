@@ -1,7 +1,5 @@
 package org.tkit.onecx.parameters.rs.internal.controllers;
 
-import java.util.List;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -53,12 +51,9 @@ public class ApplicationParameterRestController implements ParametersApi {
     }
 
     @Override
-    public Response getAllApplicationParameters(String applicationId, String productName, String key, String name,
-            Integer pageNumber,
-            Integer pageSize, List<String> type) {
+    public Response searchApplicationParametersByCriteria(ParameterSearchCriteriaDTO criteriaDTO) {
 
-        var criteria = applicationParameterInternalMapper.map(productName, applicationId, key, name, pageNumber, pageSize,
-                type);
+        var criteria = applicationParameterInternalMapper.map(criteriaDTO);
         var parameters = applicationParameterDAO.searchByCriteria(criteria);
         ApplicationParameterPageResultDTO results = applicationParameterInternalMapper.map(parameters);
         return Response.ok(results).build();
