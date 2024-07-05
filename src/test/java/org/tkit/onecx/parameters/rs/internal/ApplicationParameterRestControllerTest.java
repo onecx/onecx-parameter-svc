@@ -2,6 +2,7 @@ package org.tkit.onecx.parameters.rs.internal;
 
 import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static org.tkit.quarkus.security.test.SecurityTestUtils.getKeycloakClientToken;
 
 import java.util.Map;
 import java.util.stream.Stream;
@@ -16,6 +17,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.tkit.onecx.parameters.rs.internal.controllers.ApplicationParameterRestController;
 import org.tkit.onecx.parameters.test.AbstractTest;
+import org.tkit.quarkus.security.test.GenerateKeycloakClient;
 import org.tkit.quarkus.test.WithDBData;
 
 import gen.org.tki.onecx.parameters.rs.internal.model.*;
@@ -24,6 +26,7 @@ import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
 @TestHTTPEndpoint(ApplicationParameterRestController.class)
+@GenerateKeycloakClient(clientName = "testClient", scopes = { "ocx-pa:read", "ocx-pa:write", "ocx-pa:delete", "ocx-pa:all" })
 class ApplicationParameterRestControllerTest extends AbstractTest {
 
     static final String PATH_PARAM_ID = "id";
@@ -33,6 +36,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
     void shouldFindAllParametersWithoutCriteria() {
         ApplicationParameterPageResultDTO pageResultDTO = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .body(new ParameterSearchCriteriaDTO())
                 .contentType(APPLICATION_JSON)
                 .post("/search")
@@ -49,6 +53,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
     void searchAllApplicationsTest() {
         var output = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .get("applications")
                 .then()
@@ -71,6 +76,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
     void searchAllKeysTest(Map<String, String> queryParams, int expectedArraySize) {
         var pageResultDTO = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .queryParams(queryParams)
                 .get("keys")
@@ -101,6 +107,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
     void shouldFindParametersByCriteria(ParameterSearchCriteriaDTO criteriaDTO, Integer expectedArraySize) {
         ApplicationParameterPageResultDTO pageResultDTO = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .body(criteriaDTO)
                 .contentType(APPLICATION_JSON)
@@ -117,6 +124,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
     void shouldFindParameterById() {
         ApplicationParameterDTO applicationParameterDTO = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .pathParam(PATH_PARAM_ID, "111")
                 .get(PATH_PARAM_ID_PATH)
@@ -137,6 +145,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
     @Test
     void shouldNotFindParameterById() {
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .pathParam(PATH_PARAM_ID, "150")
                 .get(PATH_PARAM_ID_PATH)
@@ -151,6 +160,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
         applicationParameterUpdateDTO.setDescription("Test description");
 
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .contentType(APPLICATION_JSON)
                 .body(applicationParameterUpdateDTO)
@@ -180,6 +190,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
         request.setRangeFrom(from);
 
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .body(request)
                 .contentType(APPLICATION_JSON)
                 .when()
@@ -189,6 +200,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
                 .statusCode(Response.Status.NO_CONTENT.getStatusCode());
 
         var dto = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .pathParam(PATH_PARAM_ID, id)
                 .get(PATH_PARAM_ID_PATH)
@@ -210,6 +222,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
     void update_without_body_test() {
 
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .when()
                 .pathParam(PATH_PARAM_ID, "GUID1")
@@ -242,6 +255,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
         dto.setRangeTo(to);
 
         String uri = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .body(dto)
                 .contentType(APPLICATION_JSON)
                 .post()
@@ -250,6 +264,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
                 .extract().header(HttpHeaders.LOCATION);
 
         ApplicationParameterDTO dto2 = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .get(uri)
                 .then()
@@ -276,12 +291,14 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
         dto.setProductName("productName1");
         dto.setKey("key1");
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .body(dto)
                 .contentType(APPLICATION_JSON)
                 .post()
                 .then()
                 .statusCode(Response.Status.CREATED.getStatusCode());
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .body(dto)
                 .contentType(APPLICATION_JSON)
                 .post()
@@ -304,6 +321,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
     void deleteParameterTest(String id) {
 
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .pathParam(PATH_PARAM_ID, id)
                 .get(PATH_PARAM_ID_PATH)
@@ -311,6 +329,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
                 .statusCode(Response.Status.OK.getStatusCode());
 
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .pathParam(PATH_PARAM_ID, id)
                 .delete(PATH_PARAM_ID_PATH)
@@ -318,6 +337,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
                 .statusCode(Response.Status.NO_CONTENT.getStatusCode());
 
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .pathParam(PATH_PARAM_ID, id)
                 .get(PATH_PARAM_ID_PATH)
@@ -329,6 +349,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
     @Test
     void deleteNoneExistsParameterTest() {
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .pathParam(PATH_PARAM_ID, "NONE_EXISTS")
                 .delete(PATH_PARAM_ID_PATH)
