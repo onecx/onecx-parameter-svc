@@ -11,6 +11,8 @@ tags:
 paths:
   /v1/{productName}/{appId}/history:
     post:
+      security:
+        - oauth2: [ ocx-pa:write ]
       tags:
       - external
       description: Create Bucket request
@@ -42,6 +44,8 @@ paths:
           description: Not Found
   /v1/{productName}/{appId}/parameters:
     get:
+      security:
+        - oauth2: [ ocx-pa:read ]
       tags:
       - external
       description: Get parameters by application id
@@ -66,6 +70,15 @@ paths:
         "404":
           description: Not Found
 components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://oauth.simple.api/token
+          scopes:
+            ocx-pa:read: Grants read access
+            ocx-pa:write: Grants write access
   schemas:
     ParameterInfo:
       type: object

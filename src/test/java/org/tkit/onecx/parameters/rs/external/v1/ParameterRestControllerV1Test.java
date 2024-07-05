@@ -2,6 +2,7 @@ package org.tkit.onecx.parameters.rs.external.v1;
 
 import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static org.tkit.quarkus.security.test.SecurityTestUtils.getKeycloakClientToken;
 
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.tkit.onecx.parameters.rs.external.v1.controllers.ParameterRestControllerV1;
 import org.tkit.onecx.parameters.test.AbstractTest;
+import org.tkit.quarkus.security.test.GenerateKeycloakClient;
 import org.tkit.quarkus.test.WithDBData;
 
 import gen.org.tkit.onecx.parameters.rs.v1.model.ParameterInfoDTOV1;
@@ -21,11 +23,13 @@ import io.restassured.path.json.JsonPath;
 
 @QuarkusTest
 @TestHTTPEndpoint(ParameterRestControllerV1.class)
+@GenerateKeycloakClient(clientName = "testClient", scopes = { "ocx-pa:read", "ocx-pa:write" })
 class ParameterRestControllerV1Test extends AbstractTest {
 
     @Test
     void shouldNotFindParametersWithGivenApplicationId() {
         Map<String, String> applicationParameters = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .pathParam("productName", "not-exist")
                 .pathParam("appId", "not-exist")
@@ -42,6 +46,7 @@ class ParameterRestControllerV1Test extends AbstractTest {
     @WithDBData(value = { "data/parameters-importdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
     void shouldReturnImportValueParameter() {
         Map<String, String> applicationParameters = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .contentType(APPLICATION_JSON)
                 .pathParam("productName", "import-product")
@@ -60,6 +65,7 @@ class ParameterRestControllerV1Test extends AbstractTest {
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
     void shouldReturnParameter() {
         Map<String, String> applicationParameters = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .pathParam("productName", "access-mgmt-product")
                 .pathParam("appId", "access-mgmt")
@@ -77,6 +83,7 @@ class ParameterRestControllerV1Test extends AbstractTest {
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
     void shouldNotReturnParameterWithNullSetValue() {
         JsonPath applicationParameters = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .pathParam("productName", "access-mgmt-product")
                 .pathParam("appId", "access-mgmt")
@@ -101,6 +108,7 @@ class ParameterRestControllerV1Test extends AbstractTest {
         parameterInfoDTO1.setType("STRING");
         parametersBucketDTO.getParameters().put("testKey", parameterInfoDTO1);
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .body(parametersBucketDTO)
                 .pathParam("productName", "new-product")
@@ -109,6 +117,7 @@ class ParameterRestControllerV1Test extends AbstractTest {
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode());
         Map<String, String> applicationParameters = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .pathParam("productName", "new-product")
                 .pathParam("appId", "new-application")
@@ -132,6 +141,7 @@ class ParameterRestControllerV1Test extends AbstractTest {
         parameterInfoDTO1.setType("INTEGER");
         parametersBucketDTO.getParameters().put("COUNTER", parameterInfoDTO1);
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .body(parametersBucketDTO)
                 .pathParam("productName", "access-mgmt-product")
@@ -144,6 +154,7 @@ class ParameterRestControllerV1Test extends AbstractTest {
     @Test
     void bucketRequestEmptyDTO() {
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .pathParam("productName", "test")
                 .pathParam("appId", "test")
@@ -156,6 +167,7 @@ class ParameterRestControllerV1Test extends AbstractTest {
     void bucketRequestNoParametersDTO() {
         ParametersBucketDTOV1 parametersBucketDTO = new ParametersBucketDTOV1();
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .contentType(APPLICATION_JSON)
                 .body(parametersBucketDTO)
                 .pathParam("productName", "test")

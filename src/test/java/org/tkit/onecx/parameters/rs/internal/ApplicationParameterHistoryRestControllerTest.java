@@ -2,6 +2,7 @@ package org.tkit.onecx.parameters.rs.internal;
 
 import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static org.tkit.quarkus.security.test.SecurityTestUtils.getKeycloakClientToken;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -15,6 +16,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.tkit.onecx.parameters.rs.internal.controllers.ApplicationParameterHistoryRestController;
 import org.tkit.onecx.parameters.test.AbstractTest;
+import org.tkit.quarkus.security.test.GenerateKeycloakClient;
 import org.tkit.quarkus.test.WithDBData;
 
 import gen.org.tki.onecx.parameters.rs.internal.model.ApplicationParameterHistoryCriteriaDTO;
@@ -27,11 +29,13 @@ import io.quarkus.test.junit.QuarkusTest;
 @QuarkusTest
 @TestHTTPEndpoint(ApplicationParameterHistoryRestController.class)
 @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
+@GenerateKeycloakClient(clientName = "testClient", scopes = { "ocx-pa:read", "ocx-pa:write", "ocx-pa:delete", "ocx-pa:all" })
 class ApplicationParameterHistoryRestControllerTest extends AbstractTest {
 
     @Test
     void shouldFindAllParametersHistoryWithoutCriteria() {
         var pageResultDTO = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .body(new ApplicationParameterHistoryCriteriaDTO())
                 .contentType(APPLICATION_JSON)
                 .post()
@@ -63,6 +67,7 @@ class ApplicationParameterHistoryRestControllerTest extends AbstractTest {
     @MethodSource("findByCriteriaTestData")
     void shouldFindParametersHistoryByCriteria(ApplicationParameterHistoryCriteriaDTO criteriaDTO, Integer expectedArraySize) {
         var pageResultDTO = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .body(criteriaDTO)
                 .contentType(APPLICATION_JSON)
@@ -93,6 +98,7 @@ class ApplicationParameterHistoryRestControllerTest extends AbstractTest {
     void shouldFindParametersHistoryByCriteriaQueryLatest(ApplicationParameterHistoryCriteriaDTO criteriaDTO,
             Integer expectedArraySize) {
         var pageResultDTO = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .body(criteriaDTO)
                 .contentType(APPLICATION_JSON)
@@ -108,6 +114,7 @@ class ApplicationParameterHistoryRestControllerTest extends AbstractTest {
     @Test
     void getApplicationParametersHistoryByIdNoFoundTest() {
         given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .pathParam("id", "not-id")
                 .get("{id}")
@@ -127,6 +134,7 @@ class ApplicationParameterHistoryRestControllerTest extends AbstractTest {
     @MethodSource("getApplicationParametersHistoryByIds")
     void getApplicationParametersHistoryById(String id, String applicationId, String productName) {
         var result = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .pathParam("id", id)
                 .get("{id}")
@@ -159,6 +167,7 @@ class ApplicationParameterHistoryRestControllerTest extends AbstractTest {
     @MethodSource("findCountByCriteriaTestData")
     void getCountsByCriteriaTest(ParameterHistoryCountCriteriaDTO criteria, Integer expectedArraySize) {
         var tmp = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .body(criteria)
                 .contentType(APPLICATION_JSON)
