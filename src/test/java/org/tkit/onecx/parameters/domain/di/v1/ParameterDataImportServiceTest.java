@@ -3,7 +3,6 @@ package org.tkit.onecx.parameters.domain.di.v1;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import jakarta.inject.Inject;
 
@@ -47,13 +46,13 @@ class ParameterDataImportServiceTest extends AbstractTest {
         };
         service.importData(config);
 
-        List<ApplicationParameter> params = dao.findAll().collect(Collectors.toList());
+        List<ApplicationParameter> params = dao.findAll().toList();
         Assertions.assertNotNull(params);
         Assertions.assertEquals(9, params.size());
 
         config.getMetadata().put("operation", "NONE");
 
-        params = dao.findAll().collect(Collectors.toList());
+        params = dao.findAll().toList();
         Assertions.assertNotNull(params);
         Assertions.assertEquals(9, params.size());
     }
@@ -89,7 +88,7 @@ class ParameterDataImportServiceTest extends AbstractTest {
             }
         });
 
-        List<ApplicationParameter> params = dao.findAll().collect(Collectors.toList());
+        List<ApplicationParameter> params = dao.findAll().toList();
         Assertions.assertNotNull(params);
         Assertions.assertEquals(1, params.size());
 
@@ -139,7 +138,7 @@ class ParameterDataImportServiceTest extends AbstractTest {
             }
         });
 
-        List<ApplicationParameter> params = dao.findAll().collect(Collectors.toList());
+        List<ApplicationParameter> params = dao.findAll().toList();
         Assertions.assertNotNull(params);
         Assertions.assertEquals(10, params.size());
         List<ApplicationParameter> p1 = dao.findByApplicationIdAndParameterKeys("app1", List.of("param"));
@@ -179,7 +178,7 @@ class ParameterDataImportServiceTest extends AbstractTest {
             }
         });
 
-        List<ApplicationParameter> params = dao.findAll().collect(Collectors.toList());
+        List<ApplicationParameter> params = dao.findAll().toList();
         Assertions.assertNotNull(params);
         Assertions.assertEquals(9, params.size());
         List<ApplicationParameter> p1 = dao.findByApplicationIdAndParameterKeys("app1", List.of("param"));
