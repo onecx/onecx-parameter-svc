@@ -32,7 +32,7 @@ class MaintenanceHistoryServiceTest {
     @Order(1)
     void maintenanceHistoryDataTest() {
         service.maintenanceHistoryData();
-        List<ApplicationParameterHistory> result = dao.findAll().collect(Collectors.toList());
+        List<ApplicationParameterHistory> result = dao.findAll().toList();
         Assertions.assertNotNull(result);
         Assertions.assertEquals(2, result.size());
     }
@@ -40,14 +40,14 @@ class MaintenanceHistoryServiceTest {
     @Test
     @Order(2)
     void maintenanceHistoryNoDataTest() {
-        var result = dao.findAll().collect(Collectors.toList());
+        var result = dao.findAll().toList();
         Assertions.assertNotNull(result);
         Assertions.assertEquals(10, result.size());
 
         jobDAO.deleteQueryById(MaintenanceHistoryService.JOB_ID);
         service.maintenanceHistoryData();
 
-        result = dao.findAll().collect(Collectors.toList());
+        result = dao.findAll().toList();
         Assertions.assertNotNull(result);
         Assertions.assertEquals(10, result.size());
     }
