@@ -1,7 +1,6 @@
 package org.tkit.onecx.parameters.domain.timer;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import jakarta.inject.Inject;
 
