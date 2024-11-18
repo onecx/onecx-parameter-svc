@@ -1,9 +1,6 @@
 package org.tkit.onecx.parameters.domain.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
 
 import org.hibernate.annotations.TenantId;
 import org.tkit.quarkus.jpa.models.TraceableEntity;
@@ -14,8 +11,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "APM_APP_PARAM", uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "APPLICATION_ID", "PRODUCT_NAME", "PARAM_KEY", "TENANT_ID" }) })
+@Table(name = "PARAMETER", uniqueConstraints = {
+        @UniqueConstraint(columnNames = { "KEY", "APPLICATION_ID", "PRODUCT_NAME", "TENANT_ID" }) })
 @SuppressWarnings("java:S2160")
 public class ApplicationParameter extends TraceableEntity {
 
@@ -31,20 +28,20 @@ public class ApplicationParameter extends TraceableEntity {
     /**
      * The application parameter key.
      */
-    @Column(name = "PARAM_KEY")
+    @Column(name = "KEY")
     private String key;
 
     /**
      * The application parameter name.
      */
-    @Column(name = "PARAM_NAME")
+    @Column(name = "NAME")
     private String name;
 
     /**
      * The name of the parameter as it appears in functional specifications
      * (FSS).
      */
-    @Column(name = "PARAM_DESCRIPTION")
+    @Column(name = "DESCRIPTION")
     private String description;
 
     /**
@@ -62,12 +59,12 @@ public class ApplicationParameter extends TraceableEntity {
     /**
      * The application parameter set value.
      */
-    @Column(name = "SET_VALUE")
+    @Column(name = "SET_VALUE", columnDefinition = "varchar(1000)")
     private String setValue;
 
     /**
      * The application parameter set value.
      */
-    @Column(name = "IMPORT_VALUE")
+    @Column(name = "IMPORT_VALUE", columnDefinition = "varchar(1000)")
     private String importValue;
 }
