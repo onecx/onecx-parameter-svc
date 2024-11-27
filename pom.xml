@@ -158,20 +158,22 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.tkit.maven</groupId>
-                <artifactId>tkit-docs-quarkus-plugin</artifactId>
+                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <artifactId>download-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>docs</id>
-                        <phase>prepare-package</phase>
+                        <id>onecx-permission-v1</id>
+                        <phase>initialize</phase>
                         <goals>
-                            <goal>docs</goal>
+                            <goal>wget</goal>
                         </goals>
                         <configuration>
-                            <skipDocs>${skipDocs}</skipDocs>
-                            <openApiFiles>
-                                <openApiFile>openapi-v1.yaml</openApiFile>
-                            </openApiFiles>
+                            <url>
+                                https://raw.githubusercontent.com/onecx/onecx-parameter/main/openapi/onecx-parameter-v1.yaml
+                            </url>
+                            <outputDirectory>target/tmp/openapi</outputDirectory>
+                            <outputFileName>onecx-parameter-v1.yaml</outputFileName>
+                            <skipCache>true</skipCache>
                         </configuration>
                     </execution>
                 </executions>
@@ -210,7 +212,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>src/main/openapi/openapi-v1.yaml</inputSpec>
+                            <inputSpec>target/tmp/openapi/onecx-parameter-v1.yaml</inputSpec>
                             <apiPackage>gen.org.tkit.onecx.parameters.rs.v1</apiPackage>
                             <modelPackage>gen.org.tkit.onecx.parameters.rs.v1.model</modelPackage>
                             <modelNameSuffix>DTOV1</modelNameSuffix>

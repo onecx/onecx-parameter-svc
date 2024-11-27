@@ -23,7 +23,7 @@ import io.restassured.path.json.JsonPath;
 
 @QuarkusTest
 @TestHTTPEndpoint(ParameterRestControllerV1.class)
-@GenerateKeycloakClient(clientName = "testClient", scopes = { "ocx-pa:read", "ocx-pa:write" })
+@GenerateKeycloakClient(clientName = "testClient", scopes = { "ocx-pa-ap:read", "ocx-pa-me:write" })
 class ParameterRestControllerV1Test extends AbstractTest {
 
     @Test
@@ -115,7 +115,7 @@ class ParameterRestControllerV1Test extends AbstractTest {
                 .pathParam("appId", "new-application")
                 .post("history")
                 .then()
-                .statusCode(Response.Status.OK.getStatusCode());
+                .statusCode(Response.Status.NO_CONTENT.getStatusCode());
         Map<String, String> applicationParameters = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
@@ -148,7 +148,7 @@ class ParameterRestControllerV1Test extends AbstractTest {
                 .pathParam("appId", "access-mgmt")
                 .post("history")
                 .then()
-                .statusCode(Response.Status.OK.getStatusCode());
+                .statusCode(Response.Status.NO_CONTENT.getStatusCode());
     }
 
     @Test
@@ -160,7 +160,7 @@ class ParameterRestControllerV1Test extends AbstractTest {
                 .pathParam("appId", "test")
                 .post("history")
                 .then()
-                .statusCode(Response.Status.OK.getStatusCode());
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
     }
 
     @Test
@@ -174,7 +174,22 @@ class ParameterRestControllerV1Test extends AbstractTest {
                 .pathParam("appId", "test")
                 .post("history")
                 .then()
-                .statusCode(Response.Status.OK.getStatusCode());
+                .statusCode(Response.Status.NO_CONTENT.getStatusCode());
+    }
+
+    @Test
+    void bucketRequestNullParametersDTO() {
+        ParametersBucketDTOV1 parametersBucketDTO = new ParametersBucketDTOV1();
+        parametersBucketDTO.setParameters(null);
+        given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .contentType(APPLICATION_JSON)
+                .body(parametersBucketDTO)
+                .pathParam("productName", "test")
+                .pathParam("appId", "test")
+                .post("history")
+                .then()
+                .statusCode(Response.Status.NO_CONTENT.getStatusCode());
     }
 
 }
