@@ -10,9 +10,9 @@ import org.tkit.onecx.parameters.domain.models.ApplicationParameterHistory;
 import org.tkit.onecx.parameters.rs.internal.mappers.ApplicationParameterInternalMapper;
 import org.tkit.quarkus.log.cdi.LogService;
 
-import gen.org.tki.onecx.parameters.rs.internal.model.ApplicationParameterHistoryCriteriaDTO;
-import gen.org.tki.onecx.parameters.rs.internal.model.ParameterHistoryCountCriteriaDTO;
 import gen.org.tkit.onecx.parameters.rs.internal.HistoriesApi;
+import gen.org.tkit.onecx.parameters.rs.internal.model.ApplicationParameterHistoryCriteriaDTO;
+import gen.org.tkit.onecx.parameters.rs.internal.model.ParameterHistoryCountCriteriaDTO;
 
 @LogService
 @ApplicationScoped

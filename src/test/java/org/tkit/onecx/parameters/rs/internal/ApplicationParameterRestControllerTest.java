@@ -20,7 +20,7 @@ import org.tkit.onecx.parameters.test.AbstractTest;
 import org.tkit.quarkus.security.test.GenerateKeycloakClient;
 import org.tkit.quarkus.test.WithDBData;
 
-import gen.org.tki.onecx.parameters.rs.internal.model.*;
+import gen.org.tkit.onecx.parameters.rs.internal.model.*;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 

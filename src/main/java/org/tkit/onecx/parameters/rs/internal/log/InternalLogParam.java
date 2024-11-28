@@ -6,8 +6,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 
 import org.tkit.quarkus.log.cdi.LogParam;
 
-import gen.org.tki.onecx.parameters.rs.internal.model.ApplicationParameterCreateDTO;
-import gen.org.tki.onecx.parameters.rs.internal.model.ApplicationParameterUpdateDTO;
+import gen.org.tkit.onecx.parameters.rs.internal.model.ApplicationParameterCreateDTO;
+import gen.org.tkit.onecx.parameters.rs.internal.model.ApplicationParameterUpdateDTO;
 
 @ApplicationScoped
 public class InternalLogParam implements LogParam {

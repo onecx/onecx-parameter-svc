@@ -17,8 +17,8 @@ import org.tkit.onecx.parameters.rs.internal.mappers.ExceptionMapper;
 import org.tkit.quarkus.jpa.exceptions.ConstraintException;
 import org.tkit.quarkus.log.cdi.LogService;
 
-import gen.org.tki.onecx.parameters.rs.internal.model.*;
 import gen.org.tkit.onecx.parameters.rs.internal.ParametersApi;
+import gen.org.tkit.onecx.parameters.rs.internal.model.*;
 
 @LogService
 @ApplicationScoped

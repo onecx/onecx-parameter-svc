@@ -19,10 +19,10 @@ import org.tkit.onecx.parameters.test.AbstractTest;
 import org.tkit.quarkus.security.test.GenerateKeycloakClient;
 import org.tkit.quarkus.test.WithDBData;
 
-import gen.org.tki.onecx.parameters.rs.internal.model.ApplicationParameterHistoryCriteriaDTO;
-import gen.org.tki.onecx.parameters.rs.internal.model.ApplicationParameterHistoryDTO;
-import gen.org.tki.onecx.parameters.rs.internal.model.ApplicationParameterHistoryPageResultDTO;
-import gen.org.tki.onecx.parameters.rs.internal.model.ParameterHistoryCountCriteriaDTO;
+import gen.org.tkit.onecx.parameters.rs.internal.model.ApplicationParameterHistoryCriteriaDTO;
+import gen.org.tkit.onecx.parameters.rs.internal.model.ApplicationParameterHistoryDTO;
+import gen.org.tkit.onecx.parameters.rs.internal.model.ApplicationParameterHistoryPageResultDTO;
+import gen.org.tkit.onecx.parameters.rs.internal.model.ParameterHistoryCountCriteriaDTO;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 

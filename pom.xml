@@ -203,7 +203,7 @@
                         <configuration>
                             <inputSpec>src/main/openapi/openapi-internal.yaml</inputSpec>
                             <apiPackage>gen.org.tkit.onecx.parameters.rs.internal</apiPackage>
-                            <modelPackage>gen.org.tki.onecx.parameters.rs.internal.model</modelPackage>
+                            <modelPackage>gen.org.tkit.onecx.parameters.rs.internal.model</modelPackage>
                         </configuration>
                     </execution>
                     <execution>
