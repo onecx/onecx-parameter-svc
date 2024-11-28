@@ -2,25 +2,34 @@ package org.tkit.onecx.parameters.rs.internal;
 
 import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static org.mockserver.model.HttpRequest.request;
+import static org.mockserver.model.HttpResponse.response;
 import static org.tkit.quarkus.security.test.SecurityTestUtils.getKeycloakClientToken;
 
 import java.util.Map;
 import java.util.stream.Stream;
 
+import jakarta.ws.rs.HttpMethod;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Response;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockserver.client.MockServerClient;
+import org.mockserver.model.JsonBody;
+import org.mockserver.model.MediaType;
 import org.tkit.onecx.parameters.rs.internal.controllers.ApplicationParameterRestController;
 import org.tkit.onecx.parameters.test.AbstractTest;
 import org.tkit.quarkus.security.test.GenerateKeycloakClient;
 import org.tkit.quarkus.test.WithDBData;
 
 import gen.org.tkit.onecx.parameters.rs.internal.model.*;
+import gen.org.tkit.onecx.tenant.client.model.TenantId;
+import io.quarkiverse.mockserver.test.InjectMockServerClient;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 
@@ -32,11 +41,27 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
     static final String PATH_PARAM_ID = "id";
     static final String PATH_PARAM_ID_PATH = "{" + PATH_PARAM_ID + "}";
 
+    @InjectMockServerClient
+    MockServerClient mockServerClient;
+
+    @BeforeEach
+    void resetExpectation() {
+        clearExpectation(mockServerClient);
+    }
+
     @Test
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
     void shouldFindAllParametersWithoutCriteria() {
+        var apm = createToken("org1");
+        addExpectation(mockServerClient
+                .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
+
         ApplicationParameterPageResultDTO pageResultDTO = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
                 .body(new ParameterSearchCriteriaDTO())
                 .contentType(APPLICATION_JSON)
                 .post("/search")
@@ -52,8 +77,16 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
     @Test
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
     void searchAllApplicationsTest() {
+        var apm = createToken("org1");
+        addExpectation(mockServerClient
+                .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
+
         var output = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .get("applications")
                 .then()
@@ -75,8 +108,16 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
     @MethodSource("findAllKeys")
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
     void searchAllKeysTest(Map<String, String> queryParams, int expectedArraySize) {
+        var apm = createToken("org1");
+        addExpectation(mockServerClient
+                .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
+
         var pageResultDTO = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .queryParams(queryParams)
                 .get("keys")
@@ -106,8 +147,16 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
     @MethodSource("findByCriteriaTestData")
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
     void shouldFindParametersByCriteria(ParameterSearchCriteriaDTO criteriaDTO, Integer expectedArraySize) {
+        var apm = createToken("org1");
+        addExpectation(mockServerClient
+                .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
+
         ApplicationParameterPageResultDTO pageResultDTO = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .body(criteriaDTO)
                 .contentType(APPLICATION_JSON)
@@ -123,8 +172,16 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
     @Test
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
     void shouldFindParameterById() {
+        var apm = createToken("org1");
+        addExpectation(mockServerClient
+                .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
+
         ApplicationParameterDTO applicationParameterDTO = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .pathParam(PATH_PARAM_ID, "111")
                 .get(PATH_PARAM_ID_PATH)
@@ -144,8 +201,16 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
 
     @Test
     void shouldNotFindParameterById() {
+        var apm = createToken("org1");
+        addExpectation(mockServerClient
+                .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
+
         given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .pathParam(PATH_PARAM_ID, "150")
                 .get(PATH_PARAM_ID_PATH)
@@ -155,12 +220,20 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
 
     @Test
     void shouldNotFindUpdateParameterById() {
+        var apm = createToken("org1");
+        addExpectation(mockServerClient
+                .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
+
         ApplicationParameterUpdateDTO applicationParameterUpdateDTO = new ApplicationParameterUpdateDTO();
         applicationParameterUpdateDTO.setValue("JBPM");
         applicationParameterUpdateDTO.setDescription("Test description");
 
         given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .contentType(APPLICATION_JSON)
                 .body(applicationParameterUpdateDTO)
@@ -182,6 +255,13 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
     void shouldUpdateParameterTest(String appId, String desc, String id, String value, String unit, Integer from, Integer to,
             String checkUnit) {
+        var apm = createToken("org1");
+        addExpectation(mockServerClient
+                .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
+
         var request = new ApplicationParameterUpdateDTO();
         request.setValue(value);
         request.setDescription(desc);
@@ -191,6 +271,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
 
         given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
                 .body(request)
                 .contentType(APPLICATION_JSON)
                 .when()
@@ -201,6 +282,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
 
         var dto = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .pathParam(PATH_PARAM_ID, id)
                 .get(PATH_PARAM_ID_PATH)
@@ -220,9 +302,16 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
     @Test
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
     void update_without_body_test() {
+        var apm = createToken("org1");
+        addExpectation(mockServerClient
+                .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
 
         given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
                 .contentType(APPLICATION_JSON)
                 .when()
                 .pathParam(PATH_PARAM_ID, "GUID1")
@@ -244,6 +333,14 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
     void createParameterTest(String appId, String productName, String desc, String key, String value, String unit, Integer from,
             Integer to,
             String checkUnit) {
+
+        var apm = createToken("org1");
+        addExpectation(mockServerClient
+                .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
+
         ApplicationParameterCreateDTO dto = new ApplicationParameterCreateDTO();
         dto.setApplicationId(appId);
         dto.setProductName(productName);
@@ -256,6 +353,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
 
         String uri = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
                 .body(dto)
                 .contentType(APPLICATION_JSON)
                 .post()
@@ -265,6 +363,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
 
         ApplicationParameterDTO dto2 = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
                 .contentType(APPLICATION_JSON)
                 .get(uri)
                 .then()
@@ -286,12 +385,20 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
 
     @Test
     void createTwice_Bad_Request_Test() {
+        var apm = createToken("org1");
+        addExpectation(mockServerClient
+                .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
+
         ApplicationParameterCreateDTO dto = new ApplicationParameterCreateDTO();
         dto.setApplicationId("app1");
         dto.setProductName("productName1");
         dto.setKey("key1");
         given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
                 .body(dto)
                 .contentType(APPLICATION_JSON)
                 .post()
@@ -299,6 +406,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
                 .statusCode(Response.Status.CREATED.getStatusCode());
         given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
                 .body(dto)
                 .contentType(APPLICATION_JSON)
                 .post()
@@ -319,9 +427,16 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
     @MethodSource("deleteParameterTestInput")
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
     void deleteParameterTest(String id) {
+        var apm = createToken("org1");
+        addExpectation(mockServerClient
+                .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
 
         given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
                 .contentType(APPLICATION_JSON)
                 .pathParam(PATH_PARAM_ID, id)
                 .get(PATH_PARAM_ID_PATH)
@@ -330,6 +445,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
 
         given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
                 .contentType(APPLICATION_JSON)
                 .pathParam(PATH_PARAM_ID, id)
                 .delete(PATH_PARAM_ID_PATH)
@@ -338,6 +454,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
 
         given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
                 .contentType(APPLICATION_JSON)
                 .pathParam(PATH_PARAM_ID, id)
                 .get(PATH_PARAM_ID_PATH)
@@ -348,8 +465,16 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
 
     @Test
     void deleteNoneExistsParameterTest() {
+        var apm = createToken("org1");
+        addExpectation(mockServerClient
+                .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
+
         given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
                 .contentType(APPLICATION_JSON)
                 .pathParam(PATH_PARAM_ID, "NONE_EXISTS")
                 .delete(PATH_PARAM_ID_PATH)

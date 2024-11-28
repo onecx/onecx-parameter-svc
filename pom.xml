@@ -153,6 +153,11 @@
             <artifactId>tkit-quarkus-security-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.quarkiverse.mockserver</groupId>
+            <artifactId>quarkus-mockserver-test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

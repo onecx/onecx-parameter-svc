@@ -2,18 +2,25 @@ package org.tkit.onecx.parameters.rs.internal;
 
 import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static org.mockserver.model.HttpRequest.request;
+import static org.mockserver.model.HttpResponse.response;
 import static org.tkit.quarkus.security.test.SecurityTestUtils.getKeycloakClientToken;
 
 import java.util.List;
 import java.util.stream.Stream;
 
+import jakarta.ws.rs.HttpMethod;
 import jakarta.ws.rs.core.Response;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockserver.client.MockServerClient;
+import org.mockserver.model.JsonBody;
+import org.mockserver.model.MediaType;
 import org.tkit.onecx.parameters.rs.internal.controllers.ApplicationParameterHistoryRestController;
 import org.tkit.onecx.parameters.test.AbstractTest;
 import org.tkit.quarkus.security.test.GenerateKeycloakClient;
@@ -23,6 +30,8 @@ import gen.org.tkit.onecx.parameters.rs.internal.model.ApplicationParameterHisto
 import gen.org.tkit.onecx.parameters.rs.internal.model.ApplicationParameterHistoryDTO;
 import gen.org.tkit.onecx.parameters.rs.internal.model.ApplicationParameterHistoryPageResultDTO;
 import gen.org.tkit.onecx.parameters.rs.internal.model.ParameterHistoryCountCriteriaDTO;
+import gen.org.tkit.onecx.tenant.client.model.TenantId;
+import io.quarkiverse.mockserver.test.InjectMockServerClient;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 
@@ -32,10 +41,26 @@ import io.quarkus.test.junit.QuarkusTest;
 @GenerateKeycloakClient(clientName = "testClient", scopes = { "ocx-pa:read", "ocx-pa:write", "ocx-pa:delete", "ocx-pa:all" })
 class ApplicationParameterHistoryRestControllerTest extends AbstractTest {
 
+    @InjectMockServerClient
+    MockServerClient mockServerClient;
+
+    @BeforeEach
+    void resetExpectation() {
+        clearExpectation(mockServerClient);
+    }
+
     @Test
     void shouldFindAllParametersHistoryWithoutCriteria() {
+        var apm = createToken("org1");
+        addExpectation(mockServerClient
+                .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
+
         var pageResultDTO = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
                 .body(new ApplicationParameterHistoryCriteriaDTO())
                 .contentType(APPLICATION_JSON)
                 .post()
@@ -66,8 +91,17 @@ class ApplicationParameterHistoryRestControllerTest extends AbstractTest {
     @ParameterizedTest
     @MethodSource("findByCriteriaTestData")
     void shouldFindParametersHistoryByCriteria(ApplicationParameterHistoryCriteriaDTO criteriaDTO, Integer expectedArraySize) {
+
+        var apm = createToken("org1");
+        addExpectation(mockServerClient
+                .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
+
         var pageResultDTO = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .body(criteriaDTO)
                 .contentType(APPLICATION_JSON)
@@ -97,8 +131,17 @@ class ApplicationParameterHistoryRestControllerTest extends AbstractTest {
     @MethodSource("findByCriteriaTestDataQueryLatest")
     void shouldFindParametersHistoryByCriteriaQueryLatest(ApplicationParameterHistoryCriteriaDTO criteriaDTO,
             Integer expectedArraySize) {
+
+        var apm = createToken("org1");
+        addExpectation(mockServerClient
+                .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
+
         var pageResultDTO = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .body(criteriaDTO)
                 .contentType(APPLICATION_JSON)
@@ -113,8 +156,16 @@ class ApplicationParameterHistoryRestControllerTest extends AbstractTest {
 
     @Test
     void getApplicationParametersHistoryByIdNoFoundTest() {
+        var apm = createToken("org1");
+        addExpectation(mockServerClient
+                .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
+
         given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .pathParam("id", "not-id")
                 .get("{id}")
@@ -133,8 +184,16 @@ class ApplicationParameterHistoryRestControllerTest extends AbstractTest {
     @ParameterizedTest
     @MethodSource("getApplicationParametersHistoryByIds")
     void getApplicationParametersHistoryById(String id, String applicationId, String productName) {
+        var apm = createToken("org1");
+        addExpectation(mockServerClient
+                .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
+
         var result = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .pathParam("id", id)
                 .get("{id}")
@@ -166,8 +225,16 @@ class ApplicationParameterHistoryRestControllerTest extends AbstractTest {
     @ParameterizedTest
     @MethodSource("findCountByCriteriaTestData")
     void getCountsByCriteriaTest(ParameterHistoryCountCriteriaDTO criteria, Integer expectedArraySize) {
+        var apm = createToken("org1");
+        addExpectation(mockServerClient
+                .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
+
         var tmp = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .body(criteria)
                 .contentType(APPLICATION_JSON)
