@@ -153,6 +153,11 @@
             <artifactId>tkit-quarkus-security-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.quarkiverse.mockserver</groupId>
+            <artifactId>quarkus-mockserver-test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -203,7 +208,7 @@
                         <configuration>
                             <inputSpec>src/main/openapi/openapi-internal.yaml</inputSpec>
                             <apiPackage>gen.org.tkit.onecx.parameters.rs.internal</apiPackage>
-                            <modelPackage>gen.org.tki.onecx.parameters.rs.internal.model</modelPackage>
+                            <modelPackage>gen.org.tkit.onecx.parameters.rs.internal.model</modelPackage>
                         </configuration>
                     </execution>
                     <execution>

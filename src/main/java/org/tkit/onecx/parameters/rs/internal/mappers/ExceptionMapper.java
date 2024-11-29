@@ -17,9 +17,9 @@ import org.tkit.quarkus.jpa.exceptions.ConstraintException;
 import org.tkit.quarkus.log.cdi.LogService;
 import org.tkit.quarkus.rs.mappers.OffsetDateTimeMapper;
 
-import gen.org.tki.onecx.parameters.rs.internal.model.ProblemDetailInvalidParamDTO;
-import gen.org.tki.onecx.parameters.rs.internal.model.ProblemDetailParamDTO;
-import gen.org.tki.onecx.parameters.rs.internal.model.ProblemDetailResponseDTO;
+import gen.org.tkit.onecx.parameters.rs.internal.model.ProblemDetailInvalidParamDTO;
+import gen.org.tkit.onecx.parameters.rs.internal.model.ProblemDetailParamDTO;
+import gen.org.tkit.onecx.parameters.rs.internal.model.ProblemDetailResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j

@@ -1,0 +1,15 @@
+[
+  {
+    "id": "-1",
+    "httpRequest": {
+      "path": "/ping"
+    },
+    "httpResponse": {
+      "body": {
+        "type": "JSON",
+        "json": {},
+        "contentType": "application/json"
+      }
+    }
+  }
+]

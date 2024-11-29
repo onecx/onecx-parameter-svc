@@ -16,7 +16,7 @@ import org.tkit.onecx.parameters.domain.models.ParameterHistoryCountTuple;
 import org.tkit.quarkus.jpa.daos.PageResult;
 import org.tkit.quarkus.rs.mappers.OffsetDateTimeMapper;
 
-import gen.org.tki.onecx.parameters.rs.internal.model.*;
+import gen.org.tkit.onecx.parameters.rs.internal.model.*;
 
 @Mapper(uses = { OffsetDateTimeMapper.class })
 public interface ApplicationParameterInternalMapper {
