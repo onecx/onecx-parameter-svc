@@ -60,7 +60,7 @@ public abstract class AbstractTest {
         MOCK_IDS.clear();
     }
 
-    static public String createToken(String orgId) {
+    public static String createToken(String orgId) {
         JsonObjectBuilder claims = Json.createObjectBuilder();
         claims.add(Claims.preferred_username.name(), "test");
         claims.add(Claims.sub.name(), "test");
@@ -68,7 +68,7 @@ public abstract class AbstractTest {
         return Jwt.claims(claims.build()).sign(KEY);
     }
 
-    static PrivateKey KEY = createKey();
+    static final PrivateKey KEY = createKey();
 
     static PrivateKey createKey() {
         try {

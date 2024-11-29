@@ -40,6 +40,7 @@ public class SecurityTest extends AbstractSecurityTest {
         return config;
     }
 
+    @Override
     public void default_security_test(String client, List<String> scopes, Integer expectation, String url, String method) {
 
         var apm = createToken("org1");
