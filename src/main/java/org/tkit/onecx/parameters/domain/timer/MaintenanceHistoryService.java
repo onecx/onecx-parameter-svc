@@ -6,8 +6,9 @@ import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.transaction.Transactional;
 
-import org.tkit.onecx.parameters.domain.daos.ApplicationParameterHistoryDAO;
+import org.tkit.onecx.parameters.domain.config.ParameterConfig;
 import org.tkit.onecx.parameters.domain.daos.JobDAO;
+import org.tkit.onecx.parameters.domain.daos.ParameterHistoryDAO;
 import org.tkit.onecx.parameters.domain.models.Job;
 import org.tkit.quarkus.jpa.exceptions.DAOException;
 
@@ -23,7 +24,7 @@ public class MaintenanceHistoryService {
     ParameterConfig parameterConfig;
 
     @Inject
-    ApplicationParameterHistoryDAO dao;
+    ParameterHistoryDAO dao;
 
     @Inject
     JobDAO jobDAO;

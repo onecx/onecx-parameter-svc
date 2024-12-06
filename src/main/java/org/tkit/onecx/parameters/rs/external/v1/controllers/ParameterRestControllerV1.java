@@ -12,11 +12,11 @@ import jakarta.ws.rs.core.Response;
 
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
-import org.tkit.onecx.parameters.domain.daos.ApplicationParameterDAO;
-import org.tkit.onecx.parameters.domain.daos.ApplicationParameterHistoryDAO;
-import org.tkit.onecx.parameters.domain.models.ApplicationParameterHistory;
-import org.tkit.onecx.parameters.rs.external.v1.mappers.ApplicationParameterHistoryMapper;
-import org.tkit.onecx.parameters.rs.external.v1.mappers.ExceptionMapper;
+import org.tkit.onecx.parameters.domain.daos.ParameterDAO;
+import org.tkit.onecx.parameters.domain.daos.ParameterHistoryDAO;
+import org.tkit.onecx.parameters.domain.models.ParameterHistory;
+import org.tkit.onecx.parameters.rs.external.v1.mappers.ExceptionMapperV1;
+import org.tkit.onecx.parameters.rs.external.v1.mappers.ParameterMapperV1;
 import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.org.tkit.onecx.parameters.rs.v1.ParameterApi;
@@ -29,22 +29,25 @@ import gen.org.tkit.onecx.parameters.rs.v1.model.ProblemDetailResponseDTOV1;
 public class ParameterRestControllerV1 implements ParameterApi {
 
     @Inject
-    ApplicationParameterDAO applicationParameterDAO;
+    ParameterDAO applicationParameterDAO;
 
     @Inject
-    ApplicationParameterHistoryDAO historyDAO;
+    ParameterHistoryDAO historyDAO;
 
     @Inject
-    ApplicationParameterHistoryMapper mapper;
+    ParameterMapperV1 mapper;
 
     @Inject
-    ExceptionMapper exceptionMapper;
+    ExceptionMapperV1 exceptionMapper;
 
     @Override
-    public Response getApplicationParameters(String productName, String appId) {
+    public Response getParameters(String productName, String appId) {
         Map<String, String> applicationParameters = applicationParameterDAO.findAllByProductNameAndApplicationId(productName,
                 appId);
-        return Response.ok(applicationParameters).build();
+        if (applicationParameters.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok(mapper.mapParameters(applicationParameters)).build();
     }
 
     @Override
@@ -52,7 +55,7 @@ public class ParameterRestControllerV1 implements ParameterApi {
         if (dto.getParameters() == null || dto.getParameters().isEmpty()) {
             return Response.status(Response.Status.NO_CONTENT).build();
         }
-        List<ApplicationParameterHistory> items = new ArrayList<>();
+        List<ParameterHistory> items = new ArrayList<>();
         dto.getParameters().forEach((key, value) -> items
                 .add(mapper.mapItem(value, key, dto, productName, appId,
                         value.getCurrentValue())));

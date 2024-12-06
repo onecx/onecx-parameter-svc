@@ -1,4 +1,4 @@
-package org.tkit.onecx.parameters.domain.timer;
+package org.tkit.onecx.parameters.domain.config;
 
 import io.quarkus.runtime.annotations.ConfigDocFilename;
 import io.quarkus.runtime.annotations.ConfigPhase;
