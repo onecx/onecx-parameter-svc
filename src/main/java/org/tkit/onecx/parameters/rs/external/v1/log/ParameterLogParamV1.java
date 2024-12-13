@@ -9,7 +9,7 @@ import org.tkit.quarkus.log.cdi.LogParam;
 import gen.org.tkit.onecx.parameters.rs.v1.model.ParametersBucketDTOV1;
 
 @ApplicationScoped
-public class ExternalV1LogParam implements LogParam {
+public class ParameterLogParamV1 implements LogParam {
 
     @Override
     public List<Item> getClasses() {

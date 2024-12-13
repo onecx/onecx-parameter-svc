@@ -17,16 +17,11 @@ import lombok.Setter;
 @Entity
 @Table(name = "PARAMETER_HISTORY")
 @SuppressWarnings("java:S2160")
-public class ApplicationParameterHistory extends TraceableEntity {
+public class ParameterHistory extends TraceableEntity {
 
     @TenantId
     @Column(name = "TENANT_ID")
     private String tenantId;
-
-    /**
-     * The UID for this class.
-     */
-    private static final long serialVersionUID = 9009055375282015896L;
 
     /**
      * The application parameter key.

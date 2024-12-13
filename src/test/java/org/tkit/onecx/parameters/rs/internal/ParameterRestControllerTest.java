@@ -22,7 +22,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.model.JsonBody;
 import org.mockserver.model.MediaType;
-import org.tkit.onecx.parameters.rs.internal.controllers.ApplicationParameterRestController;
+import org.tkit.onecx.parameters.rs.internal.controllers.ParameterRestController;
 import org.tkit.onecx.parameters.test.AbstractTest;
 import org.tkit.quarkus.security.test.GenerateKeycloakClient;
 import org.tkit.quarkus.test.WithDBData;
@@ -34,9 +34,9 @@ import io.quarkus.test.common.http.TestHTTPEndpoint;
 import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
-@TestHTTPEndpoint(ApplicationParameterRestController.class)
+@TestHTTPEndpoint(ParameterRestController.class)
 @GenerateKeycloakClient(clientName = "testClient", scopes = { "ocx-pa:read", "ocx-pa:write", "ocx-pa:delete", "ocx-pa:all" })
-class ApplicationParameterRestControllerTest extends AbstractTest {
+class ParameterRestControllerTest extends AbstractTest {
 
     static final String PATH_PARAM_ID = "id";
     static final String PATH_PARAM_ID_PATH = "{" + PATH_PARAM_ID + "}";
@@ -59,7 +59,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
 
-        ApplicationParameterPageResultDTO pageResultDTO = given()
+        ParameterPageResultDTO pageResultDTO = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .body(new ParameterSearchCriteriaDTO())
@@ -67,7 +67,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
                 .post("/search")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
-                .extract().body().as(ApplicationParameterPageResultDTO.class);
+                .extract().body().as(ParameterPageResultDTO.class);
 
         Assertions.assertEquals(9, pageResultDTO.getStream().size());
         Assertions.assertEquals(Long.valueOf(9), pageResultDTO.getTotalElements());
@@ -154,7 +154,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
 
-        ApplicationParameterPageResultDTO pageResultDTO = given()
+        ParameterPageResultDTO pageResultDTO = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
@@ -165,7 +165,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
-                .body().as(ApplicationParameterPageResultDTO.class);
+                .body().as(ParameterPageResultDTO.class);
         Assertions.assertEquals(expectedArraySize, pageResultDTO.getStream().size());
     }
 
@@ -179,7 +179,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
 
-        ApplicationParameterDTO applicationParameterDTO = given()
+        ParameterDTO applicationParameterDTO = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
@@ -189,12 +189,12 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
-                .body().as(ApplicationParameterDTO.class);
+                .body().as(ParameterDTO.class);
         Assertions.assertNotNull(applicationParameterDTO);
         Assertions.assertEquals("access-mgmt", applicationParameterDTO.getApplicationId());
         Assertions.assertEquals("access-mgmt-product", applicationParameterDTO.getProductName());
         Assertions.assertEquals("ENGINE", applicationParameterDTO.getKey());
-        Assertions.assertEquals("KOGITO", applicationParameterDTO.getSetValue());
+        Assertions.assertEquals("KOGITO", applicationParameterDTO.getValue());
         Assertions.assertEquals("Engine", applicationParameterDTO.getName());
         Assertions.assertNull(applicationParameterDTO.getDescription());
     }
@@ -227,7 +227,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
 
-        ApplicationParameterUpdateDTO applicationParameterUpdateDTO = new ApplicationParameterUpdateDTO();
+        ParameterUpdateDTO applicationParameterUpdateDTO = new ParameterUpdateDTO();
         applicationParameterUpdateDTO.setValue("JBPM");
         applicationParameterUpdateDTO.setDescription("Test description");
 
@@ -262,12 +262,9 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
 
-        var request = new ApplicationParameterUpdateDTO();
+        var request = new ParameterUpdateDTO();
         request.setValue(value);
         request.setDescription(desc);
-        request.setUnit(unit);
-        request.setRangeTo(to);
-        request.setRangeFrom(from);
 
         given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
@@ -289,14 +286,11 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .extract()
-                .body().as(ApplicationParameterDTO.class);
+                .body().as(ParameterDTO.class);
         Assertions.assertNotNull(dto);
         Assertions.assertEquals(appId, dto.getApplicationId());
-        Assertions.assertEquals(value, dto.getSetValue());
+        Assertions.assertEquals(value, dto.getValue());
         Assertions.assertEquals(desc, dto.getDescription());
-        Assertions.assertEquals(checkUnit, dto.getUnit());
-        Assertions.assertEquals(from, dto.getRangeFrom());
-        Assertions.assertEquals(to, dto.getRangeTo());
     }
 
     @Test
@@ -341,15 +335,12 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
 
-        ApplicationParameterCreateDTO dto = new ApplicationParameterCreateDTO();
+        ParameterCreateDTO dto = new ParameterCreateDTO();
         dto.setApplicationId(appId);
         dto.setProductName(productName);
         dto.setDescription(desc);
         dto.setKey(key);
         dto.setValue(value);
-        dto.setUnit(unit);
-        dto.setRangeFrom(from);
-        dto.setRangeTo(to);
 
         String uri = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
@@ -361,7 +352,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
                 .statusCode(Response.Status.CREATED.getStatusCode())
                 .extract().header(HttpHeaders.LOCATION);
 
-        ApplicationParameterDTO dto2 = given()
+        ParameterDTO dto2 = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .contentType(APPLICATION_JSON)
@@ -369,17 +360,14 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .extract()
-                .body().as(ApplicationParameterDTO.class);
+                .body().as(ParameterDTO.class);
 
         Assertions.assertNotNull(dto2);
         Assertions.assertEquals(dto.getApplicationId(), dto2.getApplicationId());
         Assertions.assertEquals(dto.getProductName(), dto2.getProductName());
         Assertions.assertEquals(dto.getDescription(), dto2.getDescription());
         Assertions.assertEquals(dto.getKey(), dto2.getKey());
-        Assertions.assertEquals(dto.getValue(), dto2.getSetValue());
-        Assertions.assertEquals(checkUnit, dto2.getUnit());
-        Assertions.assertEquals(dto.getRangeFrom(), dto2.getRangeFrom());
-        Assertions.assertEquals(dto.getRangeTo(), dto2.getRangeTo());
+        Assertions.assertEquals(dto.getValue(), dto2.getValue());
 
     }
 
@@ -392,7 +380,7 @@ class ApplicationParameterRestControllerTest extends AbstractTest {
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
 
-        ApplicationParameterCreateDTO dto = new ApplicationParameterCreateDTO();
+        ParameterCreateDTO dto = new ParameterCreateDTO();
         dto.setApplicationId("app1");
         dto.setProductName("productName1");
         dto.setKey("key1");

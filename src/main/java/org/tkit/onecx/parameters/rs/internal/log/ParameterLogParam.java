@@ -9,14 +9,14 @@ import org.tkit.quarkus.log.cdi.LogParam;
 import gen.org.tkit.onecx.parameters.rs.internal.model.*;
 
 @ApplicationScoped
-public class InternalLogParam implements LogParam {
+public class ParameterLogParam implements LogParam {
 
     @Override
     public List<Item> getClasses() {
         return List.of(
-                item(10, ApplicationParameterHistoryCriteriaDTO.class, x -> {
-                    ApplicationParameterHistoryCriteriaDTO d = (ApplicationParameterHistoryCriteriaDTO) x;
-                    return ApplicationParameterHistoryCriteriaDTO.class.getSimpleName() + "[" + d.getPageNumber() + ","
+                item(10, ParameterHistoryCriteriaDTO.class, x -> {
+                    ParameterHistoryCriteriaDTO d = (ParameterHistoryCriteriaDTO) x;
+                    return ParameterHistoryCriteriaDTO.class.getSimpleName() + "[" + d.getPageNumber() + ","
                             + d.getPageSize()
                             + "]";
                 }),
@@ -31,9 +31,9 @@ public class InternalLogParam implements LogParam {
                     return ParameterSearchCriteriaDTO.class.getSimpleName() + "[" + d.getPageNumber() + "," + d.getPageSize()
                             + "]";
                 }),
-                item(10, ApplicationParameterCreateDTO.class,
-                        x -> x.getClass().getSimpleName() + ":" + ((ApplicationParameterCreateDTO) x).getKey()),
-                item(10, ApplicationParameterUpdateDTO.class,
-                        x -> x.getClass().getSimpleName() + ":" + ((ApplicationParameterUpdateDTO) x).getUnit()));
+                item(10, ParameterCreateDTO.class,
+                        x -> x.getClass().getSimpleName() + ":" + ((ParameterCreateDTO) x).getKey()),
+                item(10, ParameterUpdateDTO.class,
+                        x -> x.getClass().getSimpleName()));
     }
 }

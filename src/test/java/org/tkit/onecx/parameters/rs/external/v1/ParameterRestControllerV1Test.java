@@ -53,7 +53,7 @@ class ParameterRestControllerV1Test extends AbstractTest {
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
 
-        Map<String, String> applicationParameters = given()
+        given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
@@ -61,11 +61,7 @@ class ParameterRestControllerV1Test extends AbstractTest {
                 .pathParam("appId", "not-exist")
                 .get("parameters")
                 .then()
-                .statusCode(Response.Status.OK.getStatusCode())
-                .contentType(APPLICATION_JSON)
-                .extract()
-                .body().jsonPath().getMap(".", String.class, String.class);
-        Assertions.assertTrue(applicationParameters.isEmpty());
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
 
     @Test
@@ -79,7 +75,7 @@ class ParameterRestControllerV1Test extends AbstractTest {
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
 
-        Map<String, String> applicationParameters = given()
+        Map<String, Object> applicationParameters = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
@@ -87,12 +83,12 @@ class ParameterRestControllerV1Test extends AbstractTest {
                 .pathParam("productName", "import-product")
                 .pathParam("appId", "import-app")
                 .get("parameters")
-                .then()
+                .then().log().all()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
-                .body().jsonPath().getMap(".", String.class, String.class);
-        Assertions.assertEquals(1, applicationParameters.size());
+                .body().jsonPath().getMap(".");
+        Assertions.assertEquals(2, applicationParameters.size());
         Assertions.assertEquals("import-value", applicationParameters.get("importParam"));
     }
 
@@ -107,7 +103,7 @@ class ParameterRestControllerV1Test extends AbstractTest {
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-200")))));
 
-        Map<String, String> applicationParameters = given()
+        Map<String, Object> applicationParameters = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .when()
                 .header("apm-principal-token", apm)
@@ -119,7 +115,7 @@ class ParameterRestControllerV1Test extends AbstractTest {
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
-                .body().jsonPath().getMap(".", String.class, String.class);
+                .body().jsonPath().getMap(".");
         Assertions.assertEquals(1, applicationParameters.size());
         Assertions.assertEquals("import-value-200", applicationParameters.get("importParam"));
     }
@@ -134,7 +130,7 @@ class ParameterRestControllerV1Test extends AbstractTest {
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
 
-        Map<String, String> applicationParameters = given()
+        Map<String, Object> applicationParameters = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
@@ -145,7 +141,7 @@ class ParameterRestControllerV1Test extends AbstractTest {
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
-                .body().jsonPath().getMap(".", String.class, String.class);
+                .body().jsonPath().getMap(".");
         Assertions.assertEquals(1, applicationParameters.size());
         Assertions.assertEquals("KOGITO", applicationParameters.get("ENGINE"));
     }
@@ -203,7 +199,7 @@ class ParameterRestControllerV1Test extends AbstractTest {
                 .post("history")
                 .then()
                 .statusCode(Response.Status.NO_CONTENT.getStatusCode());
-        Map<String, String> applicationParameters = given()
+        given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
@@ -211,11 +207,7 @@ class ParameterRestControllerV1Test extends AbstractTest {
                 .pathParam("appId", "new-application")
                 .get("parameters")
                 .then()
-                .statusCode(Response.Status.OK.getStatusCode())
-                .contentType(APPLICATION_JSON)
-                .extract()
-                .body().jsonPath().getMap(".", String.class, String.class);
-        Assertions.assertEquals(0, applicationParameters.size());
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
     }
 
     @Test

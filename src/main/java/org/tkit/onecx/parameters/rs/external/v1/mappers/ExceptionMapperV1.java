@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Mapper(uses = { OffsetDateTimeMapper.class })
-public abstract class ExceptionMapper {
+public abstract class ExceptionMapperV1 {
 
     public RestResponse<ProblemDetailResponseDTOV1> constraint(ConstraintViolationException ex) {
         var dto = exception(ErrorKeys.CONSTRAINT_VIOLATIONS.name(), ex.getMessage());

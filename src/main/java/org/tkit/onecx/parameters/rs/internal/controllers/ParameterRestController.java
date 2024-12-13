@@ -10,10 +10,10 @@ import jakarta.ws.rs.core.UriInfo;
 
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
-import org.tkit.onecx.parameters.domain.daos.ApplicationParameterDAO;
-import org.tkit.onecx.parameters.domain.models.ApplicationParameter;
-import org.tkit.onecx.parameters.rs.internal.mappers.ApplicationParameterInternalMapper;
+import org.tkit.onecx.parameters.domain.daos.ParameterDAO;
+import org.tkit.onecx.parameters.domain.models.Parameter;
 import org.tkit.onecx.parameters.rs.internal.mappers.ExceptionMapper;
+import org.tkit.onecx.parameters.rs.internal.mappers.ParameterMapper;
 import org.tkit.quarkus.jpa.exceptions.ConstraintException;
 import org.tkit.quarkus.log.cdi.LogService;
 
@@ -23,13 +23,13 @@ import gen.org.tkit.onecx.parameters.rs.internal.model.*;
 @LogService
 @ApplicationScoped
 @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
-public class ApplicationParameterRestController implements ParametersApi {
+public class ParameterRestController implements ParametersApi {
 
     @Inject
-    ApplicationParameterDAO applicationParameterDAO;
+    ParameterDAO parameterDAO;
 
     @Inject
-    ApplicationParameterInternalMapper applicationParameterInternalMapper;
+    ParameterMapper parameterMapper;
 
     @Context
     UriInfo uriInfo;
@@ -39,73 +39,67 @@ public class ApplicationParameterRestController implements ParametersApi {
 
     @Override
     public Response getAllApplications() {
-        var apps = applicationParameterDAO.searchAllProductNamesAndApplicationIds();
-        return Response.ok(applicationParameterInternalMapper.apps(apps)).build();
+        var apps = parameterDAO.searchAllProductNamesAndApplicationIds();
+        return Response.ok(parameterMapper.apps(apps)).build();
     }
 
     @Override
     public Response getAllKeys(String applicationId, String productName) {
-        var criteria = applicationParameterInternalMapper.map(productName, applicationId);
-        var keys = applicationParameterDAO.searchAllKeys(criteria);
-        return Response.ok(applicationParameterInternalMapper.keys(keys)).build();
+        var criteria = parameterMapper.map(productName, applicationId);
+        var keys = parameterDAO.searchAllKeys(criteria);
+        return Response.ok(parameterMapper.keys(keys)).build();
     }
 
     @Override
-    public Response searchApplicationParametersByCriteria(ParameterSearchCriteriaDTO criteriaDTO) {
+    public Response searchParametersByCriteria(ParameterSearchCriteriaDTO criteriaDTO) {
 
-        var criteria = applicationParameterInternalMapper.map(criteriaDTO);
-        var parameters = applicationParameterDAO.searchByCriteria(criteria);
-        ApplicationParameterPageResultDTO results = applicationParameterInternalMapper.map(parameters);
+        var criteria = parameterMapper.map(criteriaDTO);
+        var parameters = parameterDAO.searchByCriteria(criteria);
+        ParameterPageResultDTO results = parameterMapper.map(parameters);
         return Response.ok(results).build();
     }
 
     @Override
     public Response getParameterById(String id) {
-        ApplicationParameter param = applicationParameterDAO.findById(id);
+        Parameter param = parameterDAO.findById(id);
         if (param == null) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity(exceptionMapper.exception(Response.Status.NOT_FOUND.name(),
                             "Parameter with id" + id + " not found."))
                     .build();
         }
-        ApplicationParameterDTO parameterDTO = applicationParameterInternalMapper.map(param);
+        ParameterDTO parameterDTO = parameterMapper.map(param);
         return Response.ok(parameterDTO).build();
     }
 
     @Override
-    @Transactional
     public Response updateParameterValue(String id,
-            ApplicationParameterUpdateDTO applicationParameterUpdateDTO) {
-        ApplicationParameter applicationParameter = applicationParameterDAO.findById(id);
-        if (applicationParameter == null) {
+            ParameterUpdateDTO parameterUpdateDTO) {
+        Parameter parameter = parameterDAO.findById(id);
+        if (parameter == null) {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity(exceptionMapper.exception(Response.Status.NOT_FOUND.name(),
                             "Parameter with id" + id + " not found."))
                     .build();
         }
-        applicationParameterInternalMapper.update(applicationParameterUpdateDTO, applicationParameter);
-        applicationParameterDAO.update(applicationParameter);
+        parameterMapper.update(parameterUpdateDTO, parameter);
+        parameterDAO.update(parameter);
         return Response.status(Response.Status.NO_CONTENT.getStatusCode()).build();
     }
 
     @Override
-    @Transactional
-    public Response createParameterValue(ApplicationParameterCreateDTO request) {
+    public Response createParameter(ParameterCreateDTO request) {
 
-        ApplicationParameter param = applicationParameterInternalMapper.create(request);
-        param = applicationParameterDAO.create(param);
+        Parameter param = parameterMapper.create(request);
+        param = parameterDAO.create(param);
         return Response
                 .created(uriInfo.getAbsolutePathBuilder().path(param.getId()).build())
                 .build();
     }
 
     @Override
-    @Transactional
     public Response deleteParameter(String id) {
-        ApplicationParameter parameter = applicationParameterDAO.findById(id);
-        if (parameter != null) {
-            applicationParameterDAO.delete(parameter);
-        }
+        parameterDAO.deleteQueryById(id);
         return Response.status(Response.Status.NO_CONTENT.getStatusCode()).build();
     }
 

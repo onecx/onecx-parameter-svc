@@ -13,10 +13,10 @@ import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
-class ApplicationParameterDAOExceptionTest {
+class ParameterDAOExceptionTest {
 
     @Inject
-    ApplicationParameterDAO dao;
+    ParameterDAO dao;
 
     @InjectMock
     EntityManager em;
@@ -27,41 +27,26 @@ class ApplicationParameterDAOExceptionTest {
     }
 
     @Test
-    void findApplicationParametersByKeysTest() {
-        var exc = Assertions.assertThrows(DAOException.class, () -> dao.findApplicationParametersByKeys(null, null));
-        Assertions.assertEquals(ApplicationParameterDAO.ErrorKeys.FIND_PARAMETER_BY_APPLICATION_ID_AND_PARAMETER_KEY_FAILED,
-                exc.key);
-    }
-
-    @Test
-    void findByApplicationIdAndParameterKeysTest() {
-        var exc = Assertions.assertThrows(DAOException.class,
-                () -> dao.findByApplicationIdAndParameterKeys(null, null));
-        Assertions.assertEquals(ApplicationParameterDAO.ErrorKeys.FIND_PARAMETERS_BY_APPLICATION_AND_PARAMETER_KEYS_FAILED,
-                exc.key);
-    }
-
-    @Test
     void findAllByApplicationIdTest() {
         var exc = Assertions.assertThrows(DAOException.class, () -> dao.findAllByProductNameAndApplicationId(null, null));
-        Assertions.assertEquals(ApplicationParameterDAO.ErrorKeys.FIND_ALL_PARAMETERS_BY_APPLICATION_ID_FAILED, exc.key);
+        Assertions.assertEquals(ParameterDAO.ErrorKeys.FIND_ALL_PARAMETERS_BY_APPLICATION_ID_FAILED, exc.key);
     }
 
     @Test
     void searchByCriteriaTest() {
         var exc = Assertions.assertThrows(DAOException.class, () -> dao.searchByCriteria(null));
-        Assertions.assertEquals(ApplicationParameterDAO.ErrorKeys.FIND_ALL_PARAMETERS_FAILED, exc.key);
+        Assertions.assertEquals(ParameterDAO.ErrorKeys.FIND_ALL_PARAMETERS_FAILED, exc.key);
     }
 
     @Test
     void searchAllApplicationsTest() {
         var exc = Assertions.assertThrows(DAOException.class, () -> dao.searchAllProductNamesAndApplicationIds());
-        Assertions.assertEquals(ApplicationParameterDAO.ErrorKeys.FIND_ALL_APPLICATIONS_FAILED, exc.key);
+        Assertions.assertEquals(ParameterDAO.ErrorKeys.FIND_ALL_APPLICATIONS_FAILED, exc.key);
     }
 
     @Test
     void searchAllKeysTest() {
         var exc = Assertions.assertThrows(DAOException.class, () -> dao.searchAllKeys(null));
-        Assertions.assertEquals(ApplicationParameterDAO.ErrorKeys.FIND_ALL_KEYS_FAILED, exc.key);
+        Assertions.assertEquals(ParameterDAO.ErrorKeys.FIND_ALL_KEYS_FAILED, exc.key);
     }
 }

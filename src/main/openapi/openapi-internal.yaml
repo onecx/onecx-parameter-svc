@@ -17,19 +17,19 @@ paths:
       tags:
       - histories
       description: Find all parameters history
-      operationId: getAllApplicationParametersHistory
+      operationId: getAllParametersHistory
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApplicationParameterHistoryCriteria'
+              $ref: '#/components/schemas/ParameterHistoryCriteria'
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApplicationParameterHistoryPageResult'
+                $ref: '#/components/schemas/ParameterHistoryPageResult'
   /histories/counts:
     post:
       security:
@@ -59,19 +59,19 @@ paths:
       tags:
       - histories
       description: Find all parameters history latest
-      operationId: getAllApplicationParametersHistoryLatest
+      operationId: getAllParametersHistoryLatest
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApplicationParameterHistoryCriteria'
+              $ref: '#/components/schemas/ParameterHistoryCriteria'
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApplicationParameterHistoryPageResult'
+                $ref: '#/components/schemas/ParameterHistoryPageResult'
   /histories/{id}:
     get:
       security:
@@ -79,7 +79,7 @@ paths:
       tags:
       - histories
       description: Find parameters history by Id
-      operationId: getApplicationParametersHistoryById
+      operationId: getParametersHistoryById
       parameters:
       - name: id
         in: path
@@ -92,7 +92,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApplicationParameterHistory'
+                $ref: '#/components/schemas/ParameterHistory'
         "404":
           description: Not Found
   /parameters/search:
@@ -102,7 +102,7 @@ paths:
       tags:
         - parameters
       description: Find all parameters by criteria
-      operationId: searchApplicationParametersByCriteria
+      operationId: searchParametersByCriteria
       requestBody:
         required: true
         content:
@@ -115,7 +115,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApplicationParameterPageResult'
+                $ref: '#/components/schemas/ParameterPageResult'
         "400":
           description: Bad Request
           content:
@@ -129,13 +129,13 @@ paths:
       tags:
       - parameters
       description: Create parameter
-      operationId: createParameterValue
+      operationId: createParameter
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApplicationParameterCreate'
+              $ref: '#/components/schemas/ParameterCreate'
       responses:
         "204":
           description: No Content
@@ -178,7 +178,7 @@ paths:
       - name: applicationId
         in: query
         schema:
-          description: The application parameter id.
+          description: The application id.
           type: string
       - name: productName
         in: query
@@ -214,7 +214,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApplicationParameter'
+                $ref: '#/components/schemas/Parameter'
         "400":
           description: Bad request
         "404":
@@ -237,7 +237,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ApplicationParameterUpdate'
+              $ref: '#/components/schemas/ParameterUpdate'
       responses:
         "204":
           description: No Content
@@ -284,7 +284,7 @@ components:
             ocx-pa:write: Grants write access
             ocx-pa:delete: Grants access to delete operations
   schemas:
-    ApplicationParameterCreate:
+    ParameterCreate:
       type: object
       properties:
         key:
@@ -294,18 +294,10 @@ components:
         productName:
           type: string
         value:
-          type: string
+          type: object
         description:
           type: string
-        unit:
-          type: string
-        rangeFrom:
-          format: int32
-          type: integer
-        rangeTo:
-          format: int32
-          type: integer
-    ApplicationParameter:
+    Parameter:
       type: object
       properties:
         id:
@@ -335,19 +327,11 @@ components:
           type: string
         key:
           type: string
-        setValue:
-          type: string
+        value:
+          type: object
         importValue:
-          type: string
-        unit:
-          type: string
-        rangeFrom:
-          format: int32
-          type: integer
-        rangeTo:
-          format: int32
-          type: integer
-    ApplicationParameterHistory:
+          type: object
+    ParameterHistory:
       type: object
       properties:
         id:
@@ -374,14 +358,14 @@ components:
         key:
           type: string
         usedValue:
-          type: string
+          type: object
         defaultValue:
-          type: string
+          type: object
         type:
           type: string
         instanceId:
           type: string
-    ApplicationParameterHistoryCriteria:
+    ParameterHistoryCriteria:
       type: object
       properties:
         applicationId:
@@ -402,7 +386,7 @@ components:
           type: array
           items:
             type: string
-    ApplicationParameterHistoryPageResult:
+    ParameterHistoryPageResult:
       type: object
       properties:
         totalElements:
@@ -421,8 +405,8 @@ components:
         stream:
           type: array
           items:
-            $ref: '#/components/schemas/ApplicationParameterHistory'
-    ApplicationParameterPageResult:
+            $ref: '#/components/schemas/ParameterHistory'
+    ParameterPageResult:
       type: object
       properties:
         totalElements:
@@ -441,21 +425,14 @@ components:
         stream:
           type: array
           items:
-            $ref: '#/components/schemas/ApplicationParameter'
-    ApplicationParameterUpdate:
+            $ref: '#/components/schemas/Parameter'
+    ParameterUpdate:
       type: object
       properties:
-        value: {}
+        value:
+          type: object
         description:
           type: string
-        unit:
-          type: string
-        rangeFrom:
-          format: int32
-          type: integer
-        rangeTo:
-          format: int32
-          type: integer
     Product:
       type: object
       properties:

@@ -8,11 +8,11 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
 
-import org.tkit.onecx.parameters.domain.criteria.ApplicationParameterHistorySearchCriteria;
-import org.tkit.onecx.parameters.domain.models.ApplicationParameterHistory;
-import org.tkit.onecx.parameters.domain.models.ApplicationParameterHistory_;
-import org.tkit.onecx.parameters.domain.models.ApplicationParameter_;
+import org.tkit.onecx.parameters.domain.criteria.ParameterHistorySearchCriteria;
+import org.tkit.onecx.parameters.domain.models.ParameterHistory;
 import org.tkit.onecx.parameters.domain.models.ParameterHistoryCountTuple;
+import org.tkit.onecx.parameters.domain.models.ParameterHistory_;
+import org.tkit.onecx.parameters.domain.models.Parameter_;
 import org.tkit.quarkus.jpa.daos.AbstractDAO;
 import org.tkit.quarkus.jpa.daos.Page;
 import org.tkit.quarkus.jpa.daos.PageResult;
@@ -22,14 +22,14 @@ import org.tkit.quarkus.jpa.models.TraceableEntity_;
 
 @ApplicationScoped
 @Transactional(value = Transactional.TxType.NOT_SUPPORTED, rollbackOn = DAOException.class)
-public class ApplicationParameterHistoryDAO extends AbstractDAO<ApplicationParameterHistory> {
+public class ParameterHistoryDAO extends AbstractDAO<ParameterHistory> {
 
     @Transactional(value = Transactional.TxType.REQUIRED, rollbackOn = DAOException.class)
     public void deleteApplicationHistoryOlderThan(LocalDateTime date) {
         try {
             CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-            CriteriaDelete<ApplicationParameterHistory> cd = deleteQuery();
-            Root<ApplicationParameterHistory> root = cd.from(ApplicationParameterHistory.class);
+            CriteriaDelete<ParameterHistory> cd = deleteQuery();
+            Root<ParameterHistory> root = cd.from(ParameterHistory.class);
             cd.where(cb.lessThanOrEqualTo(root.get(AbstractTraceableEntity_.CREATION_DATE), date));
             getEntityManager().createQuery(cd).executeUpdate();
         } catch (Exception e) {
@@ -37,27 +37,27 @@ public class ApplicationParameterHistoryDAO extends AbstractDAO<ApplicationParam
         }
     }
 
-    public PageResult<ApplicationParameterHistory> searchByCriteria(ApplicationParameterHistorySearchCriteria criteria) {
+    public PageResult<ParameterHistory> searchByCriteria(ParameterHistorySearchCriteria criteria) {
         try {
-            CriteriaQuery<ApplicationParameterHistory> cq = criteriaQuery();
-            Root<ApplicationParameterHistory> root = cq.from(ApplicationParameterHistory.class);
+            CriteriaQuery<ParameterHistory> cq = criteriaQuery();
+            Root<ParameterHistory> root = cq.from(ParameterHistory.class);
             List<Predicate> predicates = new ArrayList<>();
             CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 
             if (criteria.getProductName() != null && !criteria.getProductName().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get(ApplicationParameter_.PRODUCT_NAME)),
+                predicates.add(cb.like(cb.lower(root.get(Parameter_.PRODUCT_NAME)),
                         stringPattern(criteria.getProductName())));
             }
 
             if (criteria.getApplicationId() != null && !criteria.getApplicationId().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get(ApplicationParameter_.APPLICATION_ID)),
+                predicates.add(cb.like(cb.lower(root.get(Parameter_.APPLICATION_ID)),
                         stringPattern(criteria.getApplicationId())));
             }
             if (criteria.getKey() != null && !criteria.getKey().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get(ApplicationParameterHistory_.KEY)), stringPattern(criteria.getKey())));
+                predicates.add(cb.like(cb.lower(root.get(ParameterHistory_.KEY)), stringPattern(criteria.getKey())));
             }
             if (!criteria.getType().isEmpty()) {
-                predicates.add(cb.lower(root.get(ApplicationParameterHistory_.TYPE)).in(toLowerCase(criteria.getType())));
+                predicates.add(cb.lower(root.get(ParameterHistory_.TYPE)).in(toLowerCase(criteria.getType())));
             }
             if (!predicates.isEmpty()) {
                 cq.where(cb.and(predicates.toArray(new Predicate[0])));
@@ -69,36 +69,36 @@ public class ApplicationParameterHistoryDAO extends AbstractDAO<ApplicationParam
         }
     }
 
-    public PageResult<ApplicationParameterHistory> searchOnlyLatestByCriteria(
-            ApplicationParameterHistorySearchCriteria criteria) {
+    public PageResult<ParameterHistory> searchOnlyLatestByCriteria(
+            ParameterHistorySearchCriteria criteria) {
         try {
             CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-            CriteriaQuery<ApplicationParameterHistory> cq = cb.createQuery(ApplicationParameterHistory.class);
-            Root<ApplicationParameterHistory> root = cq.from(ApplicationParameterHistory.class);
+            CriteriaQuery<ParameterHistory> cq = cb.createQuery(ParameterHistory.class);
+            Root<ParameterHistory> root = cq.from(ParameterHistory.class);
 
             Subquery<Number> maxDateSubquery = cq.subquery(Number.class);
-            Root<ApplicationParameterHistory> maxDateSubqueryRoot = maxDateSubquery.from(ApplicationParameterHistory.class);
+            Root<ParameterHistory> maxDateSubqueryRoot = maxDateSubquery.from(ParameterHistory.class);
             maxDateSubquery.select(cb.max(maxDateSubqueryRoot.get(AbstractTraceableEntity_.CREATION_DATE)))
-                    .groupBy(maxDateSubqueryRoot.get(ApplicationParameterHistory_.INSTANCE_ID));
+                    .groupBy(maxDateSubqueryRoot.get(ParameterHistory_.INSTANCE_ID));
 
             List<Predicate> predicates = new ArrayList<>();
             predicates.add(root.get(AbstractTraceableEntity_.CREATION_DATE).in(maxDateSubquery));
 
             if (criteria.getProductName() != null && !criteria.getProductName().isEmpty()) {
-                predicates.add(cb.equal(cb.lower(root.get(ApplicationParameter_.PRODUCT_NAME)),
+                predicates.add(cb.equal(cb.lower(root.get(Parameter_.PRODUCT_NAME)),
                         criteria.getProductName().toLowerCase()));
             }
             if (criteria.getApplicationId() != null && !criteria.getApplicationId().isEmpty()) {
-                predicates.add(cb.equal(cb.lower(root.get(ApplicationParameter_.APPLICATION_ID)),
+                predicates.add(cb.equal(cb.lower(root.get(Parameter_.APPLICATION_ID)),
                         criteria.getApplicationId().toLowerCase()));
             }
             if (criteria.getKey() != null && !criteria.getKey().isEmpty()) {
-                predicates.add(cb.equal(cb.lower(root.get(ApplicationParameterHistory_.KEY)), criteria.getKey().toLowerCase()));
+                predicates.add(cb.equal(cb.lower(root.get(ParameterHistory_.KEY)), criteria.getKey().toLowerCase()));
             }
 
             cq.select(root)
                     .where(cb.and(predicates.toArray(new Predicate[0])))
-                    .groupBy(root.get(ApplicationParameterHistory_.INSTANCE_ID), root.get(TraceableEntity_.ID));
+                    .groupBy(root.get(ParameterHistory_.INSTANCE_ID), root.get(TraceableEntity_.ID));
 
             return createPageQuery(cq, Page.of(criteria.getPageNumber(), criteria.getPageSize())).getPageResult();
         } catch (Exception exception) {
@@ -106,27 +106,27 @@ public class ApplicationParameterHistoryDAO extends AbstractDAO<ApplicationParam
         }
     }
 
-    public List<ParameterHistoryCountTuple> searchCountsByCriteria(ApplicationParameterHistorySearchCriteria criteria) {
+    public List<ParameterHistoryCountTuple> searchCountsByCriteria(ParameterHistorySearchCriteria criteria) {
         try {
             var cb = getEntityManager().getCriteriaBuilder();
             CriteriaQuery<ParameterHistoryCountTuple> cq = cb.createQuery(ParameterHistoryCountTuple.class);
-            Root<ApplicationParameterHistory> root = cq.from(ApplicationParameterHistory.class);
+            Root<ParameterHistory> root = cq.from(ParameterHistory.class);
             cq.select(
                     cb.construct(ParameterHistoryCountTuple.class, root.get(AbstractTraceableEntity_.CREATION_DATE),
-                            root.get(ApplicationParameterHistory_.COUNT)));
+                            root.get(ParameterHistory_.COUNT)));
             List<Predicate> predicates = new ArrayList<>();
 
             if (criteria.getProductName() != null && !criteria.getProductName().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get(ApplicationParameter_.PRODUCT_NAME)),
+                predicates.add(cb.like(cb.lower(root.get(Parameter_.PRODUCT_NAME)),
                         stringPattern(criteria.getProductName())));
             }
 
             if (criteria.getApplicationId() != null && !criteria.getApplicationId().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get(ApplicationParameter_.APPLICATION_ID)),
+                predicates.add(cb.like(cb.lower(root.get(Parameter_.APPLICATION_ID)),
                         stringPattern(criteria.getApplicationId())));
             }
             if (criteria.getKey() != null && !criteria.getKey().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get(ApplicationParameterHistory_.KEY)), stringPattern(criteria.getKey())));
+                predicates.add(cb.like(cb.lower(root.get(ParameterHistory_.KEY)), stringPattern(criteria.getKey())));
             }
             if (!predicates.isEmpty()) {
                 cq.where(cb.and(predicates.toArray(new Predicate[0])));

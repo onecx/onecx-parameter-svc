@@ -5,43 +5,43 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 
-import org.tkit.onecx.parameters.domain.daos.ApplicationParameterHistoryDAO;
-import org.tkit.onecx.parameters.domain.models.ApplicationParameterHistory;
-import org.tkit.onecx.parameters.rs.internal.mappers.ApplicationParameterInternalMapper;
+import org.tkit.onecx.parameters.domain.daos.ParameterHistoryDAO;
+import org.tkit.onecx.parameters.domain.models.ParameterHistory;
+import org.tkit.onecx.parameters.rs.internal.mappers.ParameterMapper;
 import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.org.tkit.onecx.parameters.rs.internal.HistoriesApi;
-import gen.org.tkit.onecx.parameters.rs.internal.model.ApplicationParameterHistoryCriteriaDTO;
 import gen.org.tkit.onecx.parameters.rs.internal.model.ParameterHistoryCountCriteriaDTO;
+import gen.org.tkit.onecx.parameters.rs.internal.model.ParameterHistoryCriteriaDTO;
 
 @LogService
 @ApplicationScoped
 @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
-public class ApplicationParameterHistoryRestController implements HistoriesApi {
+public class HistoryRestController implements HistoriesApi {
 
     @Inject
-    ApplicationParameterInternalMapper applicationParameterInternalMapper;
+    ParameterMapper applicationParameterInternalMapper;
 
     @Inject
-    ApplicationParameterHistoryDAO historyDAO;
+    ParameterHistoryDAO historyDAO;
 
     @Override
-    public Response getAllApplicationParametersHistoryLatest(ApplicationParameterHistoryCriteriaDTO criteriaDTO) {
+    public Response getAllParametersHistoryLatest(ParameterHistoryCriteriaDTO criteriaDTO) {
         var criteria = applicationParameterInternalMapper.map(criteriaDTO);
         var parametersHistories = historyDAO.searchOnlyLatestByCriteria(criteria);
         return Response.ok(applicationParameterInternalMapper.mapHistory(parametersHistories)).build();
     }
 
     @Override
-    public Response getAllApplicationParametersHistory(ApplicationParameterHistoryCriteriaDTO criteriaDTO) {
+    public Response getAllParametersHistory(ParameterHistoryCriteriaDTO criteriaDTO) {
         var criteria = applicationParameterInternalMapper.map(criteriaDTO);
         var parametersHistories = historyDAO.searchByCriteria(criteria);
         return Response.ok(applicationParameterInternalMapper.mapHistory(parametersHistories)).build();
     }
 
     @Override
-    public Response getApplicationParametersHistoryById(String id) {
-        ApplicationParameterHistory parameter = historyDAO.findById(id);
+    public Response getParametersHistoryById(String id) {
+        ParameterHistory parameter = historyDAO.findById(id);
         if (parameter == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
