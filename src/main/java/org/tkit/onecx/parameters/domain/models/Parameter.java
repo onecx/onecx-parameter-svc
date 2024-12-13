@@ -12,7 +12,8 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "PARAMETER", uniqueConstraints = {
-        @UniqueConstraint(columnNames = { "KEY", "APPLICATION_ID", "PRODUCT_NAME", "TENANT_ID" }) })
+        @UniqueConstraint(name = "PARAMETER_CONSTRAINT", columnNames = { "KEY", "APPLICATION_ID", "PRODUCT_NAME",
+                "TENANT_ID" }) })
 @SuppressWarnings("java:S2160")
 public class Parameter extends TraceableEntity {
 
@@ -54,12 +55,12 @@ public class Parameter extends TraceableEntity {
     /**
      * The parameter value.
      */
-    @Column(name = "SET_VALUE", columnDefinition = "varchar(1000)")
+    @Column(name = "VALUE", columnDefinition = "varchar(5000)")
     private String value;
 
     /**
      * The parameter import value.
      */
-    @Column(name = "IMPORT_VALUE", columnDefinition = "varchar(1000)")
+    @Column(name = "IMPORT_VALUE", columnDefinition = "varchar(5000)")
     private String importValue;
 }
