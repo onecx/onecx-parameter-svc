@@ -28,7 +28,7 @@ public class JobDAO extends AbstractDAO<Job> {
                     .createQuery(cq)
                     .setMaxResults(1)
                     .setLockMode(LockModeType.PESSIMISTIC_WRITE)
-                    .setHint("javax.persistence.lock.timeout", -2)
+                    .setHint("jakarta.persistence.lock.timeout", -2)
                     .getSingleResult();
 
         } catch (NoResultException ex) {

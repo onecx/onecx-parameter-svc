@@ -32,18 +32,22 @@
         <addUniqueConstraint columnNames="key, application_id, product_name, tenant_id" constraintName="parameter_constraint" tableName="parameter"/>
     </changeSet>
     <changeSet author="dev (generated)" id="1734081628790-3">
-        <createTable tableName="apm_job">
+        <createTable tableName="job">
             <column name="optlock" type="INTEGER">
                 <constraints nullable="false"/>
             </column>
             <column name="creationdate" type="TIMESTAMP WITHOUT TIME ZONE"/>
             <column name="modificationdate" type="TIMESTAMP WITHOUT TIME ZONE"/>
             <column name="guid" type="VARCHAR(255)">
-                <constraints nullable="false" primaryKey="true" primaryKeyName="apm_job_pkey"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="job_pkey"/>
             </column>
             <column name="creationuser" type="VARCHAR(255)"/>
             <column name="modificationuser" type="VARCHAR(255)"/>
         </createTable>
+        <insert tableName="job">
+            <column  name="guid"  value="maintenance.history"/>
+            <column  name="optlock"  value="1"/>
+        </insert>
     </changeSet>
     <changeSet author="dev (generated)" id="1734081628790-4">
         <createTable tableName="parameter_history">

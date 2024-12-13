@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "APM_JOB")
+@Table(name = "JOB")
 public class Job extends TraceableEntity {
 
 }
