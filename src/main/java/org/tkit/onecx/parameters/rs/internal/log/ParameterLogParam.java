@@ -14,15 +14,15 @@ public class ParameterLogParam implements LogParam {
     @Override
     public List<Item> getClasses() {
         return List.of(
-                item(10, ParameterHistoryCriteriaDTO.class, x -> {
-                    ParameterHistoryCriteriaDTO d = (ParameterHistoryCriteriaDTO) x;
-                    return ParameterHistoryCriteriaDTO.class.getSimpleName() + "[" + d.getPageNumber() + ","
+                item(10, HistoryCriteriaDTO.class, x -> {
+                    HistoryCriteriaDTO d = (HistoryCriteriaDTO) x;
+                    return HistoryCriteriaDTO.class.getSimpleName() + "[" + d.getPageNumber() + ","
                             + d.getPageSize()
                             + "]";
                 }),
-                item(10, ParameterHistoryCountCriteriaDTO.class, x -> {
-                    ParameterHistoryCountCriteriaDTO d = (ParameterHistoryCountCriteriaDTO) x;
-                    return ParameterHistoryCountCriteriaDTO.class.getSimpleName() + "[" + d.getPageNumber() + ","
+                item(10, HistoryCountCriteriaDTO.class, x -> {
+                    HistoryCountCriteriaDTO d = (HistoryCountCriteriaDTO) x;
+                    return HistoryCountCriteriaDTO.class.getSimpleName() + "[" + d.getPageNumber() + ","
                             + d.getPageSize()
                             + "]";
                 }),

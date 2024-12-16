@@ -8,13 +8,13 @@ import java.util.Map;
 import jakarta.inject.Inject;
 
 import org.mapstruct.*;
+import org.tkit.onecx.parameters.domain.criteria.HistorySearchCriteria;
 import org.tkit.onecx.parameters.domain.criteria.KeysSearchCriteria;
-import org.tkit.onecx.parameters.domain.criteria.ParameterHistorySearchCriteria;
 import org.tkit.onecx.parameters.domain.criteria.ParameterSearchCriteria;
 import org.tkit.onecx.parameters.domain.models.ApplicationTuple;
+import org.tkit.onecx.parameters.domain.models.History;
+import org.tkit.onecx.parameters.domain.models.HistoryCountTuple;
 import org.tkit.onecx.parameters.domain.models.Parameter;
-import org.tkit.onecx.parameters.domain.models.ParameterHistory;
-import org.tkit.onecx.parameters.domain.models.ParameterHistoryCountTuple;
 import org.tkit.quarkus.jpa.daos.PageResult;
 import org.tkit.quarkus.rs.mappers.OffsetDateTimeMapper;
 
@@ -52,20 +52,20 @@ public abstract class ParameterMapper {
     }
 
     @BeanMapping(nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
-    public abstract ParameterHistorySearchCriteria map(ParameterHistoryCriteriaDTO criteriaDTO);
+    public abstract HistorySearchCriteria map(HistoryCriteriaDTO criteriaDTO);
 
     @BeanMapping(nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
-    public abstract ParameterHistorySearchCriteria map(ParameterHistoryCountCriteriaDTO criteriaDTO);
+    public abstract HistorySearchCriteria map(HistoryCountCriteriaDTO criteriaDTO);
 
     @BeanMapping(nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
     public abstract ParameterSearchCriteria map(ParameterSearchCriteriaDTO criteriaDTO);
 
     @Mapping(target = "removeStreamItem", ignore = true)
-    public abstract ParameterHistoryPageResultDTO mapHistory(PageResult<ParameterHistory> page);
+    public abstract HistoryPageResultDTO mapHistory(PageResult<History> page);
 
-    public abstract ParameterHistoryDTO mapHistory(ParameterHistory parameterHistory);
+    public abstract HistoryDTO mapHistory(History parameterHistory);
 
-    public abstract List<ParameterHistoryCountDTO> mapCountList(List<ParameterHistoryCountTuple> count);
+    public abstract List<HistoryCountDTO> mapCountList(List<HistoryCountTuple> count);
 
     @Mapping(target = "removeStreamItem", ignore = true)
     public abstract ParameterPageResultDTO map(PageResult<Parameter> page);

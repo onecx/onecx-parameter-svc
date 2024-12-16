@@ -5,14 +5,14 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 
-import org.tkit.onecx.parameters.domain.daos.ParameterHistoryDAO;
-import org.tkit.onecx.parameters.domain.models.ParameterHistory;
+import org.tkit.onecx.parameters.domain.daos.HistoryDAO;
+import org.tkit.onecx.parameters.domain.models.History;
 import org.tkit.onecx.parameters.rs.internal.mappers.ParameterMapper;
 import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.org.tkit.onecx.parameters.rs.internal.HistoriesApi;
-import gen.org.tkit.onecx.parameters.rs.internal.model.ParameterHistoryCountCriteriaDTO;
-import gen.org.tkit.onecx.parameters.rs.internal.model.ParameterHistoryCriteriaDTO;
+import gen.org.tkit.onecx.parameters.rs.internal.model.HistoryCountCriteriaDTO;
+import gen.org.tkit.onecx.parameters.rs.internal.model.HistoryCriteriaDTO;
 
 @LogService
 @ApplicationScoped
@@ -23,17 +23,17 @@ public class HistoryRestController implements HistoriesApi {
     ParameterMapper applicationParameterInternalMapper;
 
     @Inject
-    ParameterHistoryDAO historyDAO;
+    HistoryDAO historyDAO;
 
     @Override
-    public Response getAllParametersHistoryLatest(ParameterHistoryCriteriaDTO criteriaDTO) {
+    public Response getAllParametersHistoryLatest(HistoryCriteriaDTO criteriaDTO) {
         var criteria = applicationParameterInternalMapper.map(criteriaDTO);
         var parametersHistories = historyDAO.searchOnlyLatestByCriteria(criteria);
         return Response.ok(applicationParameterInternalMapper.mapHistory(parametersHistories)).build();
     }
 
     @Override
-    public Response getAllParametersHistory(ParameterHistoryCriteriaDTO criteriaDTO) {
+    public Response getAllParametersHistory(HistoryCriteriaDTO criteriaDTO) {
         var criteria = applicationParameterInternalMapper.map(criteriaDTO);
         var parametersHistories = historyDAO.searchByCriteria(criteria);
         return Response.ok(applicationParameterInternalMapper.mapHistory(parametersHistories)).build();
@@ -41,7 +41,7 @@ public class HistoryRestController implements HistoriesApi {
 
     @Override
     public Response getParametersHistoryById(String id) {
-        ParameterHistory parameter = historyDAO.findById(id);
+        History parameter = historyDAO.findById(id);
         if (parameter == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -49,7 +49,7 @@ public class HistoryRestController implements HistoriesApi {
     }
 
     @Override
-    public Response getCountsByCriteria(ParameterHistoryCountCriteriaDTO criteriaDTO) {
+    public Response getCountsByCriteria(HistoryCountCriteriaDTO criteriaDTO) {
         var criteria = applicationParameterInternalMapper.map(criteriaDTO);
         var counts = historyDAO.searchCountsByCriteria(criteria);
         var results = applicationParameterInternalMapper.mapCountList(counts);

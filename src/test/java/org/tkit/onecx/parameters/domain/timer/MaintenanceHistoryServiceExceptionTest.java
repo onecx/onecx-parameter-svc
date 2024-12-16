@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.tkit.onecx.parameters.domain.daos.HistoryDAO;
 import org.tkit.onecx.parameters.domain.daos.JobDAO;
-import org.tkit.onecx.parameters.domain.daos.ParameterHistoryDAO;
 import org.tkit.onecx.parameters.domain.models.Job;
 import org.tkit.quarkus.jpa.exceptions.DAOException;
 
@@ -42,7 +42,7 @@ class MaintenanceHistoryServiceExceptionTest {
             service.maintenanceHistoryData();
         });
         var de = Assertions.assertInstanceOf(DAOException.class, exc);
-        Assertions.assertEquals(ParameterHistoryDAO.ErrorKeys.DELETE_PARAMETER_HISTORY_OLDER_THAN_FAILED, de.key);
+        Assertions.assertEquals(HistoryDAO.ErrorKeys.DELETE_PARAMETER_HISTORY_OLDER_THAN_FAILED, de.key);
     }
 
 }

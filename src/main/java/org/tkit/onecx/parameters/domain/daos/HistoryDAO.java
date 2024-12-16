@@ -8,10 +8,10 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
 
-import org.tkit.onecx.parameters.domain.criteria.ParameterHistorySearchCriteria;
-import org.tkit.onecx.parameters.domain.models.ParameterHistory;
-import org.tkit.onecx.parameters.domain.models.ParameterHistoryCountTuple;
-import org.tkit.onecx.parameters.domain.models.ParameterHistory_;
+import org.tkit.onecx.parameters.domain.criteria.HistorySearchCriteria;
+import org.tkit.onecx.parameters.domain.models.History;
+import org.tkit.onecx.parameters.domain.models.HistoryCountTuple;
+import org.tkit.onecx.parameters.domain.models.History_;
 import org.tkit.onecx.parameters.domain.models.Parameter_;
 import org.tkit.quarkus.jpa.daos.AbstractDAO;
 import org.tkit.quarkus.jpa.daos.Page;
@@ -22,14 +22,14 @@ import org.tkit.quarkus.jpa.models.TraceableEntity_;
 
 @ApplicationScoped
 @Transactional(value = Transactional.TxType.NOT_SUPPORTED, rollbackOn = DAOException.class)
-public class ParameterHistoryDAO extends AbstractDAO<ParameterHistory> {
+public class HistoryDAO extends AbstractDAO<History> {
 
     @Transactional(value = Transactional.TxType.REQUIRED, rollbackOn = DAOException.class)
     public void deleteApplicationHistoryOlderThan(LocalDateTime date) {
         try {
             CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-            CriteriaDelete<ParameterHistory> cd = deleteQuery();
-            Root<ParameterHistory> root = cd.from(ParameterHistory.class);
+            CriteriaDelete<History> cd = deleteQuery();
+            Root<History> root = cd.from(History.class);
             cd.where(cb.lessThanOrEqualTo(root.get(AbstractTraceableEntity_.CREATION_DATE), date));
             getEntityManager().createQuery(cd).executeUpdate();
         } catch (Exception e) {
@@ -37,10 +37,10 @@ public class ParameterHistoryDAO extends AbstractDAO<ParameterHistory> {
         }
     }
 
-    public PageResult<ParameterHistory> searchByCriteria(ParameterHistorySearchCriteria criteria) {
+    public PageResult<History> searchByCriteria(HistorySearchCriteria criteria) {
         try {
-            CriteriaQuery<ParameterHistory> cq = criteriaQuery();
-            Root<ParameterHistory> root = cq.from(ParameterHistory.class);
+            CriteriaQuery<History> cq = criteriaQuery();
+            Root<History> root = cq.from(History.class);
             List<Predicate> predicates = new ArrayList<>();
             CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 
@@ -54,10 +54,10 @@ public class ParameterHistoryDAO extends AbstractDAO<ParameterHistory> {
                         stringPattern(criteria.getApplicationId())));
             }
             if (criteria.getKey() != null && !criteria.getKey().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get(ParameterHistory_.KEY)), stringPattern(criteria.getKey())));
+                predicates.add(cb.like(cb.lower(root.get(History_.KEY)), stringPattern(criteria.getKey())));
             }
             if (!criteria.getType().isEmpty()) {
-                predicates.add(cb.lower(root.get(ParameterHistory_.TYPE)).in(toLowerCase(criteria.getType())));
+                predicates.add(cb.lower(root.get(History_.TYPE)).in(toLowerCase(criteria.getType())));
             }
             if (!predicates.isEmpty()) {
                 cq.where(cb.and(predicates.toArray(new Predicate[0])));
@@ -69,17 +69,17 @@ public class ParameterHistoryDAO extends AbstractDAO<ParameterHistory> {
         }
     }
 
-    public PageResult<ParameterHistory> searchOnlyLatestByCriteria(
-            ParameterHistorySearchCriteria criteria) {
+    public PageResult<History> searchOnlyLatestByCriteria(
+            HistorySearchCriteria criteria) {
         try {
             CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-            CriteriaQuery<ParameterHistory> cq = cb.createQuery(ParameterHistory.class);
-            Root<ParameterHistory> root = cq.from(ParameterHistory.class);
+            CriteriaQuery<History> cq = cb.createQuery(History.class);
+            Root<History> root = cq.from(History.class);
 
             Subquery<Number> maxDateSubquery = cq.subquery(Number.class);
-            Root<ParameterHistory> maxDateSubqueryRoot = maxDateSubquery.from(ParameterHistory.class);
+            Root<History> maxDateSubqueryRoot = maxDateSubquery.from(History.class);
             maxDateSubquery.select(cb.max(maxDateSubqueryRoot.get(AbstractTraceableEntity_.CREATION_DATE)))
-                    .groupBy(maxDateSubqueryRoot.get(ParameterHistory_.INSTANCE_ID));
+                    .groupBy(maxDateSubqueryRoot.get(History_.INSTANCE_ID));
 
             List<Predicate> predicates = new ArrayList<>();
             predicates.add(root.get(AbstractTraceableEntity_.CREATION_DATE).in(maxDateSubquery));
@@ -93,12 +93,12 @@ public class ParameterHistoryDAO extends AbstractDAO<ParameterHistory> {
                         criteria.getApplicationId().toLowerCase()));
             }
             if (criteria.getKey() != null && !criteria.getKey().isEmpty()) {
-                predicates.add(cb.equal(cb.lower(root.get(ParameterHistory_.KEY)), criteria.getKey().toLowerCase()));
+                predicates.add(cb.equal(cb.lower(root.get(History_.KEY)), criteria.getKey().toLowerCase()));
             }
 
             cq.select(root)
                     .where(cb.and(predicates.toArray(new Predicate[0])))
-                    .groupBy(root.get(ParameterHistory_.INSTANCE_ID), root.get(TraceableEntity_.ID));
+                    .groupBy(root.get(History_.INSTANCE_ID), root.get(TraceableEntity_.ID));
 
             return createPageQuery(cq, Page.of(criteria.getPageNumber(), criteria.getPageSize())).getPageResult();
         } catch (Exception exception) {
@@ -106,14 +106,14 @@ public class ParameterHistoryDAO extends AbstractDAO<ParameterHistory> {
         }
     }
 
-    public List<ParameterHistoryCountTuple> searchCountsByCriteria(ParameterHistorySearchCriteria criteria) {
+    public List<HistoryCountTuple> searchCountsByCriteria(HistorySearchCriteria criteria) {
         try {
             var cb = getEntityManager().getCriteriaBuilder();
-            CriteriaQuery<ParameterHistoryCountTuple> cq = cb.createQuery(ParameterHistoryCountTuple.class);
-            Root<ParameterHistory> root = cq.from(ParameterHistory.class);
+            CriteriaQuery<HistoryCountTuple> cq = cb.createQuery(HistoryCountTuple.class);
+            Root<History> root = cq.from(History.class);
             cq.select(
-                    cb.construct(ParameterHistoryCountTuple.class, root.get(AbstractTraceableEntity_.CREATION_DATE),
-                            root.get(ParameterHistory_.COUNT)));
+                    cb.construct(HistoryCountTuple.class, root.get(AbstractTraceableEntity_.CREATION_DATE),
+                            root.get(History_.COUNT)));
             List<Predicate> predicates = new ArrayList<>();
 
             if (criteria.getProductName() != null && !criteria.getProductName().isEmpty()) {
@@ -126,7 +126,7 @@ public class ParameterHistoryDAO extends AbstractDAO<ParameterHistory> {
                         stringPattern(criteria.getApplicationId())));
             }
             if (criteria.getKey() != null && !criteria.getKey().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get(ParameterHistory_.KEY)), stringPattern(criteria.getKey())));
+                predicates.add(cb.like(cb.lower(root.get(History_.KEY)), stringPattern(criteria.getKey())));
             }
             if (!predicates.isEmpty()) {
                 cq.where(cb.and(predicates.toArray(new Predicate[0])));

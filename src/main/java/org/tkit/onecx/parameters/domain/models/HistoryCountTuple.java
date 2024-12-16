@@ -9,13 +9,13 @@ import lombok.Setter;
 @Getter
 @Setter
 @RegisterForReflection
-public class ParameterHistoryCountTuple {
+public class HistoryCountTuple {
 
     private LocalDateTime creationDate;
 
     private Long count;
 
-    public ParameterHistoryCountTuple(LocalDateTime creationDate, Long count) {
+    public HistoryCountTuple(LocalDateTime creationDate, Long count) {
         this.creationDate = creationDate;
         this.count = count;
     }

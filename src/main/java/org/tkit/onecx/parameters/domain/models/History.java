@@ -17,7 +17,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "PARAMETER_HISTORY")
 @SuppressWarnings("java:S2160")
-public class ParameterHistory extends TraceableEntity {
+public class History extends TraceableEntity {
 
     @TenantId
     @Column(name = "TENANT_ID")

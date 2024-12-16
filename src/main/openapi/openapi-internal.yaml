@@ -22,14 +22,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ParameterHistoryCriteria'
+              $ref: '#/components/schemas/HistoryCriteria'
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ParameterHistoryPageResult'
+                $ref: '#/components/schemas/HistoryPageResult'
   /histories/counts:
     post:
       security:
@@ -42,7 +42,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ParameterHistoryCountCriteria'
+              $ref: '#/components/schemas/HistoryCountCriteria'
       responses:
         "200":
           description: OK
@@ -51,7 +51,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ParameterHistoryCount'
+                  $ref: '#/components/schemas/HistoryCount'
   /histories/latest:
     post:
       security:
@@ -64,14 +64,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ParameterHistoryCriteria'
+              $ref: '#/components/schemas/HistoryCriteria'
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ParameterHistoryPageResult'
+                $ref: '#/components/schemas/HistoryPageResult'
   /histories/{id}:
     get:
       security:
@@ -92,7 +92,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ParameterHistory'
+                $ref: '#/components/schemas/History'
         "404":
           description: Not Found
   /parameters/search:
@@ -331,7 +331,7 @@ components:
           type: object
         importValue:
           type: object
-    ParameterHistory:
+    History:
       type: object
       properties:
         id:
@@ -365,7 +365,7 @@ components:
           type: string
         instanceId:
           type: string
-    ParameterHistoryCriteria:
+    HistoryCriteria:
       type: object
       properties:
         applicationId:
@@ -386,7 +386,7 @@ components:
           type: array
           items:
             type: string
-    ParameterHistoryPageResult:
+    HistoryPageResult:
       type: object
       properties:
         totalElements:
@@ -405,7 +405,7 @@ components:
         stream:
           type: array
           items:
-            $ref: '#/components/schemas/ParameterHistory'
+            $ref: '#/components/schemas/History'
     ParameterPageResult:
       type: object
       properties:
@@ -462,7 +462,7 @@ components:
           type: array
           items:
             type: string
-    ParameterHistoryCountCriteria:
+    HistoryCountCriteria:
       type: object
       properties:
         applicationId:
@@ -483,7 +483,7 @@ components:
           type: array
           items:
             type: string
-    ParameterHistoryCount:
+    HistoryCount:
       type: object
       properties:
         creationDate:
