@@ -9,15 +9,15 @@
 
     <PARAMETER guid="111" optlock="1" application_id="access-mgmt" product_name="access-mgmt-product" name="Engine" key="ENGINE" value="&quot;KOGITO&quot;" tenant_id="tenant-100" />
 
-    <PARAMETER_HISTORY guid="1" optlock="1" application_id="access-mgmt" product_name="access-mgmt-product" key="ENGINE" used_value="JBPM" default_value="JBPM" interval_start="2019-03-24" interval_end="2019-03-23" tenant_id="tenant-100" />
-    <PARAMETER_HISTORY guid="2" optlock="1" application_id="access-mgmt" product_name="access-mgmt-product" key="ENGINE" used_value="KOGITO" default_value="JBPM" interval_start="2019-03-25" interval_end="2019-03-26" tenant_id="tenant-100" />
+    <HISTORY guid="1" optlock="1" application_id="access-mgmt" product_name="access-mgmt-product" key="ENGINE" used_value="JBPM" default_value="JBPM" interval_start="2019-03-24" interval_end="2019-03-23" tenant_id="tenant-100" />
+    <HISTORY guid="2" optlock="1" application_id="access-mgmt" product_name="access-mgmt-product" key="ENGINE" used_value="KOGITO" default_value="JBPM" interval_start="2019-03-25" interval_end="2019-03-26" tenant_id="tenant-100" />
 
     <PARAMETER guid="112" optlock="1" application_id="access-mgmt" product_name="access-mgmt-product" key="COUNTER" tenant_id="tenant-100" />
     <PARAMETER guid="113" optlock="1" application_id="portal-server" product_name="portal-server-product" key="RETURN_PORTAL_INFO" value="true" tenant_id="tenant-100" />
     <PARAMETER guid="114" optlock="1" application_id="order-mgmt" product_name="order-mgmt-product" key="UNKNOWN_PARAMETER" tenant_id="tenant-100" />
 
-    <PARAMETER_HISTORY guid="h1" optlock="1" application_id="app1" product_name="p1" key="key1" value_type="String" used_value="JBPM" default_value="JBPM" interval_start="2019-03-24" interval_end="2019-03-23" INSTANCE_ID="i1" tenant_id="tenant-100"/>
-    <PARAMETER_HISTORY guid="h2" optlock="1" application_id="app2" product_name="p2" key="key2" value_type="String" used_value="KOGITO" default_value="JBPM" interval_start="2019-03-25" interval_end="2019-03-26" INSTANCE_ID="i2" tenant_id="tenant-100"/>
-    <PARAMETER_HISTORY guid="h21" optlock="1" application_id="app2" product_name="p2" key="key2" value_type="String" used_value="KOGITO" default_value="JBPM" interval_start="2019-03-25" interval_end="2019-03-26" INSTANCE_ID="i2" tenant_id="tenant-100"/>
-    <PARAMETER_HISTORY guid="h22" optlock="1" application_id="app2" product_name="p2" key="key2" value_type="String" used_value="KOGITO" default_value="JBPM" interval_start="2019-03-25" interval_end="2019-03-26" INSTANCE_ID="i3" tenant_id="tenant-100"/>
+    <HISTORY guid="h1" optlock="1" application_id="app1" product_name="p1" key="key1" value_type="String" used_value="JBPM" default_value="JBPM" interval_start="2019-03-24" interval_end="2019-03-23" INSTANCE_ID="i1" tenant_id="tenant-100"/>
+    <HISTORY guid="h2" optlock="1" application_id="app2" product_name="p2" key="key2" value_type="String" used_value="KOGITO" default_value="JBPM" interval_start="2019-03-25" interval_end="2019-03-26" INSTANCE_ID="i2" tenant_id="tenant-100"/>
+    <HISTORY guid="h21" optlock="1" application_id="app2" product_name="p2" key="key2" value_type="String" used_value="KOGITO" default_value="JBPM" interval_start="2019-03-25" interval_end="2019-03-26" INSTANCE_ID="i2" tenant_id="tenant-100"/>
+    <HISTORY guid="h22" optlock="1" application_id="app2" product_name="p2" key="key2" value_type="String" used_value="KOGITO" default_value="JBPM" interval_start="2019-03-25" interval_end="2019-03-26" INSTANCE_ID="i3" tenant_id="tenant-100"/>
 </dataset>
