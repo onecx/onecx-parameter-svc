@@ -26,8 +26,8 @@ public class History extends TraceableEntity {
     /**
      * The parameter key.
      */
-    @Column(name = "KEY", nullable = false)
-    private String key;
+    @Column(name = "NAME", nullable = false)
+    private String name;
 
     /**
      * The application.

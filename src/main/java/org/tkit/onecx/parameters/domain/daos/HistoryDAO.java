@@ -53,8 +53,8 @@ public class HistoryDAO extends AbstractDAO<History> {
                 predicates.add(cb.like(cb.lower(root.get(Parameter_.APPLICATION_ID)),
                         stringPattern(criteria.getApplicationId())));
             }
-            if (criteria.getKey() != null && !criteria.getKey().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get(History_.KEY)), stringPattern(criteria.getKey())));
+            if (criteria.getName() != null && !criteria.getName().isEmpty()) {
+                predicates.add(cb.like(cb.lower(root.get(History_.NAME)), stringPattern(criteria.getName())));
             }
             if (!criteria.getType().isEmpty()) {
                 predicates.add(cb.lower(root.get(History_.TYPE)).in(toLowerCase(criteria.getType())));
@@ -92,8 +92,8 @@ public class HistoryDAO extends AbstractDAO<History> {
                 predicates.add(cb.equal(cb.lower(root.get(Parameter_.APPLICATION_ID)),
                         criteria.getApplicationId().toLowerCase()));
             }
-            if (criteria.getKey() != null && !criteria.getKey().isEmpty()) {
-                predicates.add(cb.equal(cb.lower(root.get(History_.KEY)), criteria.getKey().toLowerCase()));
+            if (criteria.getName() != null && !criteria.getName().isEmpty()) {
+                predicates.add(cb.equal(cb.lower(root.get(History_.NAME)), criteria.getName().toLowerCase()));
             }
 
             cq.select(root)
@@ -125,8 +125,8 @@ public class HistoryDAO extends AbstractDAO<History> {
                 predicates.add(cb.like(cb.lower(root.get(Parameter_.APPLICATION_ID)),
                         stringPattern(criteria.getApplicationId())));
             }
-            if (criteria.getKey() != null && !criteria.getKey().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get(History_.KEY)), stringPattern(criteria.getKey())));
+            if (criteria.getName() != null && !criteria.getName().isEmpty()) {
+                predicates.add(cb.like(cb.lower(root.get(History_.NAME)), stringPattern(criteria.getName())));
             }
             if (!predicates.isEmpty()) {
                 cq.where(cb.and(predicates.toArray(new Predicate[0])));

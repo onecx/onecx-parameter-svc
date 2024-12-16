@@ -46,7 +46,7 @@ public abstract class ParameterMapperV1 {
     @Mapping(target = "modificationCount", ignore = true)
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "id", ignore = true)
-    public abstract History mapItem(ParameterInfoDTOV1 dto, String key, ParametersBucketDTOV1 bucketDTO,
+    public abstract History mapItem(ParameterInfoDTOV1 dto, String name, ParametersBucketDTOV1 bucketDTO,
             String productName,
             String applicationId, String usedValue);
 

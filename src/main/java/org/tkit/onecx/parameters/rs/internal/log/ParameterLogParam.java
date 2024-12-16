@@ -32,7 +32,7 @@ public class ParameterLogParam implements LogParam {
                             + "]";
                 }),
                 item(10, ParameterCreateDTO.class,
-                        x -> x.getClass().getSimpleName() + ":" + ((ParameterCreateDTO) x).getKey()),
+                        x -> x.getClass().getSimpleName() + ":" + ((ParameterCreateDTO) x).getName()),
                 item(10, ParameterUpdateDTO.class,
                         x -> x.getClass().getSimpleName()));
     }

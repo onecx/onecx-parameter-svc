@@ -287,7 +287,7 @@ components:
     ParameterCreate:
       type: object
       properties:
-        key:
+        name:
           type: string
         displayName:
           type: string
@@ -327,7 +327,7 @@ components:
           type: string
         productName:
           type: string
-        key:
+        name:
           type: string
         value:
           type: object
@@ -357,7 +357,7 @@ components:
           type: string
         productName:
           type: string
-        key:
+        name:
           type: string
         usedValue:
           type: object
@@ -374,7 +374,7 @@ components:
           type: string
         productName:
           type: string
-        key:
+        name:
           type: string
         pageNumber:
           type: integer
@@ -473,7 +473,7 @@ components:
           type: string
         productName:
           type: string
-        key:
+        name:
           type: string
         pageNumber:
           format: int32
@@ -504,7 +504,7 @@ components:
           type: string
         productName:
           type: string
-        key:
+        name:
           type: string
         displayName:
           type: string

@@ -22,7 +22,7 @@
                 <constraints nullable="false" primaryKey="true" primaryKeyName="history_pkey"/>
             </column>
             <column name="instance_id" type="VARCHAR(255)"/>
-            <column name="key" type="VARCHAR(255)">
+            <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="product_name" type="VARCHAR(255)">
@@ -52,7 +52,7 @@
                 <constraints nullable="false" primaryKey="true" primaryKeyName="parameter_pkey"/>
             </column>
             <column name="import_value" type="VARCHAR(5000)"/>
-            <column name="key" type="VARCHAR(255)">
+            <column name="name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
             <column name="display_name" type="VARCHAR(255)"/>
@@ -68,7 +68,7 @@
         </createTable>
     </changeSet>
     <changeSet author="dev (generated)" id="1734359522399-4">
-        <addUniqueConstraint columnNames="key, app_id, product_name, tenant_id" constraintName="parameter_constraint" tableName="parameter"/>
+        <addUniqueConstraint columnNames="name, app_id, product_name, tenant_id" constraintName="parameter_constraint" tableName="parameter"/>
     </changeSet>
     <changeSet author="dev (generated)" id="1734359522399-5">
         <createTable tableName="job">

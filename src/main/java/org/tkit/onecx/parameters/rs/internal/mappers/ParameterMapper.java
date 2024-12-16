@@ -109,7 +109,7 @@ public abstract class ParameterMapper {
     @Mapping(target = "creationUser", ignore = true)
     @Mapping(target = "creationDate", ignore = true)
     @Mapping(target = "controlTraceabilityManual", ignore = true)
-    @Mapping(target = "key", ignore = true)
+    @Mapping(target = "name", ignore = true)
     @Mapping(target = "applicationId", ignore = true)
     @Mapping(target = "productName", ignore = true)
     public abstract void update(ParameterUpdateDTO dto, @MappingTarget Parameter parameter);

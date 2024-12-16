@@ -56,8 +56,8 @@ public class ParameterRestControllerV1 implements ParameterApi {
             return Response.status(Response.Status.NO_CONTENT).build();
         }
         List<History> items = new ArrayList<>();
-        dto.getParameters().forEach((key, value) -> items
-                .add(mapper.mapItem(value, key, dto, productName, appId,
+        dto.getParameters().forEach((name, value) -> items
+                .add(mapper.mapItem(value, name, dto, productName, appId,
                         value.getCurrentValue())));
         historyDAO.create(items);
         return Response.status(Response.Status.NO_CONTENT).build();

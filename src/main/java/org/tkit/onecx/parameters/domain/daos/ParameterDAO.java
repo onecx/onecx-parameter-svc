@@ -34,7 +34,7 @@ public class ParameterDAO extends AbstractDAO<Parameter> {
             return getEntityManager()
                     .createQuery(cq)
                     .getResultStream()
-                    .collect(Collectors.toMap(Parameter::getKey,
+                    .collect(Collectors.toMap(Parameter::getName,
                             p -> p.getValue() != null ? p.getValue() : p.getImportValue()));
 
         } catch (Exception e) {
@@ -56,8 +56,8 @@ public class ParameterDAO extends AbstractDAO<Parameter> {
                 predicates.add(cb.like(cb.lower(root.get(Parameter_.APPLICATION_ID)),
                         stringPattern(criteria.getApplicationId())));
             }
-            if (criteria.getKey() != null && !criteria.getKey().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get(Parameter_.KEY)), stringPattern(criteria.getKey())));
+            if (criteria.getName() != null && !criteria.getName().isEmpty()) {
+                predicates.add(cb.like(cb.lower(root.get(Parameter_.NAME)), stringPattern(criteria.getName())));
             }
             if (criteria.getDisplayName() != null && !criteria.getDisplayName().isEmpty()) {
                 predicates.add(cb.like(cb.lower(root.get(Parameter_.DISPLAY_NAME)), stringPattern(criteria.getDisplayName())));
@@ -76,7 +76,7 @@ public class ParameterDAO extends AbstractDAO<Parameter> {
             var cb = getEntityManager().getCriteriaBuilder();
             CriteriaQuery<String> cq = cb.createQuery(String.class);
             Root<Parameter> root = cq.from(Parameter.class);
-            cq.select(root.get(Parameter_.KEY)).distinct(true);
+            cq.select(root.get(Parameter_.NAME)).distinct(true);
 
             if (criteria.getProductName() != null && !criteria.getProductName().isEmpty()) {
                 cq.where(cb.equal(root.get(Parameter_.PRODUCT_NAME), criteria.getProductName()));

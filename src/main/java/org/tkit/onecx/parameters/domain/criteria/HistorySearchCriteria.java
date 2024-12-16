@@ -23,9 +23,9 @@ public class HistorySearchCriteria {
     private String productName;
 
     /**
-     * The application parameter key.
+     * The parameter name.
      */
-    private String key;
+    private String name;
 
     private List<String> type;
 

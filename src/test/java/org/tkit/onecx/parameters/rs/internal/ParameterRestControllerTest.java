@@ -137,10 +137,10 @@ class ParameterRestControllerTest extends AbstractTest {
                 Arguments.of(new ParameterSearchCriteriaDTO().applicationId("incorrect_app").productName("incorrect-product"),
                         0),
                 Arguments.of(new ParameterSearchCriteriaDTO().applicationId("incorrect_app").productName("incorrect-product")
-                        .key("").displayName(""), 0),
+                        .name("").displayName(""), 0),
                 Arguments.of(new ParameterSearchCriteriaDTO().displayName("custom"), 0),
-                Arguments.of(new ParameterSearchCriteriaDTO().key("ENGINE"), 1),
-                Arguments.of(new ParameterSearchCriteriaDTO().key("incorrect_key"), 0));
+                Arguments.of(new ParameterSearchCriteriaDTO().name("ENGINE"), 1),
+                Arguments.of(new ParameterSearchCriteriaDTO().name("incorrect_key"), 0));
     }
 
     @ParameterizedTest
@@ -193,7 +193,7 @@ class ParameterRestControllerTest extends AbstractTest {
         Assertions.assertNotNull(applicationParameterDTO);
         Assertions.assertEquals("access-mgmt", applicationParameterDTO.getApplicationId());
         Assertions.assertEquals("access-mgmt-product", applicationParameterDTO.getProductName());
-        Assertions.assertEquals("ENGINE", applicationParameterDTO.getKey());
+        Assertions.assertEquals("ENGINE", applicationParameterDTO.getName());
         Assertions.assertEquals("KOGITO", applicationParameterDTO.getValue());
         Assertions.assertEquals("Engine", applicationParameterDTO.getDisplayName());
         Assertions.assertNull(applicationParameterDTO.getDescription());
@@ -339,7 +339,7 @@ class ParameterRestControllerTest extends AbstractTest {
         dto.setApplicationId(appId);
         dto.setProductName(productName);
         dto.setDescription(desc);
-        dto.setKey(key);
+        dto.setName(key);
         dto.setValue(value);
 
         String uri = given()
@@ -366,7 +366,7 @@ class ParameterRestControllerTest extends AbstractTest {
         Assertions.assertEquals(dto.getApplicationId(), dto2.getApplicationId());
         Assertions.assertEquals(dto.getProductName(), dto2.getProductName());
         Assertions.assertEquals(dto.getDescription(), dto2.getDescription());
-        Assertions.assertEquals(dto.getKey(), dto2.getKey());
+        Assertions.assertEquals(dto.getName(), dto2.getName());
         Assertions.assertEquals(dto.getValue(), dto2.getValue());
 
     }
@@ -383,7 +383,7 @@ class ParameterRestControllerTest extends AbstractTest {
         ParameterCreateDTO dto = new ParameterCreateDTO();
         dto.setApplicationId("app1");
         dto.setProductName("productName1");
-        dto.setKey("key1");
+        dto.setName("key1");
         given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)

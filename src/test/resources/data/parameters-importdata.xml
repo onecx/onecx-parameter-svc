@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
-    <PARAMETER guid="GUID6" optlock="1" app_id="import-app" product_name="import-product" display_name="importParam" key="importParam" description="import parameter" IMPORT_VALUE="&quot;import-value&quot;" tenant_id="tenant-100"/>
-    <PARAMETER guid="GUID1" optlock="1" app_id="import-app" product_name="import-product" display_name="importParam2" key="importParam2" description="import parameter2" IMPORT_VALUE="{&quot;data&quot;:&quot;import-value&quot;}" tenant_id="tenant-100"/>
-    <PARAMETER guid="GUID61" optlock="1" app_id="import-app" product_name="import-product" display_name="importParam" key="importParam" description="import parameter" IMPORT_VALUE="&quot;import-value-200&quot;" tenant_id="tenant-200"/>
+    <PARAMETER guid="GUID6" optlock="1" app_id="import-app" product_name="import-product" display_name="importParam" name="importParam" description="import parameter" IMPORT_VALUE="&quot;import-value&quot;" tenant_id="tenant-100"/>
+    <PARAMETER guid="GUID1" optlock="1" app_id="import-app" product_name="import-product" display_name="importParam2" name="importParam2" description="import parameter2" IMPORT_VALUE="{&quot;data&quot;:&quot;import-value&quot;}" tenant_id="tenant-100"/>
+    <PARAMETER guid="GUID61" optlock="1" app_id="import-app" product_name="import-product" display_name="importParam" name="importParam" description="import parameter" IMPORT_VALUE="&quot;import-value-200&quot;" tenant_id="tenant-200"/>
 </dataset>

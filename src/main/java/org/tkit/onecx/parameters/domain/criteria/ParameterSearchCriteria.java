@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * The application parameter search criteria.
+ * The parameter search criteria.
  */
 @Getter
 @Setter
@@ -21,9 +21,9 @@ public class ParameterSearchCriteria {
     private String productName;
 
     /**
-     * The application parameter key.
+     * The parameter key.
      */
-    private String key;
+    private String name;
 
     private String displayName;
 
