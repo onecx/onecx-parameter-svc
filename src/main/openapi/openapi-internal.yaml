@@ -289,6 +289,8 @@ components:
       properties:
         key:
           type: string
+        displayName:
+          type: string
         applicationId:
           type: string
         productName:
@@ -317,7 +319,7 @@ components:
           example: 2022-03-10T12:15:50-04:00
         modificationUser:
           type: string
-        name:
+        displayName:
           type: string
         description:
           type: string
@@ -431,6 +433,8 @@ components:
       properties:
         value:
           type: object
+        displayName:
+          type: string
         description:
           type: string
     Product:
@@ -502,7 +506,7 @@ components:
           type: string
         key:
           type: string
-        name:
+        displayName:
           type: string
         pageNumber:
           format: int32

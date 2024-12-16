@@ -137,8 +137,8 @@ class ParameterRestControllerTest extends AbstractTest {
                 Arguments.of(new ParameterSearchCriteriaDTO().applicationId("incorrect_app").productName("incorrect-product"),
                         0),
                 Arguments.of(new ParameterSearchCriteriaDTO().applicationId("incorrect_app").productName("incorrect-product")
-                        .key("").name(""), 0),
-                Arguments.of(new ParameterSearchCriteriaDTO().name("custom"), 0),
+                        .key("").displayName(""), 0),
+                Arguments.of(new ParameterSearchCriteriaDTO().displayName("custom"), 0),
                 Arguments.of(new ParameterSearchCriteriaDTO().key("ENGINE"), 1),
                 Arguments.of(new ParameterSearchCriteriaDTO().key("incorrect_key"), 0));
     }
@@ -195,7 +195,7 @@ class ParameterRestControllerTest extends AbstractTest {
         Assertions.assertEquals("access-mgmt-product", applicationParameterDTO.getProductName());
         Assertions.assertEquals("ENGINE", applicationParameterDTO.getKey());
         Assertions.assertEquals("KOGITO", applicationParameterDTO.getValue());
-        Assertions.assertEquals("Engine", applicationParameterDTO.getName());
+        Assertions.assertEquals("Engine", applicationParameterDTO.getDisplayName());
         Assertions.assertNull(applicationParameterDTO.getDescription());
     }
 

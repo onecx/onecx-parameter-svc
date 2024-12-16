@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
-    <PARAMETER guid="GUID1" optlock="1" app_id="app1" product_name="p1" name="param" key="param" value="${STRING_ENV_VARIABLE}/test" description="param example" tenant_id="tenant-100" />
-    <PARAMETER guid="GUID2" optlock="1" app_id="app1" product_name="p1" name="integer_param" key="integer_param" value="${INTEGER_ENV_VARIABLE}${INTEGER_ENV_VARIABLE}" description="integer param example" tenant_id="tenant-100" />
-    <PARAMETER guid="GUID3" optlock="1" app_id="app1" product_name="p1" name="boolean_param" key="boolean_param" value="${BOOLEAN_ENV_VARIABLE}" description="boolean param example" tenant_id="tenant-100" />
+    <PARAMETER guid="GUID1" optlock="1" app_id="app1" product_name="p1" display_name="param" key="param" value="${STRING_ENV_VARIABLE}/test" description="param example" tenant_id="tenant-100" />
+    <PARAMETER guid="GUID2" optlock="1" app_id="app1" product_name="p1" display_name="integer_param" key="integer_param" value="${INTEGER_ENV_VARIABLE}${INTEGER_ENV_VARIABLE}" description="integer param example" tenant_id="tenant-100" />
+    <PARAMETER guid="GUID3" optlock="1" app_id="app1" product_name="p1" display_name="boolean_param" key="boolean_param" value="${BOOLEAN_ENV_VARIABLE}" description="boolean param example" tenant_id="tenant-100" />
 </dataset>

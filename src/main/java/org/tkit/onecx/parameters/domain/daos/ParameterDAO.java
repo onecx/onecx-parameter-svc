@@ -59,8 +59,8 @@ public class ParameterDAO extends AbstractDAO<Parameter> {
             if (criteria.getKey() != null && !criteria.getKey().isEmpty()) {
                 predicates.add(cb.like(cb.lower(root.get(Parameter_.KEY)), stringPattern(criteria.getKey())));
             }
-            if (criteria.getName() != null && !criteria.getName().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get(Parameter_.NAME)), stringPattern(criteria.getName())));
+            if (criteria.getDisplayName() != null && !criteria.getDisplayName().isEmpty()) {
+                predicates.add(cb.like(cb.lower(root.get(Parameter_.DISPLAY_NAME)), stringPattern(criteria.getDisplayName())));
             }
             if (!predicates.isEmpty()) {
                 cq.where(cb.and(predicates.toArray(new Predicate[0])));

@@ -22,16 +22,16 @@ public class Parameter extends TraceableEntity {
     private String tenantId;
 
     /**
-     * The application parameter key.
+     * The parameter key.
      */
     @Column(name = "KEY", nullable = false)
     private String key;
 
     /**
-     * The application parameter name.
+     * The display parameter name.
      */
-    @Column(name = "NAME")
-    private String name;
+    @Column(name = "DISPLAY_NAME")
+    private String displayName;
 
     /**
      * The name of the parameter as it appears in functional specifications

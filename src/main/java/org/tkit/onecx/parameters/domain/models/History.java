@@ -24,7 +24,7 @@ public class History extends TraceableEntity {
     private String tenantId;
 
     /**
-     * The application parameter key.
+     * The parameter key.
      */
     @Column(name = "KEY", nullable = false)
     private String key;
@@ -42,19 +42,19 @@ public class History extends TraceableEntity {
     private String productName;
 
     /**
-     * The application parameter type.
+     * The parameter type.
      */
     @Column(name = "VALUE_TYPE")
     private String type;
 
     /**
-     * The application parameter used value.
+     * The parameter used value.
      */
     @Column(name = "USED_VALUE", columnDefinition = "varchar(5000)")
     private String usedValue;
 
     /**
-     * The application parameter used value.
+     * The parameter used value.
      */
     @Column(name = "DEFAULT_VALUE", columnDefinition = "varchar(5000)")
     private String defaultValue;

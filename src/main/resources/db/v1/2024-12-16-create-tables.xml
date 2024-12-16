@@ -55,7 +55,7 @@
             <column name="key" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
-            <column name="name" type="VARCHAR(255)"/>
+            <column name="display_name" type="VARCHAR(255)"/>
             <column name="product_name" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
