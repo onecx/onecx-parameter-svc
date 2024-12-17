@@ -1,5 +1,7 @@
 package org.tkit.onecx.parameters.domain.daos;
 
+import static org.tkit.quarkus.jpa.utils.QueryCriteriaUtil.addSearchStringPredicate;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -34,7 +36,7 @@ public class ParameterDAO extends AbstractDAO<Parameter> {
             return getEntityManager()
                     .createQuery(cq)
                     .getResultStream()
-                    .collect(Collectors.toMap(Parameter::getKey,
+                    .collect(Collectors.toMap(Parameter::getName,
                             p -> p.getValue() != null ? p.getValue() : p.getImportValue()));
 
         } catch (Exception e) {
@@ -46,22 +48,14 @@ public class ParameterDAO extends AbstractDAO<Parameter> {
         try {
             CriteriaQuery<Parameter> cq = criteriaQuery();
             Root<Parameter> root = cq.from(Parameter.class);
-            List<Predicate> predicates = new ArrayList<>();
             CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-            if (criteria.getProductName() != null && !criteria.getProductName().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get(Parameter_.PRODUCT_NAME)),
-                        stringPattern(criteria.getProductName())));
-            }
-            if (criteria.getApplicationId() != null && !criteria.getApplicationId().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get(Parameter_.APPLICATION_ID)),
-                        stringPattern(criteria.getApplicationId())));
-            }
-            if (criteria.getKey() != null && !criteria.getKey().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get(Parameter_.KEY)), stringPattern(criteria.getKey())));
-            }
-            if (criteria.getName() != null && !criteria.getName().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get(Parameter_.NAME)), stringPattern(criteria.getName())));
-            }
+
+            List<Predicate> predicates = new ArrayList<>();
+            addSearchStringPredicate(predicates, cb, root.get(Parameter_.PRODUCT_NAME), criteria.getProductName());
+            addSearchStringPredicate(predicates, cb, root.get(Parameter_.APPLICATION_ID), criteria.getApplicationId());
+            addSearchStringPredicate(predicates, cb, root.get(Parameter_.NAME), criteria.getName());
+            addSearchStringPredicate(predicates, cb, root.get(Parameter_.DISPLAY_NAME), criteria.getDisplayName());
+
             if (!predicates.isEmpty()) {
                 cq.where(cb.and(predicates.toArray(new Predicate[0])));
             }
@@ -76,7 +70,7 @@ public class ParameterDAO extends AbstractDAO<Parameter> {
             var cb = getEntityManager().getCriteriaBuilder();
             CriteriaQuery<String> cq = cb.createQuery(String.class);
             Root<Parameter> root = cq.from(Parameter.class);
-            cq.select(root.get(Parameter_.KEY)).distinct(true);
+            cq.select(root.get(Parameter_.NAME)).distinct(true);
 
             if (criteria.getProductName() != null && !criteria.getProductName().isEmpty()) {
                 cq.where(cb.equal(root.get(Parameter_.PRODUCT_NAME), criteria.getProductName()));
@@ -106,10 +100,6 @@ public class ParameterDAO extends AbstractDAO<Parameter> {
         } catch (Exception exception) {
             throw new DAOException(ErrorKeys.FIND_ALL_APPLICATIONS_FAILED, exception);
         }
-    }
-
-    private static String stringPattern(String value) {
-        return (value.toLowerCase() + "%");
     }
 
     public enum ErrorKeys {

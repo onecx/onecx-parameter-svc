@@ -16,7 +16,7 @@ import io.quarkus.test.junit.QuarkusTest;
 class ParameterHistoryDAOExceptionTest {
 
     @Inject
-    ParameterHistoryDAO dao;
+    HistoryDAO dao;
 
     @InjectMock
     EntityManager em;
@@ -29,21 +29,21 @@ class ParameterHistoryDAOExceptionTest {
     @Test
     void searchByCriteriaTest() {
         var exc = Assertions.assertThrows(DAOException.class, () -> dao.searchByCriteria(null));
-        Assertions.assertEquals(ParameterHistoryDAO.ErrorKeys.FIND_ALL_PARAMETERS_HISTORY_FAILED,
+        Assertions.assertEquals(HistoryDAO.ErrorKeys.FIND_ALL_PARAMETERS_HISTORY_FAILED,
                 exc.key);
     }
 
     @Test
     void searchOnlyLatestByCriteriaTest() {
         var exc = Assertions.assertThrows(DAOException.class, () -> dao.searchOnlyLatestByCriteria(null));
-        Assertions.assertEquals(ParameterHistoryDAO.ErrorKeys.FIND_ALL_PARAMETERS_HISTORY_FAILED,
+        Assertions.assertEquals(HistoryDAO.ErrorKeys.FIND_ALL_PARAMETERS_HISTORY_FAILED,
                 exc.key);
     }
 
     @Test
     void searchCountsByCriteriaTest() {
         var exc = Assertions.assertThrows(DAOException.class, () -> dao.searchCountsByCriteria(null));
-        Assertions.assertEquals(ParameterHistoryDAO.ErrorKeys.FIND_ALL_PARAMETERS_HISTORY_FAILED,
+        Assertions.assertEquals(HistoryDAO.ErrorKeys.FIND_ALL_PARAMETERS_HISTORY_FAILED,
                 exc.key);
     }
 }

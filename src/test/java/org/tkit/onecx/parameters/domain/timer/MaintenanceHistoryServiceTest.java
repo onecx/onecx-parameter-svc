@@ -7,9 +7,9 @@ import jakarta.inject.Inject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.tkit.onecx.parameters.domain.daos.HistoryDAO;
 import org.tkit.onecx.parameters.domain.daos.JobDAO;
-import org.tkit.onecx.parameters.domain.daos.ParameterHistoryDAO;
-import org.tkit.onecx.parameters.domain.models.ParameterHistory;
+import org.tkit.onecx.parameters.domain.models.History;
 import org.tkit.quarkus.test.WithDBData;
 
 import io.quarkus.test.junit.QuarkusTest;
@@ -22,7 +22,7 @@ class MaintenanceHistoryServiceTest {
     MaintenanceHistoryService service;
 
     @Inject
-    ParameterHistoryDAO dao;
+    HistoryDAO dao;
 
     @Inject
     JobDAO jobDAO;
@@ -31,7 +31,7 @@ class MaintenanceHistoryServiceTest {
     @Order(1)
     void maintenanceHistoryDataTest() {
         service.maintenanceHistoryData();
-        List<ParameterHistory> result = dao.findAll().toList();
+        List<History> result = dao.findAll().toList();
         Assertions.assertNotNull(result);
         Assertions.assertEquals(2, result.size());
     }

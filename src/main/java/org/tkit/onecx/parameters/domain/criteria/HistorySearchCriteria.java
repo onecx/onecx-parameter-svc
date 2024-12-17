@@ -10,7 +10,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class ParameterHistorySearchCriteria {
+public class HistorySearchCriteria {
 
     /**
      * The application ID.
@@ -23,9 +23,9 @@ public class ParameterHistorySearchCriteria {
     private String productName;
 
     /**
-     * The application parameter key.
+     * The parameter name.
      */
-    private String key;
+    private String name;
 
     private List<String> type;
 

@@ -7,7 +7,7 @@ import jakarta.inject.Inject;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.tkit.onecx.parameters.domain.models.ParameterHistory;
+import org.tkit.onecx.parameters.domain.models.History;
 import org.tkit.quarkus.rs.mappers.OffsetDateTimeMapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,7 +46,7 @@ public abstract class ParameterMapperV1 {
     @Mapping(target = "modificationCount", ignore = true)
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "id", ignore = true)
-    public abstract ParameterHistory mapItem(ParameterInfoDTOV1 dto, String key, ParametersBucketDTOV1 bucketDTO,
+    public abstract History mapItem(ParameterInfoDTOV1 dto, String name, ParametersBucketDTOV1 bucketDTO,
             String productName,
             String applicationId, String usedValue);
 

@@ -26,10 +26,10 @@ import org.tkit.onecx.parameters.test.AbstractTest;
 import org.tkit.quarkus.security.test.GenerateKeycloakClient;
 import org.tkit.quarkus.test.WithDBData;
 
-import gen.org.tkit.onecx.parameters.rs.internal.model.ParameterHistoryCountCriteriaDTO;
-import gen.org.tkit.onecx.parameters.rs.internal.model.ParameterHistoryCriteriaDTO;
-import gen.org.tkit.onecx.parameters.rs.internal.model.ParameterHistoryDTO;
-import gen.org.tkit.onecx.parameters.rs.internal.model.ParameterHistoryPageResultDTO;
+import gen.org.tkit.onecx.parameters.rs.internal.model.HistoryCountCriteriaDTO;
+import gen.org.tkit.onecx.parameters.rs.internal.model.HistoryCriteriaDTO;
+import gen.org.tkit.onecx.parameters.rs.internal.model.HistoryDTO;
+import gen.org.tkit.onecx.parameters.rs.internal.model.HistoryPageResultDTO;
 import gen.org.tkit.onecx.tenant.client.model.TenantId;
 import io.quarkiverse.mockserver.test.InjectMockServerClient;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
@@ -39,7 +39,7 @@ import io.quarkus.test.junit.QuarkusTest;
 @TestHTTPEndpoint(HistoryRestController.class)
 @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
 @GenerateKeycloakClient(clientName = "testClient", scopes = { "ocx-pa:read", "ocx-pa:write", "ocx-pa:delete", "ocx-pa:all" })
-class ParameterHistoryRestControllerTest extends AbstractTest {
+class HistoryRestControllerTest extends AbstractTest {
 
     @InjectMockServerClient
     MockServerClient mockServerClient;
@@ -61,13 +61,13 @@ class ParameterHistoryRestControllerTest extends AbstractTest {
         var pageResultDTO = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
-                .body(new ParameterHistoryCriteriaDTO())
+                .body(new HistoryCriteriaDTO())
                 .contentType(APPLICATION_JSON)
                 .post()
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
-                .extract().body().as(ParameterHistoryPageResultDTO.class);
+                .extract().body().as(HistoryPageResultDTO.class);
 
         Assertions.assertEquals(6, pageResultDTO.getStream().size());
         Assertions.assertEquals(Long.valueOf(6), pageResultDTO.getTotalElements());
@@ -76,21 +76,21 @@ class ParameterHistoryRestControllerTest extends AbstractTest {
 
     static Stream<Arguments> findByCriteriaTestData() {
         return Stream.of(
-                Arguments.of(new ParameterHistoryCriteriaDTO(), 6),
-                Arguments.of(new ParameterHistoryCriteriaDTO().applicationId("").productName("").key("")
+                Arguments.of(new HistoryCriteriaDTO(), 6),
+                Arguments.of(new HistoryCriteriaDTO().applicationId("").productName("").name("")
                         .type(List.of("")), 0),
-                Arguments.of(new ParameterHistoryCriteriaDTO().applicationId("app0").productName("p0").key("key0")
+                Arguments.of(new HistoryCriteriaDTO().applicationId("app0").productName("p0").name("key0")
                         .type(List.of("type0")), 0),
-                Arguments.of(new ParameterHistoryCriteriaDTO().applicationId("access-mgmt")
+                Arguments.of(new HistoryCriteriaDTO().applicationId("access-mgmt")
                         .productName("access-mgmt-product"), 2),
-                Arguments.of(new ParameterHistoryCriteriaDTO().applicationId("app0").productName("p0"), 0),
-                Arguments.of(new ParameterHistoryCriteriaDTO().applicationId("app1").productName("p1"), 1),
-                Arguments.of(new ParameterHistoryCriteriaDTO().applicationId("app2").productName("p2"), 3));
+                Arguments.of(new HistoryCriteriaDTO().applicationId("app0").productName("p0"), 0),
+                Arguments.of(new HistoryCriteriaDTO().applicationId("app1").productName("p1"), 1),
+                Arguments.of(new HistoryCriteriaDTO().applicationId("app2").productName("p2"), 3));
     }
 
     @ParameterizedTest
     @MethodSource("findByCriteriaTestData")
-    void shouldFindParametersHistoryByCriteria(ParameterHistoryCriteriaDTO criteriaDTO, Integer expectedArraySize) {
+    void shouldFindParametersHistoryByCriteria(HistoryCriteriaDTO criteriaDTO, Integer expectedArraySize) {
 
         var apm = createToken("org1");
         addExpectation(mockServerClient
@@ -110,26 +110,26 @@ class ParameterHistoryRestControllerTest extends AbstractTest {
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
-                .body().as(ParameterHistoryPageResultDTO.class);
+                .body().as(HistoryPageResultDTO.class);
         Assertions.assertEquals(expectedArraySize, pageResultDTO.getStream().size());
     }
 
     static Stream<Arguments> findByCriteriaTestDataQueryLatest() {
         return Stream.of(
-                Arguments.of(new ParameterHistoryCriteriaDTO(), 0),
-                Arguments.of(new ParameterHistoryCriteriaDTO().applicationId("access-mgmt")
+                Arguments.of(new HistoryCriteriaDTO(), 0),
+                Arguments.of(new HistoryCriteriaDTO().applicationId("access-mgmt")
                         .productName("access-mgmt-product"), 0),
-                Arguments.of(new ParameterHistoryCriteriaDTO().applicationId("").productName("").key(""), 0),
-                Arguments.of(new ParameterHistoryCriteriaDTO().applicationId("").productName("").key("key1"), 0),
-                Arguments.of(new ParameterHistoryCriteriaDTO().applicationId("").productName(""), 0),
-                Arguments.of(new ParameterHistoryCriteriaDTO().applicationId("app0").productName("p0"), 0),
-                Arguments.of(new ParameterHistoryCriteriaDTO().applicationId("app1").productName("p1"), 0),
-                Arguments.of(new ParameterHistoryCriteriaDTO().applicationId("app2").productName("p2"), 0));
+                Arguments.of(new HistoryCriteriaDTO().applicationId("").productName("").name(""), 0),
+                Arguments.of(new HistoryCriteriaDTO().applicationId("").productName("").name("key1"), 0),
+                Arguments.of(new HistoryCriteriaDTO().applicationId("").productName(""), 0),
+                Arguments.of(new HistoryCriteriaDTO().applicationId("app0").productName("p0"), 0),
+                Arguments.of(new HistoryCriteriaDTO().applicationId("app1").productName("p1"), 0),
+                Arguments.of(new HistoryCriteriaDTO().applicationId("app2").productName("p2"), 0));
     }
 
     @ParameterizedTest
     @MethodSource("findByCriteriaTestDataQueryLatest")
-    void shouldFindParametersHistoryByCriteriaQueryLatest(ParameterHistoryCriteriaDTO criteriaDTO,
+    void shouldFindParametersHistoryByCriteriaQueryLatest(HistoryCriteriaDTO criteriaDTO,
             Integer expectedArraySize) {
 
         var apm = createToken("org1");
@@ -150,7 +150,7 @@ class ParameterHistoryRestControllerTest extends AbstractTest {
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
-                .body().as(ParameterHistoryPageResultDTO.class);
+                .body().as(HistoryPageResultDTO.class);
         Assertions.assertEquals(expectedArraySize, pageResultDTO.getStream().size());
     }
 
@@ -201,7 +201,7 @@ class ParameterHistoryRestControllerTest extends AbstractTest {
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
-                .body().as(ParameterHistoryDTO.class);
+                .body().as(HistoryDTO.class);
         Assertions.assertNotNull(result);
         Assertions.assertEquals(id, result.getId());
         Assertions.assertEquals(applicationId, result.getApplicationId());
@@ -211,20 +211,20 @@ class ParameterHistoryRestControllerTest extends AbstractTest {
 
     static Stream<Arguments> findCountByCriteriaTestData() {
         return Stream.of(
-                Arguments.of(new ParameterHistoryCountCriteriaDTO(), 6),
-                Arguments.of(new ParameterHistoryCountCriteriaDTO().applicationId("").productName("").key(""), 6),
-                Arguments.of(new ParameterHistoryCountCriteriaDTO().applicationId("").productName("").key("key1"), 1),
+                Arguments.of(new HistoryCountCriteriaDTO(), 6),
+                Arguments.of(new HistoryCountCriteriaDTO().applicationId("").productName("").name(""), 6),
+                Arguments.of(new HistoryCountCriteriaDTO().applicationId("").productName("").name("key1"), 1),
                 Arguments.of(
-                        new ParameterHistoryCountCriteriaDTO().applicationId("access-mgmt").productName("access-mgmt-product"),
+                        new HistoryCountCriteriaDTO().applicationId("access-mgmt").productName("access-mgmt-product"),
                         2),
-                Arguments.of(new ParameterHistoryCountCriteriaDTO().applicationId("app0").productName("p0"), 0),
-                Arguments.of(new ParameterHistoryCountCriteriaDTO().applicationId("app1").productName("p1"), 1),
-                Arguments.of(new ParameterHistoryCountCriteriaDTO().applicationId("app2").productName("p2"), 3));
+                Arguments.of(new HistoryCountCriteriaDTO().applicationId("app0").productName("p0"), 0),
+                Arguments.of(new HistoryCountCriteriaDTO().applicationId("app1").productName("p1"), 1),
+                Arguments.of(new HistoryCountCriteriaDTO().applicationId("app2").productName("p2"), 3));
     }
 
     @ParameterizedTest
     @MethodSource("findCountByCriteriaTestData")
-    void getCountsByCriteriaTest(ParameterHistoryCountCriteriaDTO criteria, Integer expectedArraySize) {
+    void getCountsByCriteriaTest(HistoryCountCriteriaDTO criteria, Integer expectedArraySize) {
         var apm = createToken("org1");
         addExpectation(mockServerClient
                 .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))

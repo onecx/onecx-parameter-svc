@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
-    <PARAMETER guid="GUID1" optlock="1" application_id="app1" product_name="p1" name="param" key="param" value="&quot;${STRING_ENV_VARIABLE}/test&quot;" description="param example" tenant_id="tenant-100" />
-    <PARAMETER guid="GUID2" optlock="1" application_id="app1" product_name="p1" name="integer_param" key="integer_param" value="&quot;${INTEGER_ENV_VARIABLE}${INTEGER_ENV_VARIABLE}&quot;" description="integer param example" tenant_id="tenant-100" />
-    <PARAMETER guid="GUID3" optlock="1" application_id="app1" product_name="p1" name="boolean_param" key="boolean_param" value="&quot;${BOOLEAN_ENV_VARIABLE}&quot;" description="boolean param example" tenant_id="tenant-100" />
-    <PARAMETER guid="GUID4" optlock="1" application_id="app1" product_name="p1" name="cyclic_param" key="cyclic_param" value="&quot;${CYCLIC_ENV_VARIABLE}&quot;" description="cyclic param example" tenant_id="tenant-100" />
-    <PARAMETER guid="GUID5" optlock="1" application_id="app1" product_name="p1" name="existStringParam" key="existStringParam" value="&quot;Existing&quot;" description="existing parameter" tenant_id="tenant-100" />
+    <PARAMETER guid="GUID1" optlock="1" app_id="app1" product_name="p1" display_name="param" name="param" value="&quot;${STRING_ENV_VARIABLE}/test&quot;" description="param example" tenant_id="tenant-100" />
+    <PARAMETER guid="GUID2" optlock="1" app_id="app1" product_name="p1" display_name="integer_param" name="integer_param" value="&quot;${INTEGER_ENV_VARIABLE}${INTEGER_ENV_VARIABLE}&quot;" description="integer param example" tenant_id="tenant-100" />
+    <PARAMETER guid="GUID3" optlock="1" app_id="app1" product_name="p1" display_name="boolean_param" name="boolean_param" value="&quot;${BOOLEAN_ENV_VARIABLE}&quot;" description="boolean param example" tenant_id="tenant-100" />
+    <PARAMETER guid="GUID4" optlock="1" app_id="app1" product_name="p1" display_name="cyclic_param" name="cyclic_param" value="&quot;${CYCLIC_ENV_VARIABLE}&quot;" description="cyclic param example" tenant_id="tenant-100" />
+    <PARAMETER guid="GUID5" optlock="1" app_id="app1" product_name="p1" display_name="existStringParam" name="existStringParam" value="&quot;Existing&quot;" description="existing parameter" tenant_id="tenant-100" />
 
 
-    <PARAMETER guid="111" optlock="1" application_id="access-mgmt" product_name="access-mgmt-product" name="Engine" key="ENGINE" value="&quot;KOGITO&quot;" tenant_id="tenant-100" />
+    <PARAMETER guid="111" optlock="1" app_id="access-mgmt" product_name="access-mgmt-product" display_name="Engine" name="ENGINE" value="&quot;KOGITO&quot;" tenant_id="tenant-100" />
 
-    <PARAMETER_HISTORY guid="1" optlock="1" application_id="access-mgmt" product_name="access-mgmt-product" key="ENGINE" used_value="JBPM" default_value="JBPM" interval_start="2019-03-24" interval_end="2019-03-23" tenant_id="tenant-100" />
-    <PARAMETER_HISTORY guid="2" optlock="1" application_id="access-mgmt" product_name="access-mgmt-product" key="ENGINE" used_value="KOGITO" default_value="JBPM" interval_start="2019-03-25" interval_end="2019-03-26" tenant_id="tenant-100" />
+    <HISTORY guid="1" optlock="1" app_id="access-mgmt" product_name="access-mgmt-product" name="ENGINE" used_value="JBPM" default_value="JBPM" interval_start="2019-03-24" interval_end="2019-03-23" tenant_id="tenant-100" />
+    <HISTORY guid="2" optlock="1" app_id="access-mgmt" product_name="access-mgmt-product" name="ENGINE" used_value="KOGITO" default_value="JBPM" interval_start="2019-03-25" interval_end="2019-03-26" tenant_id="tenant-100" />
 
-    <PARAMETER guid="112" optlock="1" application_id="access-mgmt" product_name="access-mgmt-product" key="COUNTER" tenant_id="tenant-100" />
-    <PARAMETER guid="113" optlock="1" application_id="portal-server" product_name="portal-server-product" key="RETURN_PORTAL_INFO" value="true" tenant_id="tenant-100" />
-    <PARAMETER guid="114" optlock="1" application_id="order-mgmt" product_name="order-mgmt-product" key="UNKNOWN_PARAMETER" tenant_id="tenant-100" />
+    <PARAMETER guid="112" optlock="1" app_id="access-mgmt" product_name="access-mgmt-product" name="COUNTER" tenant_id="tenant-100" />
+    <PARAMETER guid="113" optlock="1" app_id="portal-server" product_name="portal-server-product" name="RETURN_PORTAL_INFO" value="true" tenant_id="tenant-100" />
+    <PARAMETER guid="114" optlock="1" app_id="order-mgmt" product_name="order-mgmt-product" name="UNKNOWN_PARAMETER" tenant_id="tenant-100" />
 
-    <PARAMETER_HISTORY guid="h1" optlock="1" application_id="app1" product_name="p1" key="key1" value_type="String" used_value="JBPM" default_value="JBPM" interval_start="2019-03-24" interval_end="2019-03-23" INSTANCE_ID="i1" tenant_id="tenant-100"/>
-    <PARAMETER_HISTORY guid="h2" optlock="1" application_id="app2" product_name="p2" key="key2" value_type="String" used_value="KOGITO" default_value="JBPM" interval_start="2019-03-25" interval_end="2019-03-26" INSTANCE_ID="i2" tenant_id="tenant-100"/>
-    <PARAMETER_HISTORY guid="h21" optlock="1" application_id="app2" product_name="p2" key="key2" value_type="String" used_value="KOGITO" default_value="JBPM" interval_start="2019-03-25" interval_end="2019-03-26" INSTANCE_ID="i2" tenant_id="tenant-100"/>
-    <PARAMETER_HISTORY guid="h22" optlock="1" application_id="app2" product_name="p2" key="key2" value_type="String" used_value="KOGITO" default_value="JBPM" interval_start="2019-03-25" interval_end="2019-03-26" INSTANCE_ID="i3" tenant_id="tenant-100"/>
+    <HISTORY guid="h1" optlock="1" app_id="app1" product_name="p1" name="key1" value_type="String" used_value="JBPM" default_value="JBPM" interval_start="2019-03-24" interval_end="2019-03-23" INSTANCE_ID="i1" tenant_id="tenant-100"/>
+    <HISTORY guid="h2" optlock="1" app_id="app2" product_name="p2" name="key2" value_type="String" used_value="KOGITO" default_value="JBPM" interval_start="2019-03-25" interval_end="2019-03-26" INSTANCE_ID="i2" tenant_id="tenant-100"/>
+    <HISTORY guid="h21" optlock="1" app_id="app2" product_name="p2" name="key2" value_type="String" used_value="KOGITO" default_value="JBPM" interval_start="2019-03-25" interval_end="2019-03-26" INSTANCE_ID="i2" tenant_id="tenant-100"/>
+    <HISTORY guid="h22" optlock="1" app_id="app2" product_name="p2" name="key2" value_type="String" used_value="KOGITO" default_value="JBPM" interval_start="2019-03-25" interval_end="2019-03-26" INSTANCE_ID="i3" tenant_id="tenant-100"/>
 </dataset>

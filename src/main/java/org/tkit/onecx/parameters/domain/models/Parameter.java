@@ -12,26 +12,26 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "PARAMETER", uniqueConstraints = {
-        @UniqueConstraint(name = "PARAMETER_CONSTRAINT", columnNames = { "KEY", "APPLICATION_ID", "PRODUCT_NAME",
+        @UniqueConstraint(name = "PARAMETER_CONSTRAINT", columnNames = { "NAME", "APP_ID", "PRODUCT_NAME",
                 "TENANT_ID" }) })
 @SuppressWarnings("java:S2160")
 public class Parameter extends TraceableEntity {
 
     @TenantId
-    @Column(name = "TENANT_ID")
+    @Column(name = "TENANT_ID", nullable = false)
     private String tenantId;
 
     /**
-     * The application parameter key.
+     * The parameter key.
      */
-    @Column(name = "KEY")
-    private String key;
+    @Column(name = "NAME", nullable = false)
+    private String name;
 
     /**
-     * The application parameter name.
+     * The display parameter name.
      */
-    @Column(name = "NAME")
-    private String name;
+    @Column(name = "DISPLAY_NAME")
+    private String displayName;
 
     /**
      * The name of the parameter as it appears in functional specifications
@@ -43,13 +43,13 @@ public class Parameter extends TraceableEntity {
     /**
      * The application.
      */
-    @Column(name = "APPLICATION_ID")
+    @Column(name = "APP_ID", nullable = false)
     private String applicationId;
 
     /**
      * The product
      */
-    @Column(name = "PRODUCT_NAME")
+    @Column(name = "PRODUCT_NAME", nullable = false)
     private String productName;
 
     /**

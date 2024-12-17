@@ -15,48 +15,48 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "PARAMETER_HISTORY")
+@Table(name = "HISTORY")
 @SuppressWarnings("java:S2160")
-public class ParameterHistory extends TraceableEntity {
+public class History extends TraceableEntity {
 
     @TenantId
-    @Column(name = "TENANT_ID")
+    @Column(name = "TENANT_ID", nullable = false)
     private String tenantId;
 
     /**
-     * The application parameter key.
+     * The parameter key.
      */
-    @Column(name = "KEY")
-    private String key;
+    @Column(name = "NAME", nullable = false)
+    private String name;
 
     /**
      * The application.
      */
-    @Column(name = "APPLICATION_ID")
+    @Column(name = "APP_ID", nullable = false)
     private String applicationId;
 
     /**
      * The product
      */
-    @Column(name = "PRODUCT_NAME")
+    @Column(name = "PRODUCT_NAME", nullable = false)
     private String productName;
 
     /**
-     * The application parameter type.
+     * The parameter type.
      */
     @Column(name = "VALUE_TYPE")
     private String type;
 
     /**
-     * The application parameter used value.
+     * The parameter used value.
      */
-    @Column(name = "USED_VALUE", columnDefinition = "varchar(1000)")
+    @Column(name = "USED_VALUE", columnDefinition = "varchar(5000)")
     private String usedValue;
 
     /**
-     * The application parameter used value.
+     * The parameter used value.
      */
-    @Column(name = "DEFAULT_VALUE", columnDefinition = "varchar(1000)")
+    @Column(name = "DEFAULT_VALUE", columnDefinition = "varchar(5000)")
     private String defaultValue;
 
     /**

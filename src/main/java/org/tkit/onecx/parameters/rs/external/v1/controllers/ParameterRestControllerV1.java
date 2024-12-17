@@ -12,9 +12,9 @@ import jakarta.ws.rs.core.Response;
 
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
+import org.tkit.onecx.parameters.domain.daos.HistoryDAO;
 import org.tkit.onecx.parameters.domain.daos.ParameterDAO;
-import org.tkit.onecx.parameters.domain.daos.ParameterHistoryDAO;
-import org.tkit.onecx.parameters.domain.models.ParameterHistory;
+import org.tkit.onecx.parameters.domain.models.History;
 import org.tkit.onecx.parameters.rs.external.v1.mappers.ExceptionMapperV1;
 import org.tkit.onecx.parameters.rs.external.v1.mappers.ParameterMapperV1;
 import org.tkit.quarkus.log.cdi.LogService;
@@ -32,7 +32,7 @@ public class ParameterRestControllerV1 implements ParameterApi {
     ParameterDAO applicationParameterDAO;
 
     @Inject
-    ParameterHistoryDAO historyDAO;
+    HistoryDAO historyDAO;
 
     @Inject
     ParameterMapperV1 mapper;
@@ -55,9 +55,9 @@ public class ParameterRestControllerV1 implements ParameterApi {
         if (dto.getParameters() == null || dto.getParameters().isEmpty()) {
             return Response.status(Response.Status.NO_CONTENT).build();
         }
-        List<ParameterHistory> items = new ArrayList<>();
-        dto.getParameters().forEach((key, value) -> items
-                .add(mapper.mapItem(value, key, dto, productName, appId,
+        List<History> items = new ArrayList<>();
+        dto.getParameters().forEach((name, value) -> items
+                .add(mapper.mapItem(value, name, dto, productName, appId,
                         value.getCurrentValue())));
         historyDAO.create(items);
         return Response.status(Response.Status.NO_CONTENT).build();

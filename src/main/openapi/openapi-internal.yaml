@@ -22,14 +22,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ParameterHistoryCriteria'
+              $ref: '#/components/schemas/HistoryCriteria'
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ParameterHistoryPageResult'
+                $ref: '#/components/schemas/HistoryPageResult'
   /histories/counts:
     post:
       security:
@@ -42,7 +42,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ParameterHistoryCountCriteria'
+              $ref: '#/components/schemas/HistoryCountCriteria'
       responses:
         "200":
           description: OK
@@ -51,7 +51,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ParameterHistoryCount'
+                  $ref: '#/components/schemas/HistoryCount'
   /histories/latest:
     post:
       security:
@@ -64,14 +64,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ParameterHistoryCriteria'
+              $ref: '#/components/schemas/HistoryCriteria'
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ParameterHistoryPageResult'
+                $ref: '#/components/schemas/HistoryPageResult'
   /histories/{id}:
     get:
       security:
@@ -92,7 +92,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ParameterHistory'
+                $ref: '#/components/schemas/History'
         "404":
           description: Not Found
   /parameters/search:
@@ -287,7 +287,9 @@ components:
     ParameterCreate:
       type: object
       properties:
-        key:
+        name:
+          type: string
+        displayName:
           type: string
         applicationId:
           type: string
@@ -317,7 +319,7 @@ components:
           example: 2022-03-10T12:15:50-04:00
         modificationUser:
           type: string
-        name:
+        displayName:
           type: string
         description:
           type: string
@@ -325,13 +327,13 @@ components:
           type: string
         productName:
           type: string
-        key:
+        name:
           type: string
         value:
           type: object
         importValue:
           type: object
-    ParameterHistory:
+    History:
       type: object
       properties:
         id:
@@ -355,7 +357,7 @@ components:
           type: string
         productName:
           type: string
-        key:
+        name:
           type: string
         usedValue:
           type: object
@@ -365,14 +367,14 @@ components:
           type: string
         instanceId:
           type: string
-    ParameterHistoryCriteria:
+    HistoryCriteria:
       type: object
       properties:
         applicationId:
           type: string
         productName:
           type: string
-        key:
+        name:
           type: string
         pageNumber:
           type: integer
@@ -386,7 +388,7 @@ components:
           type: array
           items:
             type: string
-    ParameterHistoryPageResult:
+    HistoryPageResult:
       type: object
       properties:
         totalElements:
@@ -405,7 +407,7 @@ components:
         stream:
           type: array
           items:
-            $ref: '#/components/schemas/ParameterHistory'
+            $ref: '#/components/schemas/History'
     ParameterPageResult:
       type: object
       properties:
@@ -431,6 +433,8 @@ components:
       properties:
         value:
           type: object
+        displayName:
+          type: string
         description:
           type: string
     Product:
@@ -462,14 +466,14 @@ components:
           type: array
           items:
             type: string
-    ParameterHistoryCountCriteria:
+    HistoryCountCriteria:
       type: object
       properties:
         applicationId:
           type: string
         productName:
           type: string
-        key:
+        name:
           type: string
         pageNumber:
           format: int32
@@ -483,7 +487,7 @@ components:
           type: array
           items:
             type: string
-    ParameterHistoryCount:
+    HistoryCount:
       type: object
       properties:
         creationDate:
@@ -500,9 +504,9 @@ components:
           type: string
         productName:
           type: string
-        key:
-          type: string
         name:
+          type: string
+        displayName:
           type: string
         pageNumber:
           format: int32
