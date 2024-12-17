@@ -44,10 +44,10 @@ public class ParameterRestController implements ParametersApi {
     }
 
     @Override
-    public Response getAllKeys(String applicationId, String productName) {
+    public Response getAllNames(String productName, String applicationId) {
         var criteria = parameterMapper.map(productName, applicationId);
-        var keys = parameterDAO.searchAllKeys(criteria);
-        return Response.ok(parameterMapper.keys(keys)).build();
+        var keys = parameterDAO.searchAllNames(criteria);
+        return Response.ok(parameterMapper.names(keys)).build();
     }
 
     @Override

@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class KeysSearchCriteria {
+public class NamesSearchCriteria {
 
     private String applicationId;
 

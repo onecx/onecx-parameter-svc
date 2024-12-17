@@ -6,7 +6,6 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 import static org.tkit.quarkus.security.test.SecurityTestUtils.getKeycloakClientToken;
 
-import java.util.Map;
 import java.util.stream.Stream;
 
 import jakarta.ws.rs.HttpMethod;
@@ -97,17 +96,16 @@ class ParameterRestControllerTest extends AbstractTest {
         Assertions.assertEquals(4, output.length);
     }
 
-    static Stream<Arguments> findAllKeys() {
+    static Stream<Arguments> findAllNames() {
         return Stream.of(
-                Arguments.of(Map.of(), 9),
-                Arguments.of(Map.of("applicationId", "", "productName", ""), 9),
-                Arguments.of(Map.of("applicationId", "app1", "productName", "p1"), 5));
+                Arguments.of("p1", "", 5),
+                Arguments.of("p1", "app1", 5));
     }
 
     @ParameterizedTest
-    @MethodSource("findAllKeys")
+    @MethodSource("findAllNames")
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
-    void searchAllKeysTest(Map<String, String> queryParams, int expectedArraySize) {
+    void searchAllNamesTest(String productName, String applicationId, int expectedArraySize) {
         var apm = createToken("org1");
         addExpectation(mockServerClient
                 .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))
@@ -119,14 +117,37 @@ class ParameterRestControllerTest extends AbstractTest {
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
-                .queryParams(queryParams)
-                .get("keys")
+                .queryParam("applicationId", applicationId)
+                .get("/names/" + productName)
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
-                .body().as(KeysPageResultDTO.class);
+                .body().as(NamesPageResultDTO.class);
         Assertions.assertEquals(expectedArraySize, pageResultDTO.getStream().size());
+    }
+
+    @Test
+    @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
+    void searchAllNamesNoAppTest() {
+        var apm = createToken("org1");
+        addExpectation(mockServerClient
+                .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
+
+        var pageResultDTO = given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
+                .when()
+                .get("/names/p1")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .contentType(APPLICATION_JSON)
+                .extract()
+                .body().as(NamesPageResultDTO.class);
+        Assertions.assertEquals(5, pageResultDTO.getStream().size());
     }
 
     static Stream<Arguments> findByCriteriaTestData() {
@@ -316,17 +337,15 @@ class ParameterRestControllerTest extends AbstractTest {
 
     static Stream<Arguments> createParameterTestInput() {
         return Stream.of(
-                Arguments.of("app_10", "p10", "description", "key_10", "value_10", null, null, null, null),
-                Arguments.of("app_10", "p10", "description", "key_11", "value_10", "", null, null, null),
-                Arguments.of("app_10", "p10", "description", "key_12", "value_10", " ", null, null, null));
+                Arguments.of("app_10", "p10", "description", "key_10", "value_10"),
+                Arguments.of("app_10", "p10", "description", "key_11", "value_10", ""),
+                Arguments.of("app_10", "p10", "description", "key_12", "value_10", " "));
     }
 
     @ParameterizedTest
     @MethodSource("createParameterTestInput")
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
-    void createParameterTest(String appId, String productName, String desc, String key, String value, String unit, Integer from,
-            Integer to,
-            String checkUnit) {
+    void createParameterTest(String appId, String productName, String desc, String key, String value) {
 
         var apm = createToken("org1");
         addExpectation(mockServerClient

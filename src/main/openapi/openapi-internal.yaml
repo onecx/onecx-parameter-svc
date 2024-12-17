@@ -166,14 +166,14 @@ paths:
                   $ref: '#/components/schemas/Product'
         "400":
           description: Bad request
-  /parameters/keys:
+  /parameters/names/{productName}:
     get:
       security:
         - oauth2: [ ocx-pa:all, ocx-pa:read ]
       tags:
       - parameters
-      description: Find all parameters
-      operationId: getAllKeys
+      description: Find all parameters names
+      operationId: getAllNames
       parameters:
       - name: applicationId
         in: query
@@ -181,7 +181,8 @@ paths:
           description: The application id.
           type: string
       - name: productName
-        in: query
+        required: true
+        in: path
         schema:
           description: The product name.
           type: string
@@ -191,7 +192,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/KeysPageResult'
+                $ref: '#/components/schemas/NamesPageResult'
         "400":
           description: Bad request
   /parameters/{id}:
@@ -446,7 +447,7 @@ components:
           type: array
           items:
             type: string
-    KeysPageResult:
+    NamesPageResult:
       type: object
       properties:
         totalElements:

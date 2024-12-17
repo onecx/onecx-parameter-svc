@@ -46,7 +46,7 @@ class ParameterDAOExceptionTest {
 
     @Test
     void searchAllKeysTest() {
-        var exc = Assertions.assertThrows(DAOException.class, () -> dao.searchAllKeys(null));
-        Assertions.assertEquals(ParameterDAO.ErrorKeys.FIND_ALL_KEYS_FAILED, exc.key);
+        var exc = Assertions.assertThrows(DAOException.class, () -> dao.searchAllNames(null));
+        Assertions.assertEquals(ParameterDAO.ErrorKeys.FIND_ALL_NAMES_FAILED, exc.key);
     }
 }
