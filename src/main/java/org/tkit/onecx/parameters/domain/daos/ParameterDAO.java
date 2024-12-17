@@ -9,7 +9,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
 
-import org.tkit.onecx.parameters.domain.criteria.KeysSearchCriteria;
+import org.tkit.onecx.parameters.domain.criteria.NamesSearchCriteria;
 import org.tkit.onecx.parameters.domain.criteria.ParameterSearchCriteria;
 import org.tkit.onecx.parameters.domain.models.*;
 import org.tkit.quarkus.jpa.daos.AbstractDAO;
@@ -65,16 +65,13 @@ public class ParameterDAO extends AbstractDAO<Parameter> {
         }
     }
 
-    public PageResult<String> searchAllKeys(KeysSearchCriteria criteria) {
+    public PageResult<String> searchAllNames(NamesSearchCriteria criteria) {
         try {
             var cb = getEntityManager().getCriteriaBuilder();
             CriteriaQuery<String> cq = cb.createQuery(String.class);
             Root<Parameter> root = cq.from(Parameter.class);
             cq.select(root.get(Parameter_.NAME)).distinct(true);
-
-            if (criteria.getProductName() != null && !criteria.getProductName().isEmpty()) {
-                cq.where(cb.equal(root.get(Parameter_.PRODUCT_NAME), criteria.getProductName()));
-            }
+            cq.where(cb.equal(root.get(Parameter_.PRODUCT_NAME), criteria.getProductName()));
 
             if (criteria.getApplicationId() != null && !criteria.getApplicationId().isEmpty()) {
                 cq.where(cb.equal(root.get(Parameter_.APPLICATION_ID), criteria.getApplicationId()));
@@ -83,7 +80,7 @@ public class ParameterDAO extends AbstractDAO<Parameter> {
             var results = getEntityManager().createQuery(cq).getResultList();
             return new PageResult<>(results.size(), results.stream(), Page.of(0, 1));
         } catch (Exception exception) {
-            throw new DAOException(ErrorKeys.FIND_ALL_KEYS_FAILED, exception);
+            throw new DAOException(ErrorKeys.FIND_ALL_NAMES_FAILED, exception);
         }
     }
 
@@ -107,7 +104,7 @@ public class ParameterDAO extends AbstractDAO<Parameter> {
         FIND_ALL_PARAMETERS_BY_APPLICATION_ID_FAILED,
         FIND_ALL_APPLICATIONS_FAILED,
 
-        FIND_ALL_KEYS_FAILED,
+        FIND_ALL_NAMES_FAILED,
         FIND_ALL_PARAMETERS_FAILED;
     }
 }

@@ -9,7 +9,7 @@ import jakarta.inject.Inject;
 
 import org.mapstruct.*;
 import org.tkit.onecx.parameters.domain.criteria.HistorySearchCriteria;
-import org.tkit.onecx.parameters.domain.criteria.KeysSearchCriteria;
+import org.tkit.onecx.parameters.domain.criteria.NamesSearchCriteria;
 import org.tkit.onecx.parameters.domain.criteria.ParameterSearchCriteria;
 import org.tkit.onecx.parameters.domain.models.ApplicationTuple;
 import org.tkit.onecx.parameters.domain.models.History;
@@ -29,10 +29,10 @@ public abstract class ParameterMapper {
     ObjectMapper objectMapper;
 
     @BeanMapping(nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
-    public abstract KeysSearchCriteria map(String productName, String applicationId);
+    public abstract NamesSearchCriteria map(String productName, String applicationId);
 
     @Mapping(target = "removeStreamItem", ignore = true)
-    public abstract KeysPageResultDTO keys(PageResult<String> page);
+    public abstract NamesPageResultDTO names(PageResult<String> page);
 
     public List<ProductDTO> apps(List<ApplicationTuple> applicationTuple) {
         Map<String, List<String>> productMap = new HashMap<>();
