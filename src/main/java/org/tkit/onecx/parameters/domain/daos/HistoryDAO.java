@@ -1,5 +1,7 @@
 package org.tkit.onecx.parameters.domain.daos;
 
+import static org.tkit.quarkus.jpa.utils.QueryCriteriaUtil.addSearchStringPredicate;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +14,6 @@ import org.tkit.onecx.parameters.domain.criteria.HistorySearchCriteria;
 import org.tkit.onecx.parameters.domain.models.History;
 import org.tkit.onecx.parameters.domain.models.HistoryCountTuple;
 import org.tkit.onecx.parameters.domain.models.History_;
-import org.tkit.onecx.parameters.domain.models.Parameter_;
 import org.tkit.quarkus.jpa.daos.AbstractDAO;
 import org.tkit.quarkus.jpa.daos.Page;
 import org.tkit.quarkus.jpa.daos.PageResult;
@@ -44,20 +45,13 @@ public class HistoryDAO extends AbstractDAO<History> {
             List<Predicate> predicates = new ArrayList<>();
             CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 
-            if (criteria.getProductName() != null && !criteria.getProductName().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get(Parameter_.PRODUCT_NAME)),
-                        stringPattern(criteria.getProductName())));
-            }
+            addSearchStringPredicate(predicates, cb, root.get(History_.PRODUCT_NAME), criteria.getProductName());
+            addSearchStringPredicate(predicates, cb, root.get(History_.APPLICATION_ID), criteria.getApplicationId());
+            addSearchStringPredicate(predicates, cb, root.get(History_.NAME), criteria.getName());
 
-            if (criteria.getApplicationId() != null && !criteria.getApplicationId().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get(Parameter_.APPLICATION_ID)),
-                        stringPattern(criteria.getApplicationId())));
-            }
-            if (criteria.getName() != null && !criteria.getName().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get(History_.NAME)), stringPattern(criteria.getName())));
-            }
             if (!criteria.getType().isEmpty()) {
-                predicates.add(cb.lower(root.get(History_.TYPE)).in(toLowerCase(criteria.getType())));
+                var items = criteria.getType().stream().map(String::toLowerCase).toList();
+                predicates.add(cb.lower(root.get(History_.TYPE)).in(items));
             }
             if (!predicates.isEmpty()) {
                 cq.where(cb.and(predicates.toArray(new Predicate[0])));
@@ -83,18 +77,9 @@ public class HistoryDAO extends AbstractDAO<History> {
 
             List<Predicate> predicates = new ArrayList<>();
             predicates.add(root.get(AbstractTraceableEntity_.CREATION_DATE).in(maxDateSubquery));
-
-            if (criteria.getProductName() != null && !criteria.getProductName().isEmpty()) {
-                predicates.add(cb.equal(cb.lower(root.get(Parameter_.PRODUCT_NAME)),
-                        criteria.getProductName().toLowerCase()));
-            }
-            if (criteria.getApplicationId() != null && !criteria.getApplicationId().isEmpty()) {
-                predicates.add(cb.equal(cb.lower(root.get(Parameter_.APPLICATION_ID)),
-                        criteria.getApplicationId().toLowerCase()));
-            }
-            if (criteria.getName() != null && !criteria.getName().isEmpty()) {
-                predicates.add(cb.equal(cb.lower(root.get(History_.NAME)), criteria.getName().toLowerCase()));
-            }
+            addSearchStringPredicate(predicates, cb, root.get(History_.PRODUCT_NAME), criteria.getProductName());
+            addSearchStringPredicate(predicates, cb, root.get(History_.APPLICATION_ID), criteria.getApplicationId());
+            addSearchStringPredicate(predicates, cb, root.get(History_.NAME), criteria.getName());
 
             cq.select(root)
                     .where(cb.and(predicates.toArray(new Predicate[0])))
@@ -116,18 +101,10 @@ public class HistoryDAO extends AbstractDAO<History> {
                             root.get(History_.COUNT)));
             List<Predicate> predicates = new ArrayList<>();
 
-            if (criteria.getProductName() != null && !criteria.getProductName().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get(Parameter_.PRODUCT_NAME)),
-                        stringPattern(criteria.getProductName())));
-            }
+            addSearchStringPredicate(predicates, cb, root.get(History_.PRODUCT_NAME), criteria.getProductName());
+            addSearchStringPredicate(predicates, cb, root.get(History_.APPLICATION_ID), criteria.getApplicationId());
+            addSearchStringPredicate(predicates, cb, root.get(History_.NAME), criteria.getName());
 
-            if (criteria.getApplicationId() != null && !criteria.getApplicationId().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get(Parameter_.APPLICATION_ID)),
-                        stringPattern(criteria.getApplicationId())));
-            }
-            if (criteria.getName() != null && !criteria.getName().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get(History_.NAME)), stringPattern(criteria.getName())));
-            }
             if (!predicates.isEmpty()) {
                 cq.where(cb.and(predicates.toArray(new Predicate[0])));
             }
@@ -135,14 +112,6 @@ public class HistoryDAO extends AbstractDAO<History> {
         } catch (Exception exception) {
             throw new DAOException(ErrorKeys.FIND_ALL_PARAMETERS_HISTORY_FAILED, exception);
         }
-    }
-
-    private static String stringPattern(String value) {
-        return (value.toLowerCase() + "%");
-    }
-
-    private static List<String> toLowerCase(List<String> value) {
-        return value.stream().map(String::toLowerCase).toList();
     }
 
     public enum ErrorKeys {

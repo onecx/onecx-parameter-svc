@@ -1,5 +1,7 @@
 package org.tkit.onecx.parameters.domain.daos;
 
+import static org.tkit.quarkus.jpa.utils.QueryCriteriaUtil.addSearchStringPredicate;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -46,22 +48,14 @@ public class ParameterDAO extends AbstractDAO<Parameter> {
         try {
             CriteriaQuery<Parameter> cq = criteriaQuery();
             Root<Parameter> root = cq.from(Parameter.class);
-            List<Predicate> predicates = new ArrayList<>();
             CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-            if (criteria.getProductName() != null && !criteria.getProductName().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get(Parameter_.PRODUCT_NAME)),
-                        stringPattern(criteria.getProductName())));
-            }
-            if (criteria.getApplicationId() != null && !criteria.getApplicationId().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get(Parameter_.APPLICATION_ID)),
-                        stringPattern(criteria.getApplicationId())));
-            }
-            if (criteria.getName() != null && !criteria.getName().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get(Parameter_.NAME)), stringPattern(criteria.getName())));
-            }
-            if (criteria.getDisplayName() != null && !criteria.getDisplayName().isEmpty()) {
-                predicates.add(cb.like(cb.lower(root.get(Parameter_.DISPLAY_NAME)), stringPattern(criteria.getDisplayName())));
-            }
+
+            List<Predicate> predicates = new ArrayList<>();
+            addSearchStringPredicate(predicates, cb, root.get(Parameter_.PRODUCT_NAME), criteria.getProductName());
+            addSearchStringPredicate(predicates, cb, root.get(Parameter_.APPLICATION_ID), criteria.getApplicationId());
+            addSearchStringPredicate(predicates, cb, root.get(Parameter_.NAME), criteria.getName());
+            addSearchStringPredicate(predicates, cb, root.get(Parameter_.DISPLAY_NAME), criteria.getDisplayName());
+
             if (!predicates.isEmpty()) {
                 cq.where(cb.and(predicates.toArray(new Predicate[0])));
             }
@@ -106,10 +100,6 @@ public class ParameterDAO extends AbstractDAO<Parameter> {
         } catch (Exception exception) {
             throw new DAOException(ErrorKeys.FIND_ALL_APPLICATIONS_FAILED, exception);
         }
-    }
-
-    private static String stringPattern(String value) {
-        return (value.toLowerCase() + "%");
     }
 
     public enum ErrorKeys {
