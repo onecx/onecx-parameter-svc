@@ -337,17 +337,15 @@ class ParameterRestControllerTest extends AbstractTest {
 
     static Stream<Arguments> createParameterTestInput() {
         return Stream.of(
-                Arguments.of("app_10", "p10", "description", "key_10", "value_10", null, null, null, null),
-                Arguments.of("app_10", "p10", "description", "key_11", "value_10", "", null, null, null),
-                Arguments.of("app_10", "p10", "description", "key_12", "value_10", " ", null, null, null));
+                Arguments.of("app_10", "p10", "description", "key_10", "value_10"),
+                Arguments.of("app_10", "p10", "description", "key_11", "value_10", ""),
+                Arguments.of("app_10", "p10", "description", "key_12", "value_10", " "));
     }
 
     @ParameterizedTest
     @MethodSource("createParameterTestInput")
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
-    void createParameterTest(String appId, String productName, String desc, String key, String value, String unit, Integer from,
-            Integer to,
-            String checkUnit) {
+    void createParameterTest(String appId, String productName, String desc, String key, String value) {
 
         var apm = createToken("org1");
         addExpectation(mockServerClient
