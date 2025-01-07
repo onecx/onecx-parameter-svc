@@ -1,6 +1,7 @@
 package org.tkit.onecx.parameters.domain.daos;
 
 import static org.tkit.quarkus.jpa.utils.QueryCriteriaUtil.addSearchStringPredicate;
+import static org.tkit.quarkus.jpa.utils.QueryCriteriaUtil.createSearchStringPredicate;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -43,23 +44,72 @@ public class ParameterDAO extends AbstractDAO<Parameter> {
             throw new DAOException(ErrorKeys.FIND_ALL_PARAMETERS_BY_APPLICATION_ID_FAILED, e);
         }
     }
+    //
+    //    public PageResult<Parameter> searchByCriteria(ParameterSearchCriteria criteria) {
+    //        try {
+    //            CriteriaQuery<Parameter> cq = criteriaQuery();
+    //            Root<Parameter> root = cq.from(Parameter.class);
+    //            CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+    //
+    //            List<Predicate> predicates = new ArrayList<>();
+    //            addSearchStringPredicate(predicates, cb, root.get(Parameter_.PRODUCT_NAME), criteria.getProductName());
+    //            addSearchStringPredicate(predicates, cb, root.get(Parameter_.APPLICATION_ID), criteria.getApplicationId());
+    //            addSearchStringPredicate(predicates, cb, root.get(Parameter_.NAME), criteria.getName());
+    //            addSearchStringPredicate(predicates, cb, root.get(Parameter_.DISPLAY_NAME), criteria.getDisplayName());
+    //
+    //            if (!predicates.isEmpty()) {
+    //                cq.where(cb.and(predicates.toArray(new Predicate[0])));
+    //            }
+    //            return createPageQuery(cq, Page.of(criteria.getPageNumber(), criteria.getPageSize())).getPageResult();
+    //        } catch (Exception exception) {
+    //            throw new DAOException(ErrorKeys.FIND_ALL_PARAMETERS_FAILED, exception);
+    //        }
+    //    }
 
-    public PageResult<Parameter> searchByCriteria(ParameterSearchCriteria criteria) {
+    @Transactional
+    public PageResult<ParameterSearchResultItemTuple> searchByCriteria(ParameterSearchCriteria criteria) {
         try {
-            CriteriaQuery<Parameter> cq = criteriaQuery();
-            Root<Parameter> root = cq.from(Parameter.class);
             CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+            CriteriaQuery<Parameter> cq = cb.createQuery(Parameter.class);
+            Root<Parameter> root = cq.from(Parameter.class);
 
             List<Predicate> predicates = new ArrayList<>();
             addSearchStringPredicate(predicates, cb, root.get(Parameter_.PRODUCT_NAME), criteria.getProductName());
             addSearchStringPredicate(predicates, cb, root.get(Parameter_.APPLICATION_ID), criteria.getApplicationId());
-            addSearchStringPredicate(predicates, cb, root.get(Parameter_.NAME), criteria.getName());
-            addSearchStringPredicate(predicates, cb, root.get(Parameter_.DISPLAY_NAME), criteria.getDisplayName());
+
+            if (criteria.getName() != null && !criteria.getName().isBlank()) {
+                var namePredicate = createSearchStringPredicate(cb, root.get(Parameter_.NAME), criteria.getName());
+                var displayNamePredicate = createSearchStringPredicate(cb, root.get(Parameter_.DISPLAY_NAME),
+                        criteria.getName());
+                predicates.add(cb.or(namePredicate, displayNamePredicate));
+            }
 
             if (!predicates.isEmpty()) {
                 cq.where(cb.and(predicates.toArray(new Predicate[0])));
             }
-            return createPageQuery(cq, Page.of(criteria.getPageNumber(), criteria.getPageSize())).getPageResult();
+
+            PageResult<Parameter> parameterPageResult = createPageQuery(cq,
+                    Page.of(criteria.getPageNumber(), criteria.getPageSize())).getPageResult();
+
+            // Map to ParameterSearchResultItemTuple and set the isInHistory flag
+            List<ParameterSearchResultItemTuple> parameterTupleList = parameterPageResult.getStream()
+                    .map(parameter -> {
+                        CriteriaQuery<Long> subquery = cb.createQuery(Long.class);
+                        Root<History> historyRoot = subquery.from(History.class);
+                        subquery.select(cb.count(historyRoot));
+                        subquery.where(
+                                cb.equal(historyRoot.get(History_.NAME), parameter.getName()),
+                                cb.equal(historyRoot.get(History_.APPLICATION_ID), parameter.getApplicationId()),
+                                cb.equal(historyRoot.get(History_.PRODUCT_NAME), parameter.getProductName()),
+                                cb.equal(historyRoot.get(History_.TENANT_ID), parameter.getTenantId()));
+                        Long count = getEntityManager().createQuery(subquery).getSingleResult();
+                        boolean isInHistory = count > 0;
+                        return new ParameterSearchResultItemTuple(parameter, isInHistory);
+                    })
+                    .toList();
+
+            return new PageResult<>(parameterPageResult.getTotalElements(), parameterTupleList.stream(),
+                    parameterPageResult.getNumber(), parameterPageResult.getSize());
         } catch (Exception exception) {
             throw new DAOException(ErrorKeys.FIND_ALL_PARAMETERS_FAILED, exception);
         }

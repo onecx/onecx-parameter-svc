@@ -1,0 +1,94 @@
+---
+openapi: 3.0.3
+info:
+  title: onecx-parameters operator service
+  description: OneCx parameters operator service
+  version: "1.0.0"
+servers:
+- url: http://onecx-parameters-svc:8080/
+tags:
+- name: operatorParameters
+paths:
+  /operator/v1/parameters:
+    put:
+      security:
+        - oauth2: [ ocx-pa-op:write ]
+      tags:
+      - operatorParameters
+      description: create or update parameter
+      operationId: createOrUpdateParameterValue
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParameterUpdateRequest'
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
+        "404":
+          description: Not Found
+components:
+  securitySchemes:
+    oauth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://oauth.simple.api/token
+          scopes:
+            ocx-pa-op:write: Grants write access
+  schemas:
+    ParameterUpdateRequest:
+      type: object
+      properties:
+        tenantId:
+          type: string
+        name:
+          type: string
+        displayName:
+          type: string
+        applicationId:
+          type: string
+        productName:
+          type: string
+        value:
+          type: object
+        importValue:
+          type: string
+        description:
+          type: string
+    ProblemDetailResponse:
+      type: object
+      properties:
+        errorCode:
+          type: string
+        detail:
+          type: string
+        params:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProblemDetailParam'
+        invalidParams:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProblemDetailInvalidParam'
+    ProblemDetailParam:
+      type: object
+      properties:
+        key:
+          type: string
+        value:
+          type: string
+    ProblemDetailInvalidParam:
+      type: object
+      properties:
+        name:
+          type: string
+        message:
+          type: string

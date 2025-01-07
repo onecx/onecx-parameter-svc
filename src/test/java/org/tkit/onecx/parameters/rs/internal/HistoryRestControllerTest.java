@@ -6,7 +6,6 @@ import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
 import static org.tkit.quarkus.security.test.SecurityTestUtils.getKeycloakClientToken;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import jakarta.ws.rs.HttpMethod;
@@ -77,10 +76,8 @@ class HistoryRestControllerTest extends AbstractTest {
     static Stream<Arguments> findByCriteriaTestData() {
         return Stream.of(
                 Arguments.of(new HistoryCriteriaDTO(), 6),
-                Arguments.of(new HistoryCriteriaDTO().applicationId("").productName("").name("")
-                        .type(List.of("")), 0),
-                Arguments.of(new HistoryCriteriaDTO().applicationId("app0").productName("p0").name("key0")
-                        .type(List.of("type0")), 0),
+                Arguments.of(new HistoryCriteriaDTO().applicationId("abc").productName("").name(""), 0),
+                Arguments.of(new HistoryCriteriaDTO().applicationId("app0").productName("p0").name("key0"), 0),
                 Arguments.of(new HistoryCriteriaDTO().applicationId("access-mgmt")
                         .productName("access-mgmt-product"), 2),
                 Arguments.of(new HistoryCriteriaDTO().applicationId("app0").productName("p0"), 0),

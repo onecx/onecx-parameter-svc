@@ -49,10 +49,6 @@ public class HistoryDAO extends AbstractDAO<History> {
             addSearchStringPredicate(predicates, cb, root.get(History_.APPLICATION_ID), criteria.getApplicationId());
             addSearchStringPredicate(predicates, cb, root.get(History_.NAME), criteria.getName());
 
-            if (!criteria.getType().isEmpty()) {
-                var items = criteria.getType().stream().map(String::toLowerCase).toList();
-                predicates.add(cb.lower(root.get(History_.TYPE)).in(items));
-            }
             if (!predicates.isEmpty()) {
                 cq.where(cb.and(predicates.toArray(new Predicate[0])));
             }

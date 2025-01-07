@@ -11,10 +11,7 @@ import org.mapstruct.*;
 import org.tkit.onecx.parameters.domain.criteria.HistorySearchCriteria;
 import org.tkit.onecx.parameters.domain.criteria.NamesSearchCriteria;
 import org.tkit.onecx.parameters.domain.criteria.ParameterSearchCriteria;
-import org.tkit.onecx.parameters.domain.models.ApplicationTuple;
-import org.tkit.onecx.parameters.domain.models.History;
-import org.tkit.onecx.parameters.domain.models.HistoryCountTuple;
-import org.tkit.onecx.parameters.domain.models.Parameter;
+import org.tkit.onecx.parameters.domain.models.*;
 import org.tkit.quarkus.jpa.daos.PageResult;
 import org.tkit.quarkus.rs.mappers.OffsetDateTimeMapper;
 
@@ -68,11 +65,29 @@ public abstract class ParameterMapper {
     public abstract List<HistoryCountDTO> mapCountList(List<HistoryCountTuple> count);
 
     @Mapping(target = "removeStreamItem", ignore = true)
-    public abstract ParameterPageResultDTO map(PageResult<Parameter> page);
+    public abstract ParameterPageResultDTO map(PageResult<ParameterSearchResultItemTuple> page);
 
     @Mapping(target = "value", source = "value", qualifiedByName = "s2o")
     @Mapping(target = "importValue", source = "importValue", qualifiedByName = "s2o")
+    @Mapping(target = "isInHistory", ignore = true)
     public abstract ParameterDTO map(Parameter parameter);
+
+    @Mapping(target = "productName", source = "parameter.parameter.productName")
+    @Mapping(target = "operator", source = "parameter.parameter.operator")
+    @Mapping(target = "name", source = "parameter.parameter.name")
+    @Mapping(target = "modificationUser", source = "parameter.parameter.modificationUser")
+    @Mapping(target = "modificationDate", source = "parameter.parameter.modificationDate")
+    @Mapping(target = "modificationCount", source = "parameter.parameter.modificationCount")
+    @Mapping(target = "id", source = "parameter.parameter.id")
+    @Mapping(target = "displayName", source = "parameter.parameter.displayName")
+    @Mapping(target = "description", source = "parameter.parameter.description")
+    @Mapping(target = "creationUser", source = "parameter.parameter.creationUser")
+    @Mapping(target = "creationDate", source = "parameter.parameter.creationDate")
+    @Mapping(target = "applicationId", source = "parameter.parameter.applicationId")
+    @Mapping(target = "isInHistory", source = "parameter.isInHistory")
+    @Mapping(target = "value", source = "parameter.parameter.value", qualifiedByName = "s2o")
+    @Mapping(target = "importValue", source = "parameter.parameter.importValue", qualifiedByName = "s2o")
+    public abstract ParameterDTO map(ParameterSearchResultItemTuple parameter);
 
     @Named("s2o")
     public Object s2o(String value) {
@@ -98,12 +113,13 @@ public abstract class ParameterMapper {
         }
     }
 
+    @Mapping(target = "operator", ignore = true)
     @Mapping(target = "tenantId", ignore = true)
     @Mapping(target = "value", source = "value", qualifiedByName = "o2s")
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "modificationUser", ignore = true)
     @Mapping(target = "modificationDate", ignore = true)
-    @Mapping(target = "modificationCount", ignore = true)
+    @Mapping(target = "modificationCount", source = "modificationCount")
     @Mapping(target = "importValue", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "creationUser", ignore = true)
@@ -114,6 +130,7 @@ public abstract class ParameterMapper {
     @Mapping(target = "productName", ignore = true)
     public abstract void update(ParameterUpdateDTO dto, @MappingTarget Parameter parameter);
 
+    @Mapping(target = "operator", constant = "false")
     @Mapping(target = "tenantId", ignore = true)
     @Mapping(target = "value", source = "value", qualifiedByName = "o2s")
     @Mapping(target = "persisted", ignore = true)

@@ -163,7 +163,7 @@
                 <artifactId>download-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>onecx-permission-v1</id>
+                        <id>onecx-parameter-v1</id>
                         <phase>initialize</phase>
                         <goals>
                             <goal>wget</goal>
@@ -204,6 +204,18 @@
                             <apiPackage>gen.org.tkit.onecx.parameters.rs.v1</apiPackage>
                             <modelPackage>gen.org.tkit.onecx.parameters.rs.v1.model</modelPackage>
                             <modelNameSuffix>DTOV1</modelNameSuffix>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>operator-v1</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>src/main/openapi/openapi-operator-v1.yaml</inputSpec>
+                            <apiPackage>gen.org.tkit.onecx.parameters.rs.v1.operator</apiPackage>
+                            <modelPackage>gen.org.tkit.onecx.parameters.rs.v1.operator.model</modelPackage>
+                            <modelNameSuffix>OperatorDTOV1</modelNameSuffix>
                         </configuration>
                     </execution>
                 </executions>

@@ -240,8 +240,12 @@ paths:
             schema:
               $ref: '#/components/schemas/ParameterUpdate'
       responses:
-        "204":
-          description: No Content
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Parameter'
         "400":
           description: Bad Request
           content:
@@ -334,6 +338,10 @@ components:
           type: object
         importValue:
           type: object
+        operator:
+          type: boolean
+        isInHistory:
+          type: boolean
     History:
       type: object
       properties:
@@ -364,7 +372,7 @@ components:
           type: object
         defaultValue:
           type: object
-        type:
+        description:
           type: string
         instanceId:
           type: string
@@ -385,10 +393,6 @@ components:
           type: integer
           format: int32
           default: 100
-        type:
-          type: array
-          items:
-            type: string
     HistoryPageResult:
       type: object
       properties:
@@ -431,6 +435,8 @@ components:
             $ref: '#/components/schemas/Parameter'
     ParameterUpdate:
       type: object
+      required:
+        - modificationCount
       properties:
         value:
           type: object
@@ -438,6 +444,9 @@ components:
           type: string
         description:
           type: string
+        modificationCount:
+          format: int32
+          type: integer
     Product:
       type: object
       properties:
@@ -506,8 +515,6 @@ components:
         productName:
           type: string
         name:
-          type: string
-        displayName:
           type: string
         pageNumber:
           format: int32

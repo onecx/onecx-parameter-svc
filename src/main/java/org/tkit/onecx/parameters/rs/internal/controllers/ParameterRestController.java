@@ -2,6 +2,7 @@ package org.tkit.onecx.parameters.rs.internal.controllers;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.OptimisticLockException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.core.Context;
@@ -83,8 +84,8 @@ public class ParameterRestController implements ParametersApi {
                     .build();
         }
         parameterMapper.update(parameterUpdateDTO, parameter);
-        parameterDAO.update(parameter);
-        return Response.status(Response.Status.NO_CONTENT.getStatusCode()).build();
+        var updatedParameter = parameterMapper.map(parameterDAO.update(parameter));
+        return Response.status(Response.Status.OK.getStatusCode()).entity(updatedParameter).build();
     }
 
     @Override
@@ -111,5 +112,10 @@ public class ParameterRestController implements ParametersApi {
     @ServerExceptionMapper
     public RestResponse<ProblemDetailResponseDTO> constraint(ConstraintViolationException ex) {
         return exceptionMapper.constraint(ex);
+    }
+
+    @ServerExceptionMapper
+    public RestResponse<ProblemDetailResponseDTO> daoException(OptimisticLockException ex) {
+        return exceptionMapper.optimisticLock(ex);
     }
 }
