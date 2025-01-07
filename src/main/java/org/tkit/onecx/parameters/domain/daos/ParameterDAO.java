@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
 
@@ -44,27 +45,25 @@ public class ParameterDAO extends AbstractDAO<Parameter> {
             throw new DAOException(ErrorKeys.FIND_ALL_PARAMETERS_BY_APPLICATION_ID_FAILED, e);
         }
     }
-    //
-    //    public PageResult<Parameter> searchByCriteria(ParameterSearchCriteria criteria) {
-    //        try {
-    //            CriteriaQuery<Parameter> cq = criteriaQuery();
-    //            Root<Parameter> root = cq.from(Parameter.class);
-    //            CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-    //
-    //            List<Predicate> predicates = new ArrayList<>();
-    //            addSearchStringPredicate(predicates, cb, root.get(Parameter_.PRODUCT_NAME), criteria.getProductName());
-    //            addSearchStringPredicate(predicates, cb, root.get(Parameter_.APPLICATION_ID), criteria.getApplicationId());
-    //            addSearchStringPredicate(predicates, cb, root.get(Parameter_.NAME), criteria.getName());
-    //            addSearchStringPredicate(predicates, cb, root.get(Parameter_.DISPLAY_NAME), criteria.getDisplayName());
-    //
-    //            if (!predicates.isEmpty()) {
-    //                cq.where(cb.and(predicates.toArray(new Predicate[0])));
-    //            }
-    //            return createPageQuery(cq, Page.of(criteria.getPageNumber(), criteria.getPageSize())).getPageResult();
-    //        } catch (Exception exception) {
-    //            throw new DAOException(ErrorKeys.FIND_ALL_PARAMETERS_FAILED, exception);
-    //        }
-    //    }
+
+    public Parameter findByNameApplicationIdAndProductName(String name, String applicationId, String productName) {
+        try {
+            CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+            CriteriaQuery<Parameter> cq = cb.createQuery(Parameter.class);
+            Root<Parameter> root = cq.from(Parameter.class);
+
+            List<Predicate> predicates = new ArrayList<>();
+            predicates.add(cb.equal(root.get(Parameter_.PRODUCT_NAME), productName));
+            predicates.add(cb.equal(root.get(Parameter_.APPLICATION_ID), applicationId));
+            predicates.add(cb.equal(root.get(Parameter_.NAME), name));
+            cq.where(cb.and(predicates.toArray(new Predicate[0])));
+            return getEntityManager().createQuery(cq).getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        } catch (Exception exception) {
+            throw new DAOException(ErrorKeys.FIND_BY_NAME_PRODUCT_NAME_APPLICATION_ID_FAILED, exception);
+        }
+    }
 
     @Transactional
     public PageResult<ParameterSearchResultItemTuple> searchByCriteria(ParameterSearchCriteria criteria) {
@@ -155,6 +154,7 @@ public class ParameterDAO extends AbstractDAO<Parameter> {
         FIND_ALL_APPLICATIONS_FAILED,
 
         FIND_ALL_NAMES_FAILED,
-        FIND_ALL_PARAMETERS_FAILED;
+        FIND_ALL_PARAMETERS_FAILED,
+        FIND_BY_NAME_PRODUCT_NAME_APPLICATION_ID_FAILED
     }
 }

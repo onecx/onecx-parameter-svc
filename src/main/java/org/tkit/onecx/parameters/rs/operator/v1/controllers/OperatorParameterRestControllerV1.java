@@ -9,6 +9,7 @@ import jakarta.ws.rs.core.Response;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 import org.tkit.onecx.parameters.domain.daos.ParameterDAO;
+import org.tkit.onecx.parameters.domain.models.Parameter;
 import org.tkit.onecx.parameters.rs.operator.v1.mappers.OperatorExceptionMapperV1;
 import org.tkit.onecx.parameters.rs.operator.v1.mappers.OperatorParameterMapperV1;
 import org.tkit.quarkus.log.cdi.LogService;
@@ -37,24 +38,17 @@ public class OperatorParameterRestControllerV1 implements OperatorParametersApi 
     }
 
     @Override
-    public Response createOrUpdateParameterValue(ParameterUpdateRequestOperatorDTOV1 parameterUpdateRequestOperatorDTOV1) {
-        //param = findByUniqueConstraint()
-        //        if (param != null) {
-        //            Parameter parameter = parameterDAO.findById(parameterUpdateRequestOperatorDTOV1.getId());
-        //            if (parameter == null) {
-        //                return Response.status(Response.Status.NOT_FOUND)
-        //                        .entity(exceptionMapper.exception(Response.Status.NOT_FOUND.name(),
-        //                                "Parameter with id" + parameterUpdateRequestOperatorDTOV1.getId() + " not found."))
-        //                        .build();
-        //            }
-        //            mapper.update(parameterUpdateRequestOperatorDTOV1, parameter);
-        //            parameterDAO.update(parameter);
-        //            return Response.status(Response.Status.NO_CONTENT.getStatusCode()).build();
-        //        } else {
-        //            Parameter param = mapper.create(parameterUpdateRequestOperatorDTOV1);
-        //            parameterDAO.create(param);
-        //            return Response.status(Response.Status.CREATED).build();
-        //        }
-        return null;
+    public Response createOrUpdateParameterValue(ParameterUpdateRequestOperatorDTOV1 requestDTO) {
+        var matchedParam = parameterDAO.findByNameApplicationIdAndProductName(requestDTO.getName(),
+                requestDTO.getApplicationId(), requestDTO.getProductName());
+        if (matchedParam == null) {
+            Parameter paramToCreate = mapper.create(requestDTO);
+            parameterDAO.create(paramToCreate);
+            return Response.status(Response.Status.NO_CONTENT).build();
+        } else {
+            mapper.update(requestDTO, matchedParam);
+            parameterDAO.update(matchedParam);
+            return Response.status(Response.Status.NO_CONTENT.getStatusCode()).build();
+        }
     }
 }

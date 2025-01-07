@@ -46,9 +46,11 @@ components:
   schemas:
     ParameterUpdateRequest:
       type: object
+      required:
+        - applicationId
+        - name
+        - productName
       properties:
-        tenantId:
-          type: string
         name:
           type: string
         displayName:
