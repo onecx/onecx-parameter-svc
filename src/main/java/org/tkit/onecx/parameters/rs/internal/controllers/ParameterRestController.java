@@ -92,22 +92,20 @@ public class ParameterRestController implements ParametersApi {
         List<Parameter> create = new ArrayList<>();
         List<Parameter> update = new ArrayList<>();
 
-        request.getProducts().forEach((productName, dtoList) -> {
-            dtoList.forEach(dto -> {
-                var singleParameter = parameterDAO.findByNameApplicationIdAndProductName(
-                        dto.getName(), dto.getApplicationId(), productName);
+        request.getProducts().forEach((productName, dtoList) -> dtoList.forEach(dto -> {
+            var singleParameter = parameterDAO.findByNameApplicationIdAndProductName(
+                    dto.getName(), dto.getApplicationId(), productName);
 
-                if (singleParameter == null) {
-                    var parameter = parameterMapper.create(dto);
-                    create.add(parameter);
-                    items.put(parameter.getName(), ImportParameterResponseStatusDTO.CREATED);
-                } else {
-                    parameterMapper.update(dto, singleParameter);
-                    update.add(singleParameter);
-                    items.put(singleParameter.getName(), ImportParameterResponseStatusDTO.UPDATE);
-                }
-            });
-        });
+            if (singleParameter == null) {
+                var parameter = parameterMapper.create(dto);
+                create.add(parameter);
+                items.put(parameter.getName(), ImportParameterResponseStatusDTO.CREATED);
+            } else {
+                parameterMapper.update(dto, singleParameter);
+                update.add(singleParameter);
+                items.put(singleParameter.getName(), ImportParameterResponseStatusDTO.UPDATE);
+            }
+        }));
 
         parameterService.importParameters(create, update);
 
