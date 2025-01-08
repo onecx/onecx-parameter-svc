@@ -25,8 +25,6 @@ public class ParameterSearchCriteria {
      */
     private String name;
 
-    private String displayName;
-
     private Integer pageNumber;
 
     private Integer pageSize;

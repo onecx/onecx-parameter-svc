@@ -5,4 +5,7 @@
                         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
         <include relativeToChangelogFile="true" file="v1/2024-12-16-create-tables.xml"/>
+        <include relativeToChangelogFile="true" file="v1/2025-01-06-operator-flag-and-idx.xml"/>
+        <include relativeToChangelogFile="true" file="v1/2025-01-07-remove-type-add-desc.xml"/>
+
 </databaseChangeLog>

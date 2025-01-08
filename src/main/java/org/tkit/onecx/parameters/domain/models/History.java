@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 import org.hibernate.annotations.TenantId;
@@ -15,7 +16,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "HISTORY")
+@Table(name = "HISTORY", indexes = {
+        @Index(name = "IDX_HISTORY_V1", columnList = "PRODUCT_NAME, APP_ID, TENANT_ID") })
 @SuppressWarnings("java:S2160")
 public class History extends TraceableEntity {
 
@@ -44,8 +46,8 @@ public class History extends TraceableEntity {
     /**
      * The parameter type.
      */
-    @Column(name = "VALUE_TYPE")
-    private String type;
+    @Column(name = "VALUE_DESCRIPTION")
+    private String description;
 
     /**
      * The parameter used value.

@@ -1,7 +1,5 @@
 package org.tkit.onecx.parameters.domain.criteria;
 
-import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,8 +24,6 @@ public class HistorySearchCriteria {
      * The parameter name.
      */
     private String name;
-
-    private List<String> type;
 
     private Integer pageNumber;
 

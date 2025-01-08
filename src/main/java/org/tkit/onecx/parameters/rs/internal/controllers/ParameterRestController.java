@@ -1,7 +1,14 @@
 package org.tkit.onecx.parameters.rs.internal.controllers;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.OptimisticLockException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.core.Context;
@@ -12,6 +19,7 @@ import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 import org.tkit.onecx.parameters.domain.daos.ParameterDAO;
 import org.tkit.onecx.parameters.domain.models.Parameter;
+import org.tkit.onecx.parameters.domain.services.ParameterService;
 import org.tkit.onecx.parameters.rs.internal.mappers.ExceptionMapper;
 import org.tkit.onecx.parameters.rs.internal.mappers.ParameterMapper;
 import org.tkit.quarkus.jpa.exceptions.ConstraintException;
@@ -36,6 +44,9 @@ public class ParameterRestController implements ParametersApi {
 
     @Inject
     ExceptionMapper exceptionMapper;
+
+    @Inject
+    ParameterService parameterService;
 
     @Override
     public Response getAllApplications() {
@@ -73,6 +84,35 @@ public class ParameterRestController implements ParametersApi {
     }
 
     @Override
+    public Response importParameters(ParameterSnapshotDTO request) {
+        var productNames = request.getProducts().keySet();
+        parameterDAO.findAllByProductNames(productNames);
+
+        Map<String, ImportParameterResponseStatusDTO> items = new HashMap<>();
+        List<Parameter> create = new ArrayList<>();
+        List<Parameter> update = new ArrayList<>();
+
+        request.getProducts().forEach((productName, dtoList) -> dtoList.forEach(dto -> {
+            var singleParameter = parameterDAO.findByNameApplicationIdAndProductName(
+                    dto.getName(), dto.getApplicationId(), productName);
+
+            if (singleParameter == null) {
+                var parameter = parameterMapper.create(dto);
+                create.add(parameter);
+                items.put(parameter.getName(), ImportParameterResponseStatusDTO.CREATED);
+            } else {
+                parameterMapper.update(dto, singleParameter);
+                update.add(singleParameter);
+                items.put(singleParameter.getName(), ImportParameterResponseStatusDTO.UPDATE);
+            }
+        }));
+
+        parameterService.importParameters(create, update);
+
+        return Response.ok(parameterMapper.createImportResponse(request, items)).build();
+    }
+
+    @Override
     public Response updateParameterValue(String id,
             ParameterUpdateDTO parameterUpdateDTO) {
         Parameter parameter = parameterDAO.findById(id);
@@ -83,8 +123,8 @@ public class ParameterRestController implements ParametersApi {
                     .build();
         }
         parameterMapper.update(parameterUpdateDTO, parameter);
-        parameterDAO.update(parameter);
-        return Response.status(Response.Status.NO_CONTENT.getStatusCode()).build();
+        var updatedParameter = parameterMapper.map(parameterDAO.update(parameter));
+        return Response.status(Response.Status.OK.getStatusCode()).entity(updatedParameter).build();
     }
 
     @Override
@@ -103,6 +143,17 @@ public class ParameterRestController implements ParametersApi {
         return Response.status(Response.Status.NO_CONTENT.getStatusCode()).build();
     }
 
+    @Override
+    public Response exportParameters(ExportParameterRequestDTO requestDTO) {
+        var parameters = parameterDAO.findAllByProductNames(requestDTO.getProductNames());
+        var data = parameters.collect(Collectors.groupingBy(Parameter::getProductName, Collectors.toList()));
+        if (data.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        return Response.ok(parameterMapper.createSnapshot(data)).build();
+    }
+
     @ServerExceptionMapper
     public RestResponse<ProblemDetailResponseDTO> exception(ConstraintException ex) {
         return exceptionMapper.exception(ex);
@@ -111,5 +162,10 @@ public class ParameterRestController implements ParametersApi {
     @ServerExceptionMapper
     public RestResponse<ProblemDetailResponseDTO> constraint(ConstraintViolationException ex) {
         return exceptionMapper.constraint(ex);
+    }
+
+    @ServerExceptionMapper
+    public RestResponse<ProblemDetailResponseDTO> daoException(OptimisticLockException ex) {
+        return exceptionMapper.optimisticLock(ex);
     }
 }

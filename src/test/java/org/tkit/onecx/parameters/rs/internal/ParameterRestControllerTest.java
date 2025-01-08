@@ -158,8 +158,8 @@ class ParameterRestControllerTest extends AbstractTest {
                 Arguments.of(new ParameterSearchCriteriaDTO().applicationId("incorrect_app").productName("incorrect-product"),
                         0),
                 Arguments.of(new ParameterSearchCriteriaDTO().applicationId("incorrect_app").productName("incorrect-product")
-                        .name("").displayName(""), 0),
-                Arguments.of(new ParameterSearchCriteriaDTO().displayName("custom"), 0),
+                        .name(""), 0),
+                Arguments.of(new ParameterSearchCriteriaDTO().name("custom"), 0),
                 Arguments.of(new ParameterSearchCriteriaDTO().name("ENGINE"), 1),
                 Arguments.of(new ParameterSearchCriteriaDTO().name("incorrect_key"), 0));
     }
@@ -251,6 +251,7 @@ class ParameterRestControllerTest extends AbstractTest {
         ParameterUpdateDTO applicationParameterUpdateDTO = new ParameterUpdateDTO();
         applicationParameterUpdateDTO.setValue("JBPM");
         applicationParameterUpdateDTO.setDescription("Test description");
+        applicationParameterUpdateDTO.setModificationCount(1);
 
         given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
@@ -266,16 +267,16 @@ class ParameterRestControllerTest extends AbstractTest {
 
     static Stream<Arguments> updateParameterTestInput() {
         return Stream.of(
-                Arguments.of("access-mgmt", "Test description", "111", "JBPM", null, null, null, null),
-                Arguments.of("access-mgmt", "Test description", "111", "JBPM", "", null, null, null),
-                Arguments.of("access-mgmt", "Test description", "111", "JBPM", " ", null, null, null));
+                Arguments.of("access-mgmt", "Test description", "111", "JBPM", null, null, null, null, 1),
+                Arguments.of("access-mgmt", "Test description", "111", "JBPM", "", null, null, null, 1),
+                Arguments.of("access-mgmt", "Test description", "111", "JBPM", " ", null, null, null, 1));
     }
 
     @ParameterizedTest
     @MethodSource("updateParameterTestInput")
     @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
     void shouldUpdateParameterTest(String appId, String desc, String id, String value, String unit, Integer from, Integer to,
-            String checkUnit) {
+            String checkUnit, Integer modificationCount) {
         var apm = createToken("org1");
         addExpectation(mockServerClient
                 .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))
@@ -286,6 +287,7 @@ class ParameterRestControllerTest extends AbstractTest {
         var request = new ParameterUpdateDTO();
         request.setValue(value);
         request.setDescription(desc);
+        request.setModificationCount(modificationCount);
 
         given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
@@ -296,7 +298,7 @@ class ParameterRestControllerTest extends AbstractTest {
                 .pathParam(PATH_PARAM_ID, id)
                 .put(PATH_PARAM_ID_PATH)
                 .then()
-                .statusCode(Response.Status.NO_CONTENT.getStatusCode());
+                .statusCode(Response.Status.OK.getStatusCode());
 
         var dto = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
@@ -312,6 +314,58 @@ class ParameterRestControllerTest extends AbstractTest {
         Assertions.assertEquals(appId, dto.getApplicationId());
         Assertions.assertEquals(value, dto.getValue());
         Assertions.assertEquals(desc, dto.getDescription());
+    }
+
+    @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
+    @Test
+    void update_optLockExceptionTest() {
+        var apm = createToken("org1");
+        addExpectation(mockServerClient
+                .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
+
+        var request = new ParameterUpdateDTO();
+        request.setValue("123");
+        request.setDescription("desc");
+        request.setModificationCount(1);
+
+        given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
+                .body(request)
+                .contentType(APPLICATION_JSON)
+                .when()
+                .pathParam(PATH_PARAM_ID, 111)
+                .put(PATH_PARAM_ID_PATH)
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode());
+
+        given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
+                .body(request)
+                .contentType(APPLICATION_JSON)
+                .when()
+                .pathParam(PATH_PARAM_ID, 111)
+                .put(PATH_PARAM_ID_PATH)
+                .then()
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
+
+        request.setModificationCount(2);
+
+        given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
+                .body(request)
+                .contentType(APPLICATION_JSON)
+                .when()
+                .pathParam(PATH_PARAM_ID, 111)
+                .put(PATH_PARAM_ID_PATH)
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode());
+
     }
 
     @Test
@@ -411,14 +465,16 @@ class ParameterRestControllerTest extends AbstractTest {
                 .post()
                 .then()
                 .statusCode(Response.Status.CREATED.getStatusCode());
-        given()
+        var err = given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .body(dto)
                 .contentType(APPLICATION_JSON)
                 .post()
                 .then()
-                .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode())
+                .extract().as(ProblemDetailResponseDTO.class);
+        Assertions.assertNotNull(err.getDetail());
     }
 
     static Stream<Arguments> deleteParameterTestInput() {

@@ -187,7 +187,6 @@ class ParameterRestControllerV1Test extends AbstractTest {
         parameterInfoDTO1.setCount(1L);
         parameterInfoDTO1.setCurrentValue("DefaultValue");
         parameterInfoDTO1.setDefaultValue("DefaultValue");
-        parameterInfoDTO1.setType("STRING");
         parametersBucketDTO.getParameters().put("testKey", parameterInfoDTO1);
         given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
@@ -225,7 +224,6 @@ class ParameterRestControllerV1Test extends AbstractTest {
         parameterInfoDTO1.setCount(2L);
         parameterInfoDTO1.setCurrentValue("10");
         parameterInfoDTO1.setDefaultValue("10");
-        parameterInfoDTO1.setType("INTEGER");
         parametersBucketDTO.getParameters().put("COUNTER", parameterInfoDTO1);
         given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))

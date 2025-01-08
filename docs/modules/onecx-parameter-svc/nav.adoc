@@ -1,3 +1,1 @@
 * xref:onecx-parameter-svc:index.adoc[Parameter Backend Service]
-** External API(s)
-*** xref:onecx-parameter-svc:openapi/openapi-v1.adoc[Parameter Management V1]
