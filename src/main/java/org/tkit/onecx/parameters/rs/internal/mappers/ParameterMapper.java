@@ -1,9 +1,7 @@
 package org.tkit.onecx.parameters.rs.internal.mappers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.OffsetDateTime;
+import java.util.*;
 
 import jakarta.inject.Inject;
 
@@ -144,6 +142,42 @@ public abstract class ParameterMapper {
     @Mapping(target = "controlTraceabilityManual", ignore = true)
     public abstract Parameter create(ParameterCreateDTO request);
 
+    @Mapping(target = "modificationUser", ignore = true)
+    @Mapping(target = "modificationDate", ignore = true)
+    @Mapping(target = "modificationCount", ignore = true)
+    @Mapping(target = "creationUser", ignore = true)
+    @Mapping(target = "creationDate", ignore = true)
+    @Mapping(target = "tenantId", ignore = true)
+    @Mapping(target = "persisted", ignore = true)
+    @Mapping(target = "controlTraceabilityManual", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "value", source = "value", qualifiedByName = "o2s")
+    @Mapping(target = "importValue", source = "importValue", qualifiedByName = "o2s")
+    @Mapping(target = "operator", constant = "false")
+    public abstract Parameter create(EximParameterDTO dto);
+
+    public abstract List<Parameter> create(List<EximParameterDTO> dto);
+
+    @Mapping(target = "modificationUser", ignore = true)
+    @Mapping(target = "modificationDate", ignore = true)
+    @Mapping(target = "modificationCount", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "creationUser", ignore = true)
+    @Mapping(target = "creationDate", ignore = true)
+    @Mapping(target = "tenantId", ignore = true)
+    @Mapping(target = "persisted", ignore = true)
+    @Mapping(target = "controlTraceabilityManual", ignore = true)
+    @Mapping(target = "value", source = "value", qualifiedByName = "o2s")
+    @Mapping(target = "importValue", source = "importValue", qualifiedByName = "o2s")
+    @Mapping(target = "operator", constant = "false")
+    public abstract void update(EximParameterDTO dto, @MappingTarget Parameter parameter);
+
+    @Mapping(target = "id", source = "request.id")
+    @Mapping(target = "parameters", source = "parameters")
+    @Mapping(target = "removeParametersItem", ignore = true)
+    public abstract ImportParameterResponseDTO createImportResponse(ParameterSnapshotDTO request,
+            Map<String, ImportParameterResponseStatusDTO> parameters);
+
     public static class MapperException extends RuntimeException {
 
         public MapperException(String msg, Throwable t) {
@@ -151,4 +185,31 @@ public abstract class ParameterMapper {
         }
 
     }
+
+    public ParameterSnapshotDTO createSnapshot(Map<String, List<Parameter>> data) {
+        if (data == null) {
+            return null;
+        }
+
+        ParameterSnapshotDTO result = new ParameterSnapshotDTO();
+        result.setId(UUID.randomUUID().toString());
+        result.setCreated(OffsetDateTime.now());
+        result.setProducts(map(data));
+        return result;
+    }
+
+    public Map<String, List<EximParameterDTO>> map(Map<String, List<Parameter>> data) {
+        if (data == null) {
+            return Map.of();
+        }
+
+        Map<String, List<EximParameterDTO>> map = new HashMap<>();
+        data.forEach((name, value) -> {
+            List<EximParameterDTO> dto = maps(value);
+            map.put(name, dto);
+        });
+        return map;
+    }
+
+    public abstract List<EximParameterDTO> maps(List<Parameter> value);
 }

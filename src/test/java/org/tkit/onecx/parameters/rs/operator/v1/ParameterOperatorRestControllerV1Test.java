@@ -87,4 +87,26 @@ class ParameterOperatorRestControllerV1Test extends AbstractTest {
                 .then()
                 .statusCode(Response.Status.NO_CONTENT.getStatusCode());
     }
+
+    @Test
+    @WithDBData(value = { "data/operator-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
+    void constraintViolationMissingFieldsTest() {
+        var apm = createToken("org1");
+        addExpectation(mockServerClient
+                .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
+        var requestBody = new ParameterUpdateRequestOperatorDTOV1();
+        requestBody.value("value2");
+        given()
+                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
+                .when()
+                .contentType(APPLICATION_JSON)
+                .body(requestBody)
+                .put()
+                .then()
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
+    }
 }

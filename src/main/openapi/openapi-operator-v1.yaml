@@ -47,8 +47,8 @@ components:
     ParameterUpdateRequest:
       type: object
       required:
-        - applicationId
         - name
+        - applicationName
         - productName
       properties:
         name:

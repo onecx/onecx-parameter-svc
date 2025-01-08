@@ -276,6 +276,56 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetailResponse'
+  /parameters/export:
+    post:
+      security:
+        - oauth2: [ ocx-pa:all, ocx-pa:read ]
+      tags:
+        - parameters
+      description: Export list of parameters
+      operationId: exportParameters
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExportParameterRequest'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParameterSnapshot'
+        "404":
+          description: No parameters founds
+  /parameters/import:
+    post:
+      security:
+        - oauth2: [ ocx-pa:all, ocx-pa:write ]
+      tags:
+        - parameters
+      description: Import parameters
+      operationId: importParameters
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParameterSnapshot'
+      responses:
+        "200":
+          description: Import result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImportParameterResponse'
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetailResponse'
 components:
   securitySchemes:
     oauth2:
@@ -289,6 +339,46 @@ components:
             ocx-pa:write: Grants write access
             ocx-pa:delete: Grants access to delete operations
   schemas:
+    ExportParameterRequest:
+      type: object
+      properties:
+        productNames:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+    ParameterSnapshot:
+      type: object
+      properties:
+        id:
+          type: string
+          minLength: 10
+          description: ID of the request
+        created:
+          $ref: '#/components/schemas/OffsetDateTime'
+        products:
+          type: object
+          nullable: false
+          additionalProperties:
+            type: array
+            items:
+              $ref: '#/components/schemas/EximParameter'
+    ImportParameterResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          minLength: 10
+          description: ID of the request
+        parameters:
+          additionalProperties:
+            $ref: '#/components/schemas/ImportParameterResponseStatus'
+    ImportParameterResponseStatus:
+      type: string
+      enum:
+        - UPDATE
+        - CREATED
+        - SKIP
     ParameterCreate:
       type: object
       properties:
@@ -341,6 +431,25 @@ components:
         operator:
           type: boolean
         isInHistory:
+          type: boolean
+    EximParameter:
+      type: object
+      properties:
+        displayName:
+          type: string
+        description:
+          type: string
+        applicationId:
+          type: string
+        productName:
+          type: string
+        name:
+          type: string
+        value:
+          type: object
+        importValue:
+          type: object
+        operator:
           type: boolean
     History:
       type: object
@@ -526,6 +635,10 @@ components:
           description: The size of page
           default: 100
           type: integer
+    OffsetDateTime:
+      format: date-time
+      type: string
+      example: 2022-03-10T12:15:50-04:00
     ProblemDetailResponse:
       type: object
       properties:

@@ -5,6 +5,7 @@ import static org.tkit.quarkus.jpa.utils.QueryCriteriaUtil.createSearchStringPre
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.NoResultException;
@@ -43,6 +44,23 @@ public class ParameterDAO extends AbstractDAO<Parameter> {
 
         } catch (Exception e) {
             throw new DAOException(ErrorKeys.FIND_ALL_PARAMETERS_BY_APPLICATION_ID_FAILED, e);
+        }
+    }
+
+    public Stream<Parameter> findAllByProductNames(Set<String> productNames) {
+        try {
+            CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+            CriteriaQuery<Parameter> cq = cb.createQuery(Parameter.class);
+            Root<Parameter> root = cq.from(Parameter.class);
+            if (productNames != null && !productNames.isEmpty()) {
+                cq.where(root.get(Parameter_.PRODUCT_NAME).in(productNames));
+            }
+
+            return getEntityManager()
+                    .createQuery(cq)
+                    .getResultStream();
+        } catch (Exception e) {
+            throw new DAOException(ErrorKeys.FIND_ALL_PARAMETERS_BY_PRODUCT_NAMES_FAILED, e);
         }
     }
 
@@ -155,6 +173,7 @@ public class ParameterDAO extends AbstractDAO<Parameter> {
 
         FIND_ALL_NAMES_FAILED,
         FIND_ALL_PARAMETERS_FAILED,
-        FIND_BY_NAME_PRODUCT_NAME_APPLICATION_ID_FAILED
+        FIND_BY_NAME_PRODUCT_NAME_APPLICATION_ID_FAILED,
+        FIND_ALL_PARAMETERS_BY_PRODUCT_NAMES_FAILED
     }
 }

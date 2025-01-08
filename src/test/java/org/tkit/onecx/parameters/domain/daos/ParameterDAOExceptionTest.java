@@ -49,4 +49,18 @@ class ParameterDAOExceptionTest {
         var exc = Assertions.assertThrows(DAOException.class, () -> dao.searchAllNames(null));
         Assertions.assertEquals(ParameterDAO.ErrorKeys.FIND_ALL_NAMES_FAILED, exc.key);
     }
+
+    @Test
+    void findAllByProductNamesTest() {
+        var exc = Assertions.assertThrows(DAOException.class, () -> dao.findAllByProductNames(null));
+        Assertions.assertEquals(ParameterDAO.ErrorKeys.FIND_ALL_PARAMETERS_BY_PRODUCT_NAMES_FAILED, exc.key);
+    }
+
+    @Test
+    void findByNameApplicationIdAndProductNameTest() {
+        var exc = Assertions.assertThrows(DAOException.class,
+                () -> dao.findByNameApplicationIdAndProductName(null, null, null));
+        Assertions.assertEquals(ParameterDAO.ErrorKeys.FIND_BY_NAME_PRODUCT_NAME_APPLICATION_ID_FAILED, exc.key);
+    }
+
 }
