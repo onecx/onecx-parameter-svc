@@ -38,7 +38,7 @@ public abstract class OperatorParameterMapperV1 {
 
     @Mapping(target = "operator", constant = "true")
     @Mapping(target = "tenantId", ignore = true)
-    @Mapping(target = "value", source = "value", qualifiedByName = "o2s")
+    @Mapping(target = "value", source = "request.value", qualifiedByName = "o2s")
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "modificationUser", ignore = true)
     @Mapping(target = "modificationDate", ignore = true)
@@ -47,7 +47,8 @@ public abstract class OperatorParameterMapperV1 {
     @Mapping(target = "creationUser", ignore = true)
     @Mapping(target = "creationDate", ignore = true)
     @Mapping(target = "controlTraceabilityManual", ignore = true)
-    public abstract Parameter create(ParameterUpdateRequestOperatorDTOV1 request);
+    public abstract Parameter create(ParameterUpdateRequestOperatorDTOV1 request, String productName, String applicationId,
+            String name);
 
     @Named("o2s")
     public String o2s(Object value) {

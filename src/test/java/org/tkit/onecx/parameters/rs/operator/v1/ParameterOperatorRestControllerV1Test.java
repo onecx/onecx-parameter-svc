@@ -48,15 +48,16 @@ class ParameterOperatorRestControllerV1Test extends AbstractTest {
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
         var requestBody = new ParameterUpdateRequestOperatorDTOV1();
-        requestBody.applicationId("app1");
-        requestBody.productName("product1");
-        requestBody.name("name1");
         requestBody.value("value1");
+        requestBody.importValue("im");
         given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .contentType(APPLICATION_JSON)
+                .pathParam("productName", "product1")
+                .pathParam("applicationId", "app1")
+                .pathParam("name", "name1")
                 .body(requestBody)
                 .put()
                 .then()
@@ -73,15 +74,16 @@ class ParameterOperatorRestControllerV1Test extends AbstractTest {
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
         var requestBody = new ParameterUpdateRequestOperatorDTOV1();
-        requestBody.applicationId("app2");
-        requestBody.productName("product2");
-        requestBody.name("name2");
         requestBody.value("value2");
+        requestBody.importValue("im");
         given()
                 .auth().oauth2(getKeycloakClientToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .contentType(APPLICATION_JSON)
+                .pathParam("productName", "product2")
+                .pathParam("applicationId", "app2")
+                .pathParam("name", "name2")
                 .body(requestBody)
                 .put()
                 .then()
@@ -104,6 +106,9 @@ class ParameterOperatorRestControllerV1Test extends AbstractTest {
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .contentType(APPLICATION_JSON)
+                .pathParam("productName", "product2")
+                .pathParam("applicationId", "app2")
+                .pathParam("name", "name2")
                 .body(requestBody)
                 .put()
                 .then()
