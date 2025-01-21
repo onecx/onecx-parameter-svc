@@ -17,6 +17,7 @@ import org.tkit.quarkus.log.cdi.LogService;
 import gen.org.tkit.onecx.parameters.rs.v1.model.ProblemDetailResponseDTOV1;
 import gen.org.tkit.onecx.parameters.rs.v1.operator.OperatorParametersApi;
 import gen.org.tkit.onecx.parameters.rs.v1.operator.model.ParameterUpdateRequestOperatorDTOV1;
+import org.tkit.quarkus.rs.context.tenant.TenantExclude;
 
 @LogService
 @ApplicationScoped
@@ -47,7 +48,8 @@ public class OperatorParameterRestControllerV1 implements OperatorParametersApi 
             parameterDAO.create(paramToCreate);
             return Response.status(Response.Status.NO_CONTENT).build();
         } else {
-            mapper.update(requestDTO, matchedParam);
+            matchedParam.setDescription(requestDTO.getDescription());
+            matchedParam.setImportValue(requestDTO.getImportValue());
             parameterDAO.update(matchedParam);
             return Response.status(Response.Status.NO_CONTENT.getStatusCode()).build();
         }

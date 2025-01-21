@@ -22,22 +22,6 @@ public abstract class OperatorParameterMapperV1 {
 
     @Mapping(target = "operator", constant = "true")
     @Mapping(target = "tenantId", ignore = true)
-    @Mapping(target = "value", source = "value", qualifiedByName = "o2s")
-    @Mapping(target = "persisted", ignore = true)
-    @Mapping(target = "modificationUser", ignore = true)
-    @Mapping(target = "modificationDate", ignore = true)
-    @Mapping(target = "modificationCount", ignore = true)
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "creationUser", ignore = true)
-    @Mapping(target = "creationDate", ignore = true)
-    @Mapping(target = "controlTraceabilityManual", ignore = true)
-    @Mapping(target = "name", ignore = true)
-    @Mapping(target = "applicationId", ignore = true)
-    @Mapping(target = "productName", ignore = true)
-    public abstract void update(ParameterUpdateRequestOperatorDTOV1 dto, @MappingTarget Parameter parameter);
-
-    @Mapping(target = "operator", constant = "true")
-    @Mapping(target = "tenantId", ignore = true)
     @Mapping(target = "value", source = "request.value", qualifiedByName = "o2s")
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "modificationUser", ignore = true)
