@@ -4,7 +4,6 @@ import jakarta.inject.Inject;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import org.tkit.onecx.parameters.domain.models.Parameter;
 import org.tkit.onecx.parameters.rs.internal.mappers.ParameterMapper;

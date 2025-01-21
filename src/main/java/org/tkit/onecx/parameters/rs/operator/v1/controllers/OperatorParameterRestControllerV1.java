@@ -17,7 +17,6 @@ import org.tkit.quarkus.log.cdi.LogService;
 import gen.org.tkit.onecx.parameters.rs.v1.model.ProblemDetailResponseDTOV1;
 import gen.org.tkit.onecx.parameters.rs.v1.operator.OperatorParametersApi;
 import gen.org.tkit.onecx.parameters.rs.v1.operator.model.ParameterUpdateRequestOperatorDTOV1;
-import org.tkit.quarkus.rs.context.tenant.TenantExclude;
 
 @LogService
 @ApplicationScoped
