@@ -4,7 +4,6 @@ import jakarta.inject.Inject;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
 import org.mapstruct.Named;
 import org.tkit.onecx.parameters.domain.models.Parameter;
 import org.tkit.onecx.parameters.rs.internal.mappers.ParameterMapper;
@@ -22,7 +21,7 @@ public abstract class OperatorParameterMapperV1 {
 
     @Mapping(target = "operator", constant = "true")
     @Mapping(target = "tenantId", ignore = true)
-    @Mapping(target = "value", source = "value", qualifiedByName = "o2s")
+    @Mapping(target = "value", source = "request.value", qualifiedByName = "o2s")
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "modificationUser", ignore = true)
     @Mapping(target = "modificationDate", ignore = true)
@@ -31,23 +30,8 @@ public abstract class OperatorParameterMapperV1 {
     @Mapping(target = "creationUser", ignore = true)
     @Mapping(target = "creationDate", ignore = true)
     @Mapping(target = "controlTraceabilityManual", ignore = true)
-    @Mapping(target = "name", ignore = true)
-    @Mapping(target = "applicationId", ignore = true)
-    @Mapping(target = "productName", ignore = true)
-    public abstract void update(ParameterUpdateRequestOperatorDTOV1 dto, @MappingTarget Parameter parameter);
-
-    @Mapping(target = "operator", constant = "true")
-    @Mapping(target = "tenantId", ignore = true)
-    @Mapping(target = "value", source = "value", qualifiedByName = "o2s")
-    @Mapping(target = "persisted", ignore = true)
-    @Mapping(target = "modificationUser", ignore = true)
-    @Mapping(target = "modificationDate", ignore = true)
-    @Mapping(target = "modificationCount", ignore = true)
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "creationUser", ignore = true)
-    @Mapping(target = "creationDate", ignore = true)
-    @Mapping(target = "controlTraceabilityManual", ignore = true)
-    public abstract Parameter create(ParameterUpdateRequestOperatorDTOV1 request);
+    public abstract Parameter create(ParameterUpdateRequestOperatorDTOV1 request, String productName, String applicationId,
+            String name);
 
     @Named("o2s")
     public String o2s(Object value) {

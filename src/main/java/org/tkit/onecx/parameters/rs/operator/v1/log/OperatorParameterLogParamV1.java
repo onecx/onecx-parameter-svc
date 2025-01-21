@@ -15,6 +15,6 @@ public class OperatorParameterLogParamV1 implements LogParam {
     public List<Item> getClasses() {
         return List.of(
                 item(10, ParameterUpdateRequestOperatorDTOV1.class,
-                        x -> x.getClass().getSimpleName() + ":" + ((ParameterUpdateRequestOperatorDTOV1) x).getName()));
+                        x -> x.getClass().getSimpleName() + ":" + ((ParameterUpdateRequestOperatorDTOV1) x).getDisplayName()));
     }
 }

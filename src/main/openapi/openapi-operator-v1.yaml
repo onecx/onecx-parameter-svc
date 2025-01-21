@@ -9,7 +9,7 @@ servers:
 tags:
 - name: operatorParameters
 paths:
-  /operator/v1/parameters:
+  /operator/v1/parameters/{productName}/{applicationId}/{name}:
     put:
       security:
         - oauth2: [ ocx-pa-op:write ]
@@ -17,6 +17,22 @@ paths:
       - operatorParameters
       description: create or update parameter
       operationId: createOrUpdateParameterValue
+      parameters:
+        - in: path
+          name: productName
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: applicationId
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: name
+          schema:
+            type: string
+          required: true
       requestBody:
         required: true
         content:
@@ -47,17 +63,9 @@ components:
     ParameterUpdateRequest:
       type: object
       required:
-        - name
-        - applicationName
-        - productName
+        - importValue
       properties:
-        name:
-          type: string
         displayName:
-          type: string
-        applicationId:
-          type: string
-        productName:
           type: string
         value:
           type: object

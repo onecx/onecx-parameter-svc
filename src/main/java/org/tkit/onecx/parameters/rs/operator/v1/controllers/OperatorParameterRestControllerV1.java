@@ -38,15 +38,17 @@ public class OperatorParameterRestControllerV1 implements OperatorParametersApi 
     }
 
     @Override
-    public Response createOrUpdateParameterValue(ParameterUpdateRequestOperatorDTOV1 requestDTO) {
-        var matchedParam = parameterDAO.findByNameApplicationIdAndProductName(requestDTO.getName(),
-                requestDTO.getApplicationId(), requestDTO.getProductName());
+    public Response createOrUpdateParameterValue(String productName, String applicationId, String name,
+            ParameterUpdateRequestOperatorDTOV1 requestDTO) {
+        var matchedParam = parameterDAO.findByNameApplicationIdAndProductName(name,
+                applicationId, productName);
         if (matchedParam == null) {
-            Parameter paramToCreate = mapper.create(requestDTO);
+            Parameter paramToCreate = mapper.create(requestDTO, productName, applicationId, name);
             parameterDAO.create(paramToCreate);
             return Response.status(Response.Status.NO_CONTENT).build();
         } else {
-            mapper.update(requestDTO, matchedParam);
+            matchedParam.setDescription(requestDTO.getDescription());
+            matchedParam.setImportValue(requestDTO.getImportValue());
             parameterDAO.update(matchedParam);
             return Response.status(Response.Status.NO_CONTENT.getStatusCode()).build();
         }
