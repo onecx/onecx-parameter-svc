@@ -4,7 +4,6 @@ import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
-import static org.tkit.quarkus.security.test.SecurityTestUtils.getKeycloakClientToken;
 
 import jakarta.ws.rs.HttpMethod;
 import jakarta.ws.rs.core.Response;
@@ -51,7 +50,7 @@ class ParameterOperatorRestControllerV1Test extends AbstractTest {
         requestBody.value("value1");
         requestBody.importValue("im");
         given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .contentType(APPLICATION_JSON)
@@ -77,7 +76,7 @@ class ParameterOperatorRestControllerV1Test extends AbstractTest {
         requestBody.value("value2");
         requestBody.importValue("im");
         given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .contentType(APPLICATION_JSON)
@@ -93,6 +92,7 @@ class ParameterOperatorRestControllerV1Test extends AbstractTest {
     @Test
     @WithDBData(value = { "data/operator-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
     void constraintViolationMissingFieldsTest() {
+        keycloakTestClient.getClientAccessToken("testClient");
         var apm = createToken("org1");
         addExpectation(mockServerClient
                 .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))
@@ -102,7 +102,7 @@ class ParameterOperatorRestControllerV1Test extends AbstractTest {
         var requestBody = new ParameterUpdateRequestOperatorDTOV1();
         requestBody.value("value2");
         given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .contentType(APPLICATION_JSON)

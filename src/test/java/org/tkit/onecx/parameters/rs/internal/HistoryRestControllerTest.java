@@ -4,7 +4,6 @@ import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
-import static org.tkit.quarkus.security.test.SecurityTestUtils.getKeycloakClientToken;
 
 import java.util.stream.Stream;
 
@@ -58,7 +57,7 @@ class HistoryRestControllerTest extends AbstractTest {
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
 
         var pageResultDTO = given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .body(new HistoryCriteriaDTO())
                 .contentType(APPLICATION_JSON)
@@ -97,7 +96,7 @@ class HistoryRestControllerTest extends AbstractTest {
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
 
         var pageResultDTO = given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .body(criteriaDTO)
@@ -137,7 +136,7 @@ class HistoryRestControllerTest extends AbstractTest {
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
 
         var pageResultDTO = given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .body(criteriaDTO)
@@ -161,7 +160,7 @@ class HistoryRestControllerTest extends AbstractTest {
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
 
         given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .pathParam("id", "not-id")
@@ -189,7 +188,7 @@ class HistoryRestControllerTest extends AbstractTest {
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
 
         var result = given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .pathParam("id", id)
@@ -230,7 +229,7 @@ class HistoryRestControllerTest extends AbstractTest {
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
 
         var tmp = given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .body(criteria)

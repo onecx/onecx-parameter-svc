@@ -11,4 +11,7 @@
 
     <HISTORY creationdate="2122-03-10" guid="100" optlock="1" app_id="app2" product_name="p2" name="key2" value_description="String" used_value="KOGITO" default_value="JBPM" interval_start="2019-03-25" interval_end="2019-03-26" tenant_id="tenant-100" />
     <HISTORY creationdate="2121-03-10" guid="101" optlock="1" app_id="app2" product_name="p2" name="key2" value_description="String" used_value="KOGITO" default_value="JBPM" interval_start="2019-03-25" interval_end="2019-03-26" tenant_id="tenant-100" />
+    <!-- different tenant -->
+    <HISTORY creationdate="2022-03-10" guid="102" optlock="1" app_id="app2" product_name="p2" name="key2" value_description="String" used_value="KOGITO" default_value="JBPM" interval_start="2019-03-25" interval_end="2019-03-26" tenant_id="tenant-500" />
+
 </dataset>
