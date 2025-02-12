@@ -18,6 +18,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import io.quarkiverse.mockserver.test.MockServerTestResource;
 import io.quarkus.test.common.QuarkusTestResource;
+import io.quarkus.test.keycloak.client.KeycloakTestClient;
 import io.restassured.RestAssured;
 import io.restassured.config.ObjectMapperConfig;
 import io.restassured.config.RestAssuredConfig;
@@ -30,6 +31,8 @@ public abstract class AbstractTest {
     private static final List<String> MOCK_IDS = new ArrayList<>();
 
     protected static final String HEADER_APM_TOKEN = "apm-principal-token";
+
+    protected KeycloakTestClient keycloakTestClient = new KeycloakTestClient();
 
     static {
         RestAssured.config = RestAssuredConfig.config().objectMapperConfig(

@@ -7,7 +7,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.from;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
-import static org.tkit.quarkus.security.test.SecurityTestUtils.getKeycloakClientToken;
 
 import java.util.HashSet;
 import java.util.List;
@@ -55,7 +54,7 @@ class ExportImportParameterRestControllerTest extends AbstractTest {
         var request = new ExportParameterRequestDTO();
 
         var dto = given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .contentType(APPLICATION_JSON)
@@ -69,7 +68,7 @@ class ExportImportParameterRestControllerTest extends AbstractTest {
         assertThat(dto.getProducts()).hasSize(2);
 
         dto = given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .contentType(APPLICATION_JSON)
@@ -83,7 +82,7 @@ class ExportImportParameterRestControllerTest extends AbstractTest {
 
         request.setProductNames(new HashSet<>());
         dto = given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .contentType(APPLICATION_JSON)
@@ -97,7 +96,7 @@ class ExportImportParameterRestControllerTest extends AbstractTest {
 
         request.setProductNames(Set.of("import-product"));
         dto = given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .contentType(APPLICATION_JSON)
@@ -123,7 +122,7 @@ class ExportImportParameterRestControllerTest extends AbstractTest {
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
         given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .contentType(APPLICATION_JSON)
@@ -143,7 +142,7 @@ class ExportImportParameterRestControllerTest extends AbstractTest {
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
         var exception = given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .contentType(APPLICATION_JSON)
@@ -168,7 +167,7 @@ class ExportImportParameterRestControllerTest extends AbstractTest {
         var request = new ParameterSnapshotDTO();
 
         var data = given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .contentType(APPLICATION_JSON)
@@ -190,7 +189,7 @@ class ExportImportParameterRestControllerTest extends AbstractTest {
         data.getProducts().get("import-product2").get(0).setDisplayName("updatedDisplayName");
 
         var dto = given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .contentType(APPLICATION_JSON)

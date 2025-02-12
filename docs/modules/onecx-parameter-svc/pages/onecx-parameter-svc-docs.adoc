@@ -26,6 +26,7 @@ quarkus.liquibase.validate-on-migrate=true
 onecx.parameter.scheduler.expression=0 15 2 * * ?
 onecx.parameter.scheduler.duration=7
 tkit.rs.context.tenant-id.enabled=true
+tkit.jpa.tenant.root.enabled=true
 %prod.quarkus.datasource.jdbc.url=${DB_URL:jdbc:postgresql://postgresdb:5432/onecx-parameter?sslmode=disable}
 %prod.quarkus.datasource.username=${DB_USER:onecx-parameter}
 %prod.quarkus.datasource.password=${DB_PWD:onecx-parameter}
@@ -62,6 +63,11 @@ app:
         enabled: true
         spec:
           kcConfig:
+            defaultClientScopes: [ ocx-tn:read ]
+
+----
+
+     kcConfig:
             defaultClientScopes: [ ocx-tn:read ]
 
 ----

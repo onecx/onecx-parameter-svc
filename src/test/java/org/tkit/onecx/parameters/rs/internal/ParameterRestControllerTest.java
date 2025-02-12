@@ -4,7 +4,6 @@ import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.mockserver.model.HttpRequest.request;
 import static org.mockserver.model.HttpResponse.response;
-import static org.tkit.quarkus.security.test.SecurityTestUtils.getKeycloakClientToken;
 
 import java.util.stream.Stream;
 
@@ -59,7 +58,7 @@ class ParameterRestControllerTest extends AbstractTest {
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
 
         ParameterPageResultDTO pageResultDTO = given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .body(new ParameterSearchCriteriaDTO())
                 .contentType(APPLICATION_JSON)
@@ -84,7 +83,7 @@ class ParameterRestControllerTest extends AbstractTest {
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
 
         var output = given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .get("applications")
@@ -114,7 +113,7 @@ class ParameterRestControllerTest extends AbstractTest {
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
 
         var pageResultDTO = given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .queryParam("applicationId", applicationId)
@@ -138,7 +137,7 @@ class ParameterRestControllerTest extends AbstractTest {
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
 
         var pageResultDTO = given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .get("/names/p1")
@@ -176,7 +175,7 @@ class ParameterRestControllerTest extends AbstractTest {
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
 
         ParameterPageResultDTO pageResultDTO = given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .body(criteriaDTO)
@@ -201,7 +200,7 @@ class ParameterRestControllerTest extends AbstractTest {
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
 
         ParameterDTO applicationParameterDTO = given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .pathParam(PATH_PARAM_ID, "111")
@@ -230,7 +229,7 @@ class ParameterRestControllerTest extends AbstractTest {
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
 
         given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .pathParam(PATH_PARAM_ID, "150")
@@ -254,7 +253,7 @@ class ParameterRestControllerTest extends AbstractTest {
         applicationParameterUpdateDTO.setModificationCount(1);
 
         given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .contentType(APPLICATION_JSON)
@@ -290,7 +289,7 @@ class ParameterRestControllerTest extends AbstractTest {
         request.setModificationCount(modificationCount);
 
         given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .body(request)
                 .contentType(APPLICATION_JSON)
@@ -301,7 +300,7 @@ class ParameterRestControllerTest extends AbstractTest {
                 .statusCode(Response.Status.OK.getStatusCode());
 
         var dto = given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
                 .pathParam(PATH_PARAM_ID, id)
@@ -332,7 +331,7 @@ class ParameterRestControllerTest extends AbstractTest {
         request.setModificationCount(1);
 
         given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .body(request)
                 .contentType(APPLICATION_JSON)
@@ -343,7 +342,7 @@ class ParameterRestControllerTest extends AbstractTest {
                 .statusCode(Response.Status.OK.getStatusCode());
 
         given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .body(request)
                 .contentType(APPLICATION_JSON)
@@ -356,7 +355,7 @@ class ParameterRestControllerTest extends AbstractTest {
         request.setModificationCount(2);
 
         given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .body(request)
                 .contentType(APPLICATION_JSON)
@@ -379,7 +378,7 @@ class ParameterRestControllerTest extends AbstractTest {
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
 
         given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .contentType(APPLICATION_JSON)
                 .when()
@@ -416,7 +415,7 @@ class ParameterRestControllerTest extends AbstractTest {
         dto.setValue(value);
 
         String uri = given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .body(dto)
                 .contentType(APPLICATION_JSON)
@@ -426,7 +425,7 @@ class ParameterRestControllerTest extends AbstractTest {
                 .extract().header(HttpHeaders.LOCATION);
 
         ParameterDTO dto2 = given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .contentType(APPLICATION_JSON)
                 .get(uri)
@@ -458,7 +457,7 @@ class ParameterRestControllerTest extends AbstractTest {
         dto.setProductName("productName1");
         dto.setName("key1");
         given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .body(dto)
                 .contentType(APPLICATION_JSON)
@@ -466,7 +465,7 @@ class ParameterRestControllerTest extends AbstractTest {
                 .then()
                 .statusCode(Response.Status.CREATED.getStatusCode());
         var err = given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .body(dto)
                 .contentType(APPLICATION_JSON)
@@ -498,7 +497,7 @@ class ParameterRestControllerTest extends AbstractTest {
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
 
         given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .contentType(APPLICATION_JSON)
                 .pathParam(PATH_PARAM_ID, id)
@@ -507,7 +506,7 @@ class ParameterRestControllerTest extends AbstractTest {
                 .statusCode(Response.Status.OK.getStatusCode());
 
         given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .contentType(APPLICATION_JSON)
                 .pathParam(PATH_PARAM_ID, id)
@@ -516,7 +515,7 @@ class ParameterRestControllerTest extends AbstractTest {
                 .statusCode(Response.Status.NO_CONTENT.getStatusCode());
 
         given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .contentType(APPLICATION_JSON)
                 .pathParam(PATH_PARAM_ID, id)
@@ -536,7 +535,7 @@ class ParameterRestControllerTest extends AbstractTest {
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
 
         given()
-                .auth().oauth2(getKeycloakClientToken("testClient"))
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .contentType(APPLICATION_JSON)
                 .pathParam(PATH_PARAM_ID, "NONE_EXISTS")
