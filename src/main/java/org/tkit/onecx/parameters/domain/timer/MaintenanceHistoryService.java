@@ -36,7 +36,7 @@ public class MaintenanceHistoryService {
     ContextTenantResolverConfig tenantConfig;
 
     static final String JOB_ID = "maintenance.history";
-    private static final String PRINCIPAL = "apm-principal-token";
+    private static final String PRINCIPAL = "history-maintenance";
 
     // find older items and delete it
     @Scheduled(identity = "maintenance.history", cron = "${onecx.parameter.scheduler.expression}")
