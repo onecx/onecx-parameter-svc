@@ -46,6 +46,7 @@ public class MaintenanceHistoryService {
         LocalDateTime dt = LocalDateTime.now()
                 .minus(converter.convert(parameterConfig.maintenanceHistoryScheduler().duration()));
         try {
+            log.info("Scheduler for job id: '{}' started.", JOB_ID);
             var tenantId = Boolean.TRUE.equals(tenantConfig.root().enabled()) ? tenantConfig.root().value()
                     : tenantConfig.defaultTenantValue();
             var ctx = Context.builder()
@@ -56,21 +57,12 @@ public class MaintenanceHistoryService {
             ApplicationContext.start(ctx);
             Job job = jobDAO.getJob(JOB_ID);
             if (job != null) {
-                log.info("Scheduler for job id: '{}' started.", JOB_ID);
-                try {
-
-                    dao.deleteApplicationHistoryOlderThan(dt);
-                    log.info("Scheduler for job id: '{}' finished.", JOB_ID);
-                } catch (Exception ex) {
-                    log.error("Scheduler for job id: '" + JOB_ID + "' failed.", ex);
-                    throw ex;
-                }
+                dao.deleteApplicationHistoryOlderThan(dt);
+                log.info("Scheduler for job id: '{}' finished.", JOB_ID);
             }
         } catch (Exception ex) {
-            log.error("Failed maintain history", ex);
+            log.error("Scheduler for job id: '" + JOB_ID + "' failed.", ex);
             throw ex;
-        } finally {
-            ApplicationContext.close();
         }
     }
 }
