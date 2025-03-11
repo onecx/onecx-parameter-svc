@@ -24,7 +24,7 @@ import org.tkit.quarkus.jpa.exceptions.DAOException;
 @Transactional(value = Transactional.TxType.NOT_SUPPORTED, rollbackOn = DAOException.class)
 public class ParameterDAO extends AbstractDAO<Parameter> {
 
-    public Map<String, String> findAllByProductNameAndApplicationId(String productName, String applicationId) {
+    public Map<String, String> findAllValuesByProductNameAndApplicationId(String productName, String applicationId) {
         try {
             CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
             CriteriaQuery<Parameter> cq = cb.createQuery(Parameter.class);
@@ -41,7 +41,24 @@ public class ParameterDAO extends AbstractDAO<Parameter> {
                     .getResultStream()
                     .collect(Collectors.toMap(Parameter::getName,
                             p -> p.getValue() != null ? p.getValue() : p.getImportValue()));
+        } catch (Exception e) {
+            throw new DAOException(ErrorKeys.FIND_ALL_PARAMETERS_VALUES_BY_APPLICATION_ID_FAILED, e);
+        }
+    }
 
+    @Transactional(Transactional.TxType.SUPPORTS)
+    public List<Parameter> findAllByProductNameAndApplicationId(String productName, String applicationId) {
+        try {
+            CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+            CriteriaQuery<Parameter> cq = cb.createQuery(Parameter.class);
+            Root<Parameter> root = cq.from(Parameter.class);
+            cq.where(
+                    cb.and(
+                            cb.equal(root.get(Parameter_.PRODUCT_NAME), productName),
+                            cb.equal(root.get(Parameter_.APPLICATION_ID), applicationId)));
+            return getEntityManager()
+                    .createQuery(cq)
+                    .getResultList();
         } catch (Exception e) {
             throw new DAOException(ErrorKeys.FIND_ALL_PARAMETERS_BY_APPLICATION_ID_FAILED, e);
         }
@@ -168,6 +185,7 @@ public class ParameterDAO extends AbstractDAO<Parameter> {
 
     public enum ErrorKeys {
 
+        FIND_ALL_PARAMETERS_VALUES_BY_APPLICATION_ID_FAILED,
         FIND_ALL_PARAMETERS_BY_APPLICATION_ID_FAILED,
         FIND_ALL_APPLICATIONS_FAILED,
 

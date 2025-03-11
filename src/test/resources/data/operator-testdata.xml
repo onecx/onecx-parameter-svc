@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataset>
     <PARAMETER guid="GUID6" optlock="1" app_id="app1" product_name="product1" display_name="name1" name="name1" description="import parameter" IMPORT_VALUE="&quot;import-value&quot;" tenant_id="tenant-100" operator="true"/>
+    <PARAMETER guid="GUID7" optlock="1" app_id="app1" product_name="product1" display_name="name2" name="name2" description="import parameter" IMPORT_VALUE="" tenant_id="tenant-100" operator="false"/>
 </dataset>

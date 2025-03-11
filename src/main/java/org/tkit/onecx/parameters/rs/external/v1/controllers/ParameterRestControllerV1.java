@@ -42,7 +42,8 @@ public class ParameterRestControllerV1 implements ParameterApi {
 
     @Override
     public Response getParameters(String productName, String appId) {
-        Map<String, String> applicationParameters = applicationParameterDAO.findAllByProductNameAndApplicationId(productName,
+        Map<String, String> applicationParameters = applicationParameterDAO.findAllValuesByProductNameAndApplicationId(
+                productName,
                 appId);
         if (applicationParameters.isEmpty()) {
             return Response.status(Response.Status.NOT_FOUND).build();

@@ -9,7 +9,7 @@ servers:
 tags:
 - name: operatorParameters
 paths:
-  /operator/v1/parameters/{productName}/{applicationId}/{name}:
+  /operator/v1/parameters/{productName}/{applicationId}:
     put:
       security:
         - oauth2: [ ocx-pa-op:write ]
@@ -28,17 +28,12 @@ paths:
           schema:
             type: string
           required: true
-        - in: path
-          name: name
-          schema:
-            type: string
-          required: true
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ParameterUpdateRequest'
+              $ref: '#/components/schemas/ParametersUpdateRequest'
       responses:
         "204":
           description: No Content
@@ -60,17 +55,26 @@ components:
           scopes:
             ocx-pa-op:write: Grants write access
   schemas:
+    ParametersUpdateRequest:
+      type: object
+      properties:
+        parameters:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/ParameterUpdateRequest'
     ParameterUpdateRequest:
       type: object
       required:
-        - importValue
+        - name
+        - value
       properties:
+        name:
+          type: string
         displayName:
           type: string
         value:
           type: object
-        importValue:
-          type: string
         description:
           type: string
     ProblemDetailResponse:

@@ -8,15 +8,14 @@ import jakarta.ws.rs.core.Response;
 
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
-import org.tkit.onecx.parameters.domain.daos.ParameterDAO;
-import org.tkit.onecx.parameters.domain.models.Parameter;
+import org.tkit.onecx.parameters.domain.services.ParameterService;
 import org.tkit.onecx.parameters.rs.operator.v1.mappers.OperatorExceptionMapperV1;
 import org.tkit.onecx.parameters.rs.operator.v1.mappers.OperatorParameterMapperV1;
 import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.org.tkit.onecx.parameters.rs.v1.model.ProblemDetailResponseDTOV1;
 import gen.org.tkit.onecx.parameters.rs.v1.operator.OperatorParametersApi;
-import gen.org.tkit.onecx.parameters.rs.v1.operator.model.ParameterUpdateRequestOperatorDTOV1;
+import gen.org.tkit.onecx.parameters.rs.v1.operator.model.ParametersUpdateRequestOperatorDTOV1;
 
 @LogService
 @ApplicationScoped
@@ -24,7 +23,7 @@ import gen.org.tkit.onecx.parameters.rs.v1.operator.model.ParameterUpdateRequest
 public class OperatorParameterRestControllerV1 implements OperatorParametersApi {
 
     @Inject
-    ParameterDAO parameterDAO;
+    ParameterService service;
 
     @Inject
     OperatorParameterMapperV1 mapper;
@@ -38,19 +37,10 @@ public class OperatorParameterRestControllerV1 implements OperatorParametersApi 
     }
 
     @Override
-    public Response createOrUpdateParameterValue(String productName, String applicationId, String name,
-            ParameterUpdateRequestOperatorDTOV1 requestDTO) {
-        var matchedParam = parameterDAO.findByNameApplicationIdAndProductName(name,
-                applicationId, productName);
-        if (matchedParam == null) {
-            Parameter paramToCreate = mapper.create(requestDTO, productName, applicationId, name);
-            parameterDAO.create(paramToCreate);
-            return Response.status(Response.Status.NO_CONTENT).build();
-        } else {
-            matchedParam.setDescription(requestDTO.getDescription());
-            matchedParam.setImportValue(requestDTO.getImportValue());
-            parameterDAO.update(matchedParam);
-            return Response.status(Response.Status.NO_CONTENT.getStatusCode()).build();
-        }
+    public Response createOrUpdateParameterValue(String productName, String applicationId,
+            ParametersUpdateRequestOperatorDTOV1 dto) {
+        var params = mapper.create(productName, applicationId, dto);
+        service.operatorImportParameters(productName, applicationId, params);
+        return Response.noContent().build();
     }
 }
