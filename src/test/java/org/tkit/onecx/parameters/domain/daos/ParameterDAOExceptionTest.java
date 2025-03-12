@@ -6,6 +6,7 @@ import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mockito;
 import org.tkit.quarkus.jpa.exceptions.DAOException;
 
@@ -27,40 +28,22 @@ class ParameterDAOExceptionTest {
     }
 
     @Test
-    void findAllByApplicationIdTest() {
-        var exc = Assertions.assertThrows(DAOException.class, () -> dao.findAllByProductNameAndApplicationId(null, null));
-        Assertions.assertEquals(ParameterDAO.ErrorKeys.FIND_ALL_PARAMETERS_BY_APPLICATION_ID_FAILED, exc.key);
-    }
-
-    @Test
-    void searchByCriteriaTest() {
-        var exc = Assertions.assertThrows(DAOException.class, () -> dao.searchByCriteria(null));
-        Assertions.assertEquals(ParameterDAO.ErrorKeys.FIND_ALL_PARAMETERS_FAILED, exc.key);
-    }
-
-    @Test
-    void searchAllApplicationsTest() {
-        var exc = Assertions.assertThrows(DAOException.class, () -> dao.searchAllProductNamesAndApplicationIds());
-        Assertions.assertEquals(ParameterDAO.ErrorKeys.FIND_ALL_APPLICATIONS_FAILED, exc.key);
-    }
-
-    @Test
-    void searchAllKeysTest() {
-        var exc = Assertions.assertThrows(DAOException.class, () -> dao.searchAllNames(null));
-        Assertions.assertEquals(ParameterDAO.ErrorKeys.FIND_ALL_NAMES_FAILED, exc.key);
-    }
-
-    @Test
-    void findAllByProductNamesTest() {
-        var exc = Assertions.assertThrows(DAOException.class, () -> dao.findAllByProductNames(null));
-        Assertions.assertEquals(ParameterDAO.ErrorKeys.FIND_ALL_PARAMETERS_BY_PRODUCT_NAMES_FAILED, exc.key);
-    }
-
-    @Test
-    void findByNameApplicationIdAndProductNameTest() {
-        var exc = Assertions.assertThrows(DAOException.class,
+    void test() {
+        test(ParameterDAO.ErrorKeys.FIND_ALL_PARAMETERS_BY_APPLICATION_ID_FAILED,
+                () -> dao.findAllByProductNameAndApplicationId(null, null));
+        test(ParameterDAO.ErrorKeys.FIND_ALL_PARAMETERS_VALUES_BY_APPLICATION_ID_FAILED,
+                () -> dao.findAllValuesByProductNameAndApplicationId(null, null));
+        test(ParameterDAO.ErrorKeys.FIND_ALL_PARAMETERS_FAILED, () -> dao.searchByCriteria(null));
+        test(ParameterDAO.ErrorKeys.FIND_ALL_APPLICATIONS_FAILED, () -> dao.searchAllProductNamesAndApplicationIds());
+        test(ParameterDAO.ErrorKeys.FIND_ALL_NAMES_FAILED, () -> dao.searchAllNames(null));
+        test(ParameterDAO.ErrorKeys.FIND_ALL_PARAMETERS_BY_PRODUCT_NAMES_FAILED, () -> dao.findAllByProductNames(null));
+        test(ParameterDAO.ErrorKeys.FIND_BY_NAME_PRODUCT_NAME_APPLICATION_ID_FAILED,
                 () -> dao.findByNameApplicationIdAndProductName(null, null, null));
-        Assertions.assertEquals(ParameterDAO.ErrorKeys.FIND_BY_NAME_PRODUCT_NAME_APPLICATION_ID_FAILED, exc.key);
+    }
+
+    private void test(Enum<?> key, Executable executable) {
+        var exc = Assertions.assertThrows(DAOException.class, executable);
+        Assertions.assertEquals(key, exc.key);
     }
 
 }

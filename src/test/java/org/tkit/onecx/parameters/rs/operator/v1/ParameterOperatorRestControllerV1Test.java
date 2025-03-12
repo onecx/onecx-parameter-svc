@@ -19,6 +19,7 @@ import org.tkit.quarkus.security.test.GenerateKeycloakClient;
 import org.tkit.quarkus.test.WithDBData;
 
 import gen.org.tkit.onecx.parameters.rs.v1.operator.model.ParameterUpdateRequestOperatorDTOV1;
+import gen.org.tkit.onecx.parameters.rs.v1.operator.model.ParametersUpdateRequestOperatorDTOV1;
 import gen.org.tkit.onecx.tenant.client.model.TenantId;
 import io.quarkiverse.mockserver.test.InjectMockServerClient;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
@@ -46,9 +47,10 @@ class ParameterOperatorRestControllerV1Test extends AbstractTest {
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
-        var requestBody = new ParameterUpdateRequestOperatorDTOV1();
-        requestBody.value("value1");
-        requestBody.importValue("im");
+
+        var requestBody = new ParametersUpdateRequestOperatorDTOV1()
+                .addParametersItem(new ParameterUpdateRequestOperatorDTOV1().name("name1").value("value1"));
+
         given()
                 .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
@@ -56,7 +58,6 @@ class ParameterOperatorRestControllerV1Test extends AbstractTest {
                 .contentType(APPLICATION_JSON)
                 .pathParam("productName", "product1")
                 .pathParam("applicationId", "app1")
-                .pathParam("name", "name1")
                 .body(requestBody)
                 .put()
                 .then()
@@ -72,9 +73,11 @@ class ParameterOperatorRestControllerV1Test extends AbstractTest {
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
-        var requestBody = new ParameterUpdateRequestOperatorDTOV1();
-        requestBody.value("value2");
-        requestBody.importValue("im");
+
+        var requestBody = new ParametersUpdateRequestOperatorDTOV1()
+                .addParametersItem(new ParameterUpdateRequestOperatorDTOV1().name("name2").value("value2"))
+                .addParametersItem(new ParameterUpdateRequestOperatorDTOV1().name("name3").value("value3"));
+
         given()
                 .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
@@ -82,7 +85,6 @@ class ParameterOperatorRestControllerV1Test extends AbstractTest {
                 .contentType(APPLICATION_JSON)
                 .pathParam("productName", "product2")
                 .pathParam("applicationId", "app2")
-                .pathParam("name", "name2")
                 .body(requestBody)
                 .put()
                 .then()
@@ -99,8 +101,10 @@ class ParameterOperatorRestControllerV1Test extends AbstractTest {
                 .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
                         .withContentType(MediaType.APPLICATION_JSON)
                         .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
-        var requestBody = new ParameterUpdateRequestOperatorDTOV1();
-        requestBody.value("value2");
+
+        var requestBody = new ParametersUpdateRequestOperatorDTOV1()
+                .addParametersItem(new ParameterUpdateRequestOperatorDTOV1().value("value2"));
+
         given()
                 .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
@@ -108,7 +112,20 @@ class ParameterOperatorRestControllerV1Test extends AbstractTest {
                 .contentType(APPLICATION_JSON)
                 .pathParam("productName", "product2")
                 .pathParam("applicationId", "app2")
-                .pathParam("name", "name2")
+                .body(requestBody)
+                .put()
+                .then()
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
+
+        requestBody = new ParametersUpdateRequestOperatorDTOV1();
+
+        given()
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
+                .when()
+                .contentType(APPLICATION_JSON)
+                .pathParam("productName", "product2")
+                .pathParam("applicationId", "app2")
                 .body(requestBody)
                 .put()
                 .then()

@@ -1,5 +1,7 @@
 package org.tkit.onecx.parameters.rs.operator.v1.mappers;
 
+import java.util.List;
+
 import jakarta.inject.Inject;
 
 import org.mapstruct.Mapper;
@@ -12,6 +14,7 @@ import org.tkit.quarkus.rs.mappers.OffsetDateTimeMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import gen.org.tkit.onecx.parameters.rs.v1.operator.model.ParameterUpdateRequestOperatorDTOV1;
+import gen.org.tkit.onecx.parameters.rs.v1.operator.model.ParametersUpdateRequestOperatorDTOV1;
 
 @Mapper(uses = OffsetDateTimeMapper.class)
 public abstract class OperatorParameterMapperV1 {
@@ -19,8 +22,16 @@ public abstract class OperatorParameterMapperV1 {
     @Inject
     ObjectMapper objectMapper;
 
+    public List<Parameter> create(String productName, String applicationId, ParametersUpdateRequestOperatorDTOV1 request) {
+        if (request == null || request.getParameters() == null) {
+            return List.of();
+        }
+        return request.getParameters().stream().map(x -> createParam(productName, applicationId, x)).toList();
+    }
+
     @Mapping(target = "operator", constant = "true")
     @Mapping(target = "tenantId", ignore = true)
+    @Mapping(target = "importValue", ignore = true)
     @Mapping(target = "value", source = "request.value", qualifiedByName = "o2s")
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "modificationUser", ignore = true)
@@ -30,8 +41,8 @@ public abstract class OperatorParameterMapperV1 {
     @Mapping(target = "creationUser", ignore = true)
     @Mapping(target = "creationDate", ignore = true)
     @Mapping(target = "controlTraceabilityManual", ignore = true)
-    public abstract Parameter create(ParameterUpdateRequestOperatorDTOV1 request, String productName, String applicationId,
-            String name);
+    public abstract Parameter createParam(String productName, String applicationId,
+            ParameterUpdateRequestOperatorDTOV1 request);
 
     @Named("o2s")
     public String o2s(Object value) {

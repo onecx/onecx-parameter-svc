@@ -70,4 +70,5 @@ public class Parameter extends TraceableEntity {
      */
     @Column(name = "OPERATOR")
     private boolean operator;
+
 }

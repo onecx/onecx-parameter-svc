@@ -31,6 +31,10 @@ public class ParameterLogParam implements LogParam {
                     return ParameterSearchCriteriaDTO.class.getSimpleName() + "[" + d.getPageNumber() + "," + d.getPageSize()
                             + "]";
                 }),
+                item(10, ParameterSnapshotDTO.class, x -> {
+                    ParameterSnapshotDTO p = (ParameterSnapshotDTO) x;
+                    return ParameterSearchCriteriaDTO.class.getSimpleName() + "[" + p.getId() + "]";
+                }),
                 item(10, ParameterCreateDTO.class,
                         x -> x.getClass().getSimpleName() + ":" + ((ParameterCreateDTO) x).getName()),
                 item(10, ParameterUpdateDTO.class,

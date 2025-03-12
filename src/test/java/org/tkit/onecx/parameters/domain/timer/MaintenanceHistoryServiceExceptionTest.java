@@ -38,11 +38,10 @@ class MaintenanceHistoryServiceExceptionTest {
 
     @Test
     void testDaoException() {
-        var exc = Assertions.assertThrows(Exception.class, () -> {
+        var exc = Assertions.assertThrows(DAOException.class, () -> {
             service.maintenanceHistoryData();
         });
-        var de = Assertions.assertInstanceOf(DAOException.class, exc);
-        Assertions.assertEquals(HistoryDAO.ErrorKeys.DELETE_PARAMETER_HISTORY_OLDER_THAN_FAILED, de.key);
+        Assertions.assertEquals(HistoryDAO.ErrorKeys.DELETE_PARAMETER_HISTORY_OLDER_THAN_FAILED, exc.key);
     }
 
 }
