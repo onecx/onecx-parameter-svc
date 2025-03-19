@@ -7,6 +7,7 @@ import jakarta.inject.Inject;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import org.tkit.onecx.parameters.domain.models.History;
 import org.tkit.quarkus.rs.mappers.OffsetDateTimeMapper;
 
@@ -23,6 +24,9 @@ public abstract class ParameterMapperV1 {
 
     public Map<String, Object> mapParameters(Map<String, String> parameters) {
         Map<String, Object> data = new HashMap<>();
+        if (parameters == null) {
+            return data;
+        }
         try {
             for (Map.Entry<String, String> e : parameters.entrySet()) {
                 if (e.getValue() == null || e.getValue().isBlank()) {
@@ -47,9 +51,10 @@ public abstract class ParameterMapperV1 {
     @Mapping(target = "modificationCount", ignore = true)
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "usedValue", source = "dto.currentValue", qualifiedByName = "o2s")
+    @Mapping(target = "defaultValue", source = "dto.defaultValue", qualifiedByName = "o2s")
     public abstract History mapItem(ParameterInfoDTOV1 dto, String name, ParametersBucketDTOV1 bucketDTO,
-            String productName,
-            String applicationId, String usedValue);
+            String productName, String applicationId);
 
     public static class MapperException extends RuntimeException {
 
@@ -57,6 +62,18 @@ public abstract class ParameterMapperV1 {
             super(msg, t);
         }
 
+    }
+
+    @Named("o2s")
+    public String o2s(Object value) {
+        if (value == null) {
+            return null;
+        }
+        try {
+            return objectMapper.writeValueAsString(value);
+        } catch (Exception e) {
+            throw new MapperException("Error reading parameter value", e);
+        }
     }
 
 }
