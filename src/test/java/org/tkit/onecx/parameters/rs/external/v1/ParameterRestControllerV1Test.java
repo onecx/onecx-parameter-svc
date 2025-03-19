@@ -82,7 +82,7 @@ class ParameterRestControllerV1Test extends AbstractTest {
                 .pathParam("productName", "import-product")
                 .pathParam("appId", "import-app")
                 .get("parameters")
-                .then().log().all()
+                .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)
                 .extract()
