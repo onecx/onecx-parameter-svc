@@ -481,8 +481,6 @@ components:
           type: object
         defaultValue:
           type: object
-        description:
-          type: string
         instanceId:
           type: string
     HistoryCriteria:

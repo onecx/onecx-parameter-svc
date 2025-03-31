@@ -44,12 +44,6 @@ public class History extends TraceableEntity {
     private String productName;
 
     /**
-     * The parameter type.
-     */
-    @Column(name = "VALUE_DESCRIPTION")
-    private String description;
-
-    /**
      * The parameter used value.
      */
     @Column(name = "USED_VALUE", columnDefinition = "varchar(5000)")

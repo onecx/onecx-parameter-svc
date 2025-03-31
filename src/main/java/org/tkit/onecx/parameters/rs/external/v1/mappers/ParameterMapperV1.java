@@ -41,7 +41,6 @@ public abstract class ParameterMapperV1 {
         return data;
     }
 
-    @Mapping(target = "description", source = "dto.description")
     @Mapping(target = "tenantId", ignore = true)
     @Mapping(target = "creationDate", ignore = true)
     @Mapping(target = "creationUser", ignore = true)
