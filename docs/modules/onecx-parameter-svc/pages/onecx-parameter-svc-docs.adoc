@@ -64,11 +64,10 @@ app:
         spec:
           kcConfig:
             defaultClientScopes: [ ocx-tn:read ]
-
-----
-
-     kcConfig:
-            defaultClientScopes: [ ocx-tn:read ]
+    microservice:
+      spec:
+        description: OneCX Parameter Backend Service
+        name: OneCX Parameter SVC
 
 ----
 
