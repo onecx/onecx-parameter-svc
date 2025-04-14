@@ -483,6 +483,9 @@ components:
           type: object
         instanceId:
           type: string
+        count:
+          type: integer
+          format: int64
     HistoryCriteria:
       type: object
       properties:
