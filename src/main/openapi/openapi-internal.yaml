@@ -486,6 +486,14 @@ components:
         count:
           type: integer
           format: int64
+        start:
+          format: date-time
+          type: string
+          example: 2022-03-10T12:15:50-04:00
+        end:
+          format: date-time
+          type: string
+          example: 2022-03-10T12:15:50-04:00
     HistoryCriteria:
       type: object
       properties:
