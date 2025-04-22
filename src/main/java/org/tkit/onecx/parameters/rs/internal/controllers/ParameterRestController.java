@@ -49,7 +49,7 @@ public class ParameterRestController implements ParametersApi {
     ParameterService parameterService;
 
     @Override
-    public Response getAllApplications() {
+    public Response getAllProducts() {
         var apps = parameterDAO.searchAllProductNamesAndApplicationIds();
         return Response.ok(parameterMapper.apps(apps)).build();
     }

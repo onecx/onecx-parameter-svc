@@ -33,6 +33,12 @@ public class HistoryRestController implements HistoriesApi {
     }
 
     @Override
+    public Response getAllHistoryProducts() {
+        var apps = historyDAO.searchAllProductNamesAndApplicationIds();
+        return Response.ok(applicationParameterInternalMapper.apps(apps)).build();
+    }
+
+    @Override
     public Response getAllParametersHistory(HistoryCriteriaDTO criteriaDTO) {
         var criteria = applicationParameterInternalMapper.map(criteriaDTO);
         var parametersHistories = historyDAO.searchByCriteria(criteria);
