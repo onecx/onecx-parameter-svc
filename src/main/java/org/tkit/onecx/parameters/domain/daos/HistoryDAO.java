@@ -11,9 +11,7 @@ import jakarta.persistence.criteria.*;
 import jakarta.transaction.Transactional;
 
 import org.tkit.onecx.parameters.domain.criteria.HistorySearchCriteria;
-import org.tkit.onecx.parameters.domain.models.History;
-import org.tkit.onecx.parameters.domain.models.HistoryCountTuple;
-import org.tkit.onecx.parameters.domain.models.History_;
+import org.tkit.onecx.parameters.domain.models.*;
 import org.tkit.quarkus.jpa.daos.AbstractDAO;
 import org.tkit.quarkus.jpa.daos.Page;
 import org.tkit.quarkus.jpa.daos.PageResult;
@@ -110,8 +108,24 @@ public class HistoryDAO extends AbstractDAO<History> {
         }
     }
 
+    public List<ApplicationTuple> searchAllProductNamesAndApplicationIds() {
+        try {
+            var cb = getEntityManager().getCriteriaBuilder();
+            CriteriaQuery<ApplicationTuple> cq = cb.createQuery(ApplicationTuple.class);
+            Root<History> root = cq.from(History.class);
+            cq.select(
+                    cb.construct(ApplicationTuple.class, root.get(Parameter_.PRODUCT_NAME),
+                            root.get(Parameter_.APPLICATION_ID)))
+                    .distinct(true);
+            return getEntityManager().createQuery(cq).getResultList();
+        } catch (Exception exception) {
+            throw new DAOException(ErrorKeys.FIND_ALL_APPLICATIONS_FAILED, exception);
+        }
+    }
+
     public enum ErrorKeys {
         DELETE_PARAMETER_HISTORY_OLDER_THAN_FAILED,
+        FIND_ALL_APPLICATIONS_FAILED,
         FIND_ALL_PARAMETERS_HISTORY_FAILED;
     }
 }

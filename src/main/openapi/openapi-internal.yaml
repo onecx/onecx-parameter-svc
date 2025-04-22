@@ -95,6 +95,25 @@ paths:
                 $ref: '#/components/schemas/History'
         "404":
           description: Not Found
+  /histories/products:
+    get:
+      security:
+        - oauth2: [ ocx-pa:all, ocx-pa:read ]
+      tags:
+        - histories
+      description: Find all products
+      operationId: getAllHistoryProducts
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+        "400":
+          description: Bad request
   /parameters/search:
     post:
       security:
@@ -147,14 +166,14 @@ paths:
                 $ref: '#/components/schemas/ProblemDetailResponse'
         "404":
           description: Not Found
-  /parameters/applications:
+  /parameters/products:
     get:
       security:
         - oauth2: [ ocx-pa:all, ocx-pa:read ]
       tags:
       - parameters
-      description: Find all applications
-      operationId: getAllApplications
+      description: Find all products
+      operationId: getAllProducts
       responses:
         "200":
           description: OK

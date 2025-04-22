@@ -86,7 +86,7 @@ class ParameterRestControllerTest extends AbstractTest {
                 .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
                 .header(HEADER_APM_TOKEN, apm)
                 .when()
-                .get("applications")
+                .get("products")
                 .then()
                 .statusCode(Response.Status.OK.getStatusCode())
                 .contentType(APPLICATION_JSON)

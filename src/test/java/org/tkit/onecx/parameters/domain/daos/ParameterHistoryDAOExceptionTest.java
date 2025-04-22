@@ -46,4 +46,11 @@ class ParameterHistoryDAOExceptionTest {
         Assertions.assertEquals(HistoryDAO.ErrorKeys.FIND_ALL_PARAMETERS_HISTORY_FAILED,
                 exc.key);
     }
+
+    @Test
+    void searchAllApplicationsTest() {
+        var exc = Assertions.assertThrows(DAOException.class, () -> dao.searchAllProductNamesAndApplicationIds());
+        Assertions.assertEquals(HistoryDAO.ErrorKeys.FIND_ALL_APPLICATIONS_FAILED,
+                exc.key);
+    }
 }

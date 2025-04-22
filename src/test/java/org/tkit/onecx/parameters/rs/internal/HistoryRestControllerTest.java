@@ -24,10 +24,7 @@ import org.tkit.onecx.parameters.test.AbstractTest;
 import org.tkit.quarkus.security.test.GenerateKeycloakClient;
 import org.tkit.quarkus.test.WithDBData;
 
-import gen.org.tkit.onecx.parameters.rs.internal.model.HistoryCountCriteriaDTO;
-import gen.org.tkit.onecx.parameters.rs.internal.model.HistoryCriteriaDTO;
-import gen.org.tkit.onecx.parameters.rs.internal.model.HistoryDTO;
-import gen.org.tkit.onecx.parameters.rs.internal.model.HistoryPageResultDTO;
+import gen.org.tkit.onecx.parameters.rs.internal.model.*;
 import gen.org.tkit.onecx.tenant.client.model.TenantId;
 import io.quarkiverse.mockserver.test.InjectMockServerClient;
 import io.quarkus.test.common.http.TestHTTPEndpoint;
@@ -240,5 +237,27 @@ class HistoryRestControllerTest extends AbstractTest {
                 .extract().jsonPath();
 
         Assertions.assertEquals(expectedArraySize, tmp.getList(".").size());
+    }
+
+    @Test
+    void searchAllApplicationsTest() {
+        var apm = createToken("org1");
+        addExpectation(mockServerClient
+                .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
+
+        var output = given()
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
+                .when()
+                .get("products")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .contentType(APPLICATION_JSON)
+                .extract()
+                .body().as(ProductDTO[].class);
+        Assertions.assertEquals(3, output.length);
     }
 }
