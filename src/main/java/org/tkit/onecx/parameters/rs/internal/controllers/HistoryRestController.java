@@ -7,6 +7,7 @@ import jakarta.ws.rs.core.Response;
 
 import org.tkit.onecx.parameters.domain.daos.HistoryDAO;
 import org.tkit.onecx.parameters.domain.models.History;
+import org.tkit.onecx.parameters.domain.services.ParameterService;
 import org.tkit.onecx.parameters.rs.internal.mappers.ParameterMapper;
 import org.tkit.quarkus.log.cdi.LogService;
 
@@ -25,11 +26,13 @@ public class HistoryRestController implements HistoriesApi {
     @Inject
     HistoryDAO historyDAO;
 
+    @Inject
+    ParameterService parameterService;
+
     @Override
     public Response getAllParametersHistoryLatest(HistoryCriteriaDTO criteriaDTO) {
-        var criteria = applicationParameterInternalMapper.map(criteriaDTO);
-        var parametersHistories = historyDAO.searchOnlyLatestByCriteria(criteria);
-        return Response.ok(applicationParameterInternalMapper.mapHistory(parametersHistories)).build();
+        var pageResult = parameterService.getLatestHistoryEntries(criteriaDTO);
+        return Response.ok(pageResult).build();
     }
 
     @Override

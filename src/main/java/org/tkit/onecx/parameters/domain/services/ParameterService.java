@@ -8,14 +8,25 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
+import org.tkit.onecx.parameters.domain.daos.HistoryDAO;
 import org.tkit.onecx.parameters.domain.daos.ParameterDAO;
 import org.tkit.onecx.parameters.domain.models.Parameter;
+import org.tkit.onecx.parameters.rs.internal.mappers.ParameterMapper;
+
+import gen.org.tkit.onecx.parameters.rs.internal.model.HistoryCriteriaDTO;
+import gen.org.tkit.onecx.parameters.rs.internal.model.HistoryPageResultDTO;
 
 @ApplicationScoped
 public class ParameterService {
 
     @Inject
     ParameterDAO dao;
+
+    @Inject
+    HistoryDAO historyDAO;
+
+    @Inject
+    ParameterMapper applicationParameterInternalMapper;
 
     @Transactional
     public void importParameters(List<Parameter> create, List<Parameter> update) {
@@ -55,5 +66,20 @@ public class ParameterService {
         // create or update
         dao.create(create);
         dao.update(update);
+    }
+
+    @Transactional
+    public HistoryPageResultDTO getLatestHistoryEntries(HistoryCriteriaDTO criteriaDTO) {
+        var criteria = applicationParameterInternalMapper.map(criteriaDTO);
+        var parametersHistories = historyDAO.searchOnlyLatestByCriteria(criteria);
+        var pageResult = applicationParameterInternalMapper.mapHistory(parametersHistories);
+        pageResult.getStream().forEach(historyDTO -> {
+            var parameter = dao.findByNameApplicationIdAndProductName(historyDTO.getName(), historyDTO.getApplicationId(),
+                    historyDTO.getProductName());
+            if (parameter != null) {
+                historyDTO.setParameterId(parameter.getId());
+            }
+        });
+        return pageResult;
     }
 }
