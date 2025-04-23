@@ -58,6 +58,7 @@ public abstract class ParameterMapper {
     @Mapping(target = "removeStreamItem", ignore = true)
     public abstract HistoryPageResultDTO mapHistory(PageResult<History> page);
 
+    @Mapping(target = "parameterId", ignore = true)
     public abstract HistoryDTO mapHistory(History parameterHistory);
 
     public abstract List<HistoryCountDTO> mapCountList(List<HistoryCountTuple> count);

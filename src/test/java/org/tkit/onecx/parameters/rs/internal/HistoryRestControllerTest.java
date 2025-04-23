@@ -109,15 +109,15 @@ class HistoryRestControllerTest extends AbstractTest {
 
     static Stream<Arguments> findByCriteriaTestDataQueryLatest() {
         return Stream.of(
-                Arguments.of(new HistoryCriteriaDTO(), 0),
+                Arguments.of(new HistoryCriteriaDTO(), 6),
                 Arguments.of(new HistoryCriteriaDTO().applicationId("access-mgmt")
-                        .productName("access-mgmt-product"), 0),
-                Arguments.of(new HistoryCriteriaDTO().applicationId("").productName("").name(""), 0),
-                Arguments.of(new HistoryCriteriaDTO().applicationId("").productName("").name("key1"), 0),
-                Arguments.of(new HistoryCriteriaDTO().applicationId("").productName(""), 0),
+                        .productName("access-mgmt-product"), 2),
+                Arguments.of(new HistoryCriteriaDTO().applicationId("").productName("").name(""), 6),
+                Arguments.of(new HistoryCriteriaDTO().applicationId("").productName("").name("key1"), 1),
+                Arguments.of(new HistoryCriteriaDTO().applicationId("").productName(""), 6),
                 Arguments.of(new HistoryCriteriaDTO().applicationId("app0").productName("p0"), 0),
-                Arguments.of(new HistoryCriteriaDTO().applicationId("app1").productName("p1"), 0),
-                Arguments.of(new HistoryCriteriaDTO().applicationId("app2").productName("p2"), 0));
+                Arguments.of(new HistoryCriteriaDTO().applicationId("app1").productName("p1"), 1),
+                Arguments.of(new HistoryCriteriaDTO().applicationId("app2").productName("p2"), 3));
     }
 
     @ParameterizedTest
