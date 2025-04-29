@@ -1,0 +1,111 @@
+---
+openapi: 3.0.3
+info:
+ title: onecx-parameters
+ description: OneCx parameters bff v1 api
+ version: "2.0"
+servers:
+ - url: http://onecx-parameters-svc:8080/
+tags:
+ - name: parametersBff
+paths:
+ /bff/v1/parameters:
+  post:
+   security:
+    - oauth2: [ ocx-pa-ext:read ]
+   tags:
+    - parametersBff
+   description: Find all parameters by product names and appIds
+   operationId: getParametersByProductsAndAppIds
+   requestBody:
+    required: true
+    content:
+     application/json:
+      schema:
+       $ref: '#/components/schemas/ParametersBulkRequest'
+   responses:
+    "200":
+     description: OK
+     content:
+      application/json:
+       schema:
+        $ref: '#/components/schemas/ParametersBulkResponse'
+components:
+ securitySchemes:
+  oauth2:
+   type: oauth2
+   flows:
+    clientCredentials:
+     tokenUrl: https://oauth.simple.api/token
+     scopes:
+      ocx-pa-ext:read: Grants access to all operations
+ schemas:
+  ParametersBulkRequest:
+   type: object
+   required:
+    - products
+   properties:
+    products:
+     type: object
+     additionalProperties:
+      uniqueItems: true
+      type: array
+      items:
+       type: string
+  ParametersBulkResponse:
+   type: object
+   properties:
+    products:
+     type: object
+     additionalProperties:
+      type: object
+      additionalProperties:
+       type: array
+       items:
+        $ref: '#/components/schemas/Parameter'
+  Parameter:
+   type: object
+   properties:
+    displayName:
+     type: string
+    description:
+     type: string
+    applicationId:
+     type: string
+    productName:
+     type: string
+    name:
+     type: string
+    value:
+     type: object
+    importValue:
+     type: object
+  ProblemDetailResponse:
+   type: object
+   properties:
+    errorCode:
+     type: string
+    detail:
+     type: string
+    params:
+     type: array
+     items:
+      $ref: '#/components/schemas/ProblemDetailParam'
+    invalidParams:
+     type: array
+     items:
+      $ref: '#/components/schemas/ProblemDetailInvalidParam'
+  ProblemDetailParam:
+   type: object
+   properties:
+    key:
+     type: string
+    value:
+     type: string
+  ProblemDetailInvalidParam:
+   type: object
+   properties:
+    name:
+     type: string
+    message:
+     type: string
