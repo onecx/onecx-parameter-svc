@@ -32,7 +32,7 @@ public interface ParameterMapperBffV1 {
                                                 .filter(p -> p.getProductName().equals(entry.getKey())
                                                         && p.getApplicationId().equals(applicationId))
                                                 .map(this::parameterToParameterBffDTOV1)
-                                                .collect(Collectors.toList())))));
+                                                .toList()))));
         bulkResponseBffDTOV1.setProducts(productsMap);
         return bulkResponseBffDTOV1;
     }

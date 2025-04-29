@@ -34,7 +34,7 @@ import io.quarkus.test.junit.QuarkusTest;
 @TestHTTPEndpoint(ParameterRestControllerBffV1.class)
 @GenerateKeycloakClient(clientName = "testClient", scopes = { "ocx-pa-ext:read" })
 @WithDBData(value = { "data/parameters-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
-public class ParameterRestControllerBffV1Test extends AbstractTest {
+class ParameterRestControllerBffV1Test extends AbstractTest {
 
     @InjectMockServerClient
     MockServerClient mockServerClient;
