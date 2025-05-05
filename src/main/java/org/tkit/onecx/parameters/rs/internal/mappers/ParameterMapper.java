@@ -59,6 +59,8 @@ public abstract class ParameterMapper {
     public abstract HistoryPageResultDTO mapHistory(PageResult<History> page);
 
     @Mapping(target = "parameterId", ignore = true)
+    @Mapping(target = "defaultValue", source = "defaultValue", qualifiedByName = "s2o")
+    @Mapping(target = "usedValue", source = "usedValue", qualifiedByName = "s2o")
     public abstract HistoryDTO mapHistory(History parameterHistory);
 
     public abstract List<HistoryCountDTO> mapCountList(List<HistoryCountTuple> count);
