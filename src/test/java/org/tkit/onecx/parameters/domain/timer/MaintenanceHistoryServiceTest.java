@@ -40,6 +40,8 @@ import io.smallrye.config.SmallRyeConfig;
 
 @QuarkusTest
 @WithDBData(value = { "data/history-testdata.xml" }, deleteBeforeInsert = true, rinseAndRepeat = true)
+@GenerateKeycloakClient(clientName = "testClient", scopes = { "ocx-pa:read", "ocx-pa:write", "ocx-pa:delete",
+        "ocx-pa:all" })
 class MaintenanceHistoryServiceTest extends AbstractTest {
 
     @InjectMockServerClient
@@ -93,12 +95,10 @@ class MaintenanceHistoryServiceTest extends AbstractTest {
 
     @Test
     @Order(1)
-    @GenerateKeycloakClient(clientName = "testClient", scopes = { "ocx-pa:read", "ocx-pa:write", "ocx-pa:delete",
-            "ocx-pa:all" })
     void maintenanceHistoryWithoutRootTenantDataTest() {
         mockConfig(false);
         service.maintenanceHistoryData();
-        List<History> result = dao.findAll().toList();
+        List<History> result = dao.findAllAsList();
         Assertions.assertNotNull(result);
         Assertions.assertEquals(2, result.size());
 
@@ -151,12 +151,11 @@ class MaintenanceHistoryServiceTest extends AbstractTest {
 
     @Test
     @Order(2)
-    @GenerateKeycloakClient(clientName = "testClient", scopes = { "ocx-pa:read", "ocx-pa:write", "ocx-pa:delete",
-            "ocx-pa:all" })
+
     void maintenanceHistoryWithRootTenantDataTest() {
         mockConfig(true);
         service.maintenanceHistoryData();
-        List<History> result = dao.findAll().toList();
+        List<History> result = dao.findAllAsList();
         Assertions.assertNotNull(result);
         Assertions.assertEquals(2, result.size());
 
@@ -211,14 +210,14 @@ class MaintenanceHistoryServiceTest extends AbstractTest {
     @Order(3)
     void maintenanceHistoryNoDataTest() {
         mockConfig(false);
-        var result = dao.findAll().toList();
+        var result = dao.findAllAsList();
         Assertions.assertNotNull(result);
         Assertions.assertEquals(10, result.size());
 
         jobDAO.deleteQueryById(MaintenanceHistoryService.JOB_ID);
         service.maintenanceHistoryData();
 
-        result = dao.findAll().toList();
+        result = dao.findAllAsList();
         Assertions.assertNotNull(result);
         Assertions.assertEquals(10, result.size());
     }
