@@ -2,6 +2,8 @@ package org.tkit.onecx.parameters.domain.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -11,10 +13,13 @@ import jakarta.transaction.Transactional;
 import org.tkit.onecx.parameters.domain.daos.HistoryDAO;
 import org.tkit.onecx.parameters.domain.daos.ParameterDAO;
 import org.tkit.onecx.parameters.domain.models.Parameter;
+import org.tkit.onecx.parameters.rs.bff.v1.mappers.ParameterMapperBffV1;
 import org.tkit.onecx.parameters.rs.internal.mappers.ParameterMapper;
 
 import gen.org.tkit.onecx.parameters.rs.internal.model.HistoryCriteriaDTO;
 import gen.org.tkit.onecx.parameters.rs.internal.model.HistoryPageResultDTO;
+import gen.org.tkit.onecx.parameters.rs.v1.bff.model.ParameterBffDTOV1;
+import gen.org.tkit.onecx.parameters.rs.v1.bff.model.ParametersBulkResponseBffDTOV1;
 
 @ApplicationScoped
 public class ParameterService {
@@ -27,6 +32,9 @@ public class ParameterService {
 
     @Inject
     ParameterMapper applicationParameterInternalMapper;
+
+    @Inject
+    ParameterMapperBffV1 parameterBffMapper;
 
     @Transactional
     public void importParameters(List<Parameter> create, List<Parameter> update) {
@@ -81,5 +89,18 @@ public class ParameterService {
             }
         });
         return pageResult;
+    }
+
+    public ParametersBulkResponseBffDTOV1 getGroupedParametersByProductsAndApps(
+            Map<String, Set<String>> request) {
+        var parameters = dao.findAllByProductNamesAndApplicationIds(request);
+        var grouped = parameters.stream()
+                .map(parameter -> parameterBffMapper.parameterToParameterBffDTOV1(parameter))
+                .collect(Collectors.groupingBy(
+                        ParameterBffDTOV1::getProductName,
+                        Collectors.groupingBy(ParameterBffDTOV1::getApplicationId)));
+        ParametersBulkResponseBffDTOV1 response = new ParametersBulkResponseBffDTOV1();
+        response.setProducts(grouped);
+        return response;
     }
 }

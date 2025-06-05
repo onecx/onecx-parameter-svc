@@ -183,15 +183,45 @@ public class ParameterDAO extends AbstractDAO<Parameter> {
         }
     }
 
+    public List<Parameter> findAllByProductNamesAndApplicationIds(Map<String, Set<String>> productAppMap) {
+        try {
+            CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+            CriteriaQuery<Parameter> cq = cb.createQuery(Parameter.class);
+            Root<Parameter> root = cq.from(Parameter.class);
+
+            if (productAppMap != null && !productAppMap.isEmpty()) {
+                List<Predicate> predicates = new ArrayList<>();
+
+                for (Map.Entry<String, Set<String>> entry : productAppMap.entrySet()) {
+                    String productName = entry.getKey();
+                    Set<String> appIds = entry.getValue();
+
+                    for (String appId : appIds) {
+                        predicates.add(cb.and(
+                                cb.equal(root.get(Parameter_.PRODUCT_NAME), productName),
+                                cb.equal(root.get(Parameter_.APPLICATION_ID), appId)));
+                    }
+                }
+
+                cq.where(cb.or(predicates.toArray(new Predicate[0])));
+            }
+
+            return getEntityManager().createQuery(cq).getResultList();
+
+        } catch (Exception e) {
+            throw new DAOException(ErrorKeys.FIND_ALL_PARAMETERS_BY_PRODUCT_NAMES_AND_APP_IDS_FAILED, e);
+        }
+    }
+
     public enum ErrorKeys {
 
         FIND_ALL_PARAMETERS_VALUES_BY_APPLICATION_ID_FAILED,
         FIND_ALL_PARAMETERS_BY_APPLICATION_ID_FAILED,
         FIND_ALL_APPLICATIONS_FAILED,
-
         FIND_ALL_NAMES_FAILED,
         FIND_ALL_PARAMETERS_FAILED,
         FIND_BY_NAME_PRODUCT_NAME_APPLICATION_ID_FAILED,
-        FIND_ALL_PARAMETERS_BY_PRODUCT_NAMES_FAILED
+        FIND_ALL_PARAMETERS_BY_PRODUCT_NAMES_FAILED,
+        FIND_ALL_PARAMETERS_BY_PRODUCT_NAMES_AND_APP_IDS_FAILED
     }
 }
