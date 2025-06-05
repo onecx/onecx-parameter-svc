@@ -157,7 +157,7 @@ public class ParameterDAO extends AbstractDAO<Parameter> {
             cq.select(root.get(Parameter_.NAME)).distinct(true);
             cq.where(cb.equal(root.get(Parameter_.PRODUCT_NAME), criteria.getProductName()));
 
-            if (criteria.getApplicationId() != null && !criteria.getApplicationId().isEmpty()) {
+            if (criteria.getApplicationId() != null) {
                 cq.where(cb.equal(root.get(Parameter_.APPLICATION_ID), criteria.getApplicationId()));
             }
 
@@ -189,7 +189,7 @@ public class ParameterDAO extends AbstractDAO<Parameter> {
             CriteriaQuery<Parameter> cq = cb.createQuery(Parameter.class);
             Root<Parameter> root = cq.from(Parameter.class);
 
-            if (productAppMap != null && !productAppMap.isEmpty()) {
+            if (!productAppMap.isEmpty()) {
                 List<Predicate> predicates = new ArrayList<>();
 
                 for (Map.Entry<String, Set<String>> entry : productAppMap.entrySet()) {
