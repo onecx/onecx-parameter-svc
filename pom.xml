@@ -173,6 +173,21 @@
                             <skipCache>true</skipCache>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>onecx-parameter-v2</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <url>
+                                https://raw.githubusercontent.com/onecx/onecx-parameter/main/openapi/onecx-parameter-v2.yaml
+                            </url>
+                            <outputDirectory>target/tmp/openapi</outputDirectory>
+                            <outputFileName>onecx-parameter-v2.yaml</outputFileName>
+                            <skipCache>true</skipCache>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -200,6 +215,19 @@
                             <apiPackage>gen.org.tkit.onecx.parameters.rs.v1</apiPackage>
                             <modelPackage>gen.org.tkit.onecx.parameters.rs.v1.model</modelPackage>
                             <modelNameSuffix>DTOV1</modelNameSuffix>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>v2</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>target/tmp/openapi/onecx-parameter-v2.yaml</inputSpec>
+                            <apiPackage>gen.org.tkit.onecx.parameters.rs.v2</apiPackage>
+                            <modelPackage>gen.org.tkit.onecx.parameters.rs.v2.model</modelPackage>
+                            <modelNameSuffix>DTOV2</modelNameSuffix>
+                            <apiNameSuffix>ApiV2</apiNameSuffix>
                         </configuration>
                     </execution>
                     <execution>
