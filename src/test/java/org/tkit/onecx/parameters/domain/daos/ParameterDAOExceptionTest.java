@@ -39,6 +39,8 @@ class ParameterDAOExceptionTest {
         test(ParameterDAO.ErrorKeys.FIND_ALL_PARAMETERS_BY_PRODUCT_NAMES_FAILED, () -> dao.findAllByProductNames(null));
         test(ParameterDAO.ErrorKeys.FIND_BY_NAME_PRODUCT_NAME_APPLICATION_ID_FAILED,
                 () -> dao.findByNameApplicationIdAndProductName(null, null, null));
+        test(ParameterDAO.ErrorKeys.FIND_ALL_PARAMETERS_BY_PRODUCT_NAMES_AND_APP_IDS_FAILED,
+                () -> dao.findAllByProductNamesAndApplicationIds(null));
     }
 
     private void test(Enum<?> key, Executable executable) {

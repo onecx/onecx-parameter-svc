@@ -8,9 +8,8 @@ import jakarta.ws.rs.core.Response;
 
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
-import org.tkit.onecx.parameters.domain.daos.ParameterDAO;
+import org.tkit.onecx.parameters.domain.services.ParameterService;
 import org.tkit.onecx.parameters.rs.bff.v1.mappers.ExceptionMapperBffV1;
-import org.tkit.onecx.parameters.rs.bff.v1.mappers.ParameterMapperBffV1;
 import org.tkit.quarkus.log.cdi.LogService;
 
 import gen.org.tkit.onecx.parameters.rs.v1.bff.ParametersBffApi;
@@ -23,18 +22,15 @@ import gen.org.tkit.onecx.parameters.rs.v1.bff.model.ProblemDetailResponseBffDTO
 public class ParameterRestControllerBffV1 implements ParametersBffApi {
 
     @Inject
-    ParameterDAO applicationParameterDAO;
-
-    @Inject
     ExceptionMapperBffV1 exceptionMapper;
 
     @Inject
-    ParameterMapperBffV1 mapper;
+    ParameterService parameterService;
 
     @Override
     public Response getParametersByProductsAndAppIds(ParametersBulkRequestBffDTOV1 request) {
-        var parameters = applicationParameterDAO.findAllByProductNames(request.getProducts().keySet());
-        return Response.status(Response.Status.OK).entity(mapper.mapParameters(parameters.toList(), request)).build();
+        var result = parameterService.getGroupedParametersByProductsAndApps(request.getProducts());
+        return Response.status(Response.Status.OK).entity(result).build();
     }
 
     @ServerExceptionMapper

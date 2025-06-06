@@ -83,4 +83,71 @@ class ParameterRestControllerBffV1Test extends AbstractTest {
         Assertions.assertEquals(1, res.getProducts().get("access-mgmt-product").size());
         Assertions.assertEquals(2, res.getProducts().get("access-mgmt-product").get("access-mgmt").size());
     }
+
+    @Test
+    void shouldGetBadRequestIfProductsMissing() {
+        var apm = createToken("org1");
+        addExpectation(mockServerClient
+                .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
+
+        ParametersBulkRequestBffDTOV1 request = new ParametersBulkRequestBffDTOV1();
+
+        given()
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
+                .contentType(APPLICATION_JSON)
+                .post()
+                .then()
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
+        request.setProducts(null);
+
+        given()
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
+                .body(request)
+                .contentType(APPLICATION_JSON)
+                .post()
+                .then()
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
+    }
+
+    @Test
+    void shouldGetParamatersByProductNamesAndAppIds_empty_products() {
+        var apm = createToken("org1");
+        addExpectation(mockServerClient
+                .when(request().withPath("/v1/tenant").withMethod(HttpMethod.GET).withHeader("apm-principal-token", apm))
+                .respond(httpRequest -> response().withStatusCode(Response.Status.OK.getStatusCode())
+                        .withContentType(MediaType.APPLICATION_JSON)
+                        .withBody(JsonBody.json(new TenantId().tenantId("tenant-100")))));
+
+        ParametersBulkRequestBffDTOV1 request = new ParametersBulkRequestBffDTOV1();
+
+        given()
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
+                .contentType(APPLICATION_JSON)
+                .post()
+                .then()
+                .statusCode(Response.Status.BAD_REQUEST.getStatusCode());
+        var data = new HashMap<>(Map.of("p1", Set.of("app1")));
+        data.put("access-mgmt-product", Set.of("access-mgmt"));
+        data.clear();
+        request.setProducts(data);
+
+        var res = given()
+                .auth().oauth2(keycloakTestClient.getClientAccessToken("testClient"))
+                .header(HEADER_APM_TOKEN, apm)
+                .body(request)
+                .contentType(APPLICATION_JSON)
+                .post()
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode())
+                .extract().body().as(ParametersBulkResponseBffDTOV1.class);
+
+        Assertions.assertEquals(4, res.getProducts().size());
+
+    }
 }
