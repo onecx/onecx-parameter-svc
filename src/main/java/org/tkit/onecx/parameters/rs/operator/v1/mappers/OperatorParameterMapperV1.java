@@ -31,8 +31,8 @@ public abstract class OperatorParameterMapperV1 {
 
     @Mapping(target = "operator", constant = "true")
     @Mapping(target = "tenantId", ignore = true)
-    @Mapping(target = "importValue", ignore = true)
-    @Mapping(target = "value", source = "request.value", qualifiedByName = "o2s")
+    @Mapping(target = "importValue", source = "request.value", qualifiedByName = "o2s")
+    @Mapping(target = "value", ignore = true)
     @Mapping(target = "persisted", ignore = true)
     @Mapping(target = "modificationUser", ignore = true)
     @Mapping(target = "modificationDate", ignore = true)
