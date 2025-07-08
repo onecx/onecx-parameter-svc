@@ -50,6 +50,8 @@ public class ParameterService {
         var update = new ArrayList<Parameter>();
         var create = new ArrayList<Parameter>();
 
+        //item == item to import
+        //map current available params
         for (var item : request) {
             var parameter = map.get(item.getName());
             if (parameter == null) {
@@ -61,7 +63,7 @@ public class ParameterService {
                 parameter.setOperator(item.isOperator());
                 parameter.setDescription(item.getDescription());
                 parameter.setDisplayName(item.getDisplayName());
-                parameter.setImportValue(item.getValue());
+                parameter.setImportValue(item.getImportValue());
             }
         }
 
