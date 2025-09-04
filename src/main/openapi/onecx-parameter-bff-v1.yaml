@@ -1,13 +1,14 @@
 ---
 openapi: 3.0.3
 info:
- title: onecx-parameters
- description: OneCx parameters bff v1 api
+ title: onecx-parameters external bff service V1
+ description: This API provides endpoints for the onecx-shell-bff to retrieve parameters
  version: "2.0"
 servers:
  - url: http://onecx-parameters-svc:8080/
 tags:
  - name: parametersBff
+   description: Retrieve Parameters
 paths:
  /bff/v1/parameters:
   post:
@@ -25,7 +26,7 @@ paths:
        $ref: '#/components/schemas/ParametersBulkRequest'
    responses:
     "200":
-     description: OK
+     description: Parameters retrieved successfully
      content:
       application/json:
        schema:
