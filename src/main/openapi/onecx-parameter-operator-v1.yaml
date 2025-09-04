@@ -1,13 +1,14 @@
 ---
 openapi: 3.0.3
 info:
-  title: onecx-parameters operator service
-  description: OneCx parameters operator service
+  title: onecx-parameters operator service V1
+  description: This API provides endpoints to create and update parameters by the onecx-parameter-operator only
   version: "1.0.0"
 servers:
 - url: http://onecx-parameters-svc:8080/
 tags:
 - name: operatorParameters
+  description: Create and Update Parameters by the Operator
 paths:
   /operator/v1/parameters/{productName}/{applicationId}:
     put:
@@ -15,7 +16,7 @@ paths:
         - oauth2: [ ocx-pa-op:write ]
       tags:
       - operatorParameters
-      description: create or update parameter
+      description: Create or update a parameter by product name and application id
       operationId: createOrUpdateParameterValue
       parameters:
         - in: path
@@ -36,7 +37,7 @@ paths:
               $ref: '#/components/schemas/ParametersUpdateRequest'
       responses:
         "204":
-          description: No Content
+          description: Parameter created or updated successfully
         "400":
           description: Bad Request
           content:

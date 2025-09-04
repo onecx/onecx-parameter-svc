@@ -200,7 +200,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>src/main/openapi/openapi-internal.yaml</inputSpec>
+                            <inputSpec>src/main/openapi/onecx-parameter-internal.yaml</inputSpec>
                             <apiPackage>gen.org.tkit.onecx.parameters.rs.internal</apiPackage>
                             <modelPackage>gen.org.tkit.onecx.parameters.rs.internal.model</modelPackage>
                         </configuration>
@@ -236,7 +236,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>src/main/openapi/openapi-operator-v1.yaml</inputSpec>
+                            <inputSpec>src/main/openapi/onecx-parameter-operator-v1.yaml</inputSpec>
                             <apiPackage>gen.org.tkit.onecx.parameters.rs.v1.operator</apiPackage>
                             <modelPackage>gen.org.tkit.onecx.parameters.rs.v1.operator.model</modelPackage>
                             <modelNameSuffix>OperatorDTOV1</modelNameSuffix>
@@ -248,7 +248,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>src/main/openapi/openapi-bff-v1.yaml</inputSpec>
+                            <inputSpec>src/main/openapi/onecx-parameter-bff-v1.yaml</inputSpec>
                             <apiPackage>gen.org.tkit.onecx.parameters.rs.v1.bff</apiPackage>
                             <modelPackage>gen.org.tkit.onecx.parameters.rs.v1.bff.model</modelPackage>
                             <modelNameSuffix>BffDTOV1</modelNameSuffix>
