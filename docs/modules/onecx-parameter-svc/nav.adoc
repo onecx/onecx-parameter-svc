@@ -1,1 +1,0 @@
-* xref:onecx-parameter-svc:index.adoc[Parameter Backend Service]
