@@ -1,1 +1,1 @@
-** xref:documentation:onecx-parameter-svc:index.adoc[Parameter Backend Service]
+** xref:documentation:onecx-parameter-svc:index.adoc[Backend Service]
