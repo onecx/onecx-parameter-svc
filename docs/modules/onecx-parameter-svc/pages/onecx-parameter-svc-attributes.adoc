@@ -1,5 +1,5 @@
 
 :docker-registry: https://github.com/onecx/onecx-parameter-svc/pkgs/container/onecx-parameter-svc
-:helm-registry: https://github.com/onecx/onecx-parameter-svc/pkgs/container/charts/onecx-parameter-svc
+:helm-registry: https://github.com/onecx/onecx-parameter-svc/pkgs/container/charts%2Fonecx-parameter-svc
 :properties-file: src/main/resources/application.properties
 :helm-file: src/main/helm/values.yaml
