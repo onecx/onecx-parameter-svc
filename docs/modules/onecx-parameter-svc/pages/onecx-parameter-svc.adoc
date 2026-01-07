@@ -26,7 +26,7 @@ Environment variable: `+++ONECX_PARAMETER_SCHEDULER_DURATION+++`
 endif::add-copy-button-to-env-var[]
 --
 |string
-|`7`
+|`+++7+++`
 
 a| [[onecx-parameter-svc_onecx-parameter-scheduler-expression]] [.property-path]##link:#onecx-parameter-svc_onecx-parameter-scheduler-expression[`onecx.parameter.scheduler.expression`]##
 ifdef::add-copy-button-to-config-props[]
@@ -47,7 +47,7 @@ Environment variable: `+++ONECX_PARAMETER_SCHEDULER_EXPRESSION+++`
 endif::add-copy-button-to-env-var[]
 --
 |string
-|`0 15 2 * * ?`
+|`+++0 15 2 * * ?+++`
 
 |===
 

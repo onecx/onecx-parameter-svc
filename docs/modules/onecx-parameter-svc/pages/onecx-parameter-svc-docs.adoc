@@ -25,7 +25,7 @@ quarkus.liquibase.migrate-at-start=true
 quarkus.liquibase.validate-on-migrate=true
 onecx.parameter.scheduler.expression=0 15 2 * * ?
 onecx.parameter.scheduler.duration=7
-%prod.quarkus.oidc-client.client-id=${ONECX_OIDC_CLIENT_CLIENT_ID:${quarkus.application.name}}
+%prod.quarkus.oidc-client.client-id=${quarkus.application.name}
 tkit.rs.context.tenant-id.enabled=true
 tkit.jpa.tenant.root.enabled=true
 %prod.quarkus.datasource.jdbc.url=${DB_URL:jdbc:postgresql://postgresdb:5432/onecx-parameter?sslmode=disable}
@@ -54,8 +54,6 @@ Default values
 ----
 app:
   name: svc
-  template:
-    oidc_client_id: "ONECX_OIDC_CLIENT_CLIENT_ID"
   image:
     repository: "onecx/onecx-parameter-svc"
   db:
