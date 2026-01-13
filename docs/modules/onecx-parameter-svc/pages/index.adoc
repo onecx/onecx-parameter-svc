@@ -1,10 +1,9 @@
 include::onecx-parameter-svc-attributes.adoc[opts=optional]
 
-== onecx-parameter-svc
+= OneCX Parameter Backend Service
 
-include::docs.adoc[opts=optional]
 
-=== Configuration
+== Configuration
 include::onecx-parameter-svc.adoc[opts=optional]
 
 include::onecx-parameter-svc-docs.adoc[opts=optional]
