@@ -1,3 +1,3 @@
 # onecx-parameter-svc
 
-OneCX Parameter Management Service
+OneCX Parameter Service
