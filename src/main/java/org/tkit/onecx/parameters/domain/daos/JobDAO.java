@@ -31,7 +31,7 @@ public class JobDAO extends AbstractDAO<Job> {
                     .setHint("jakarta.persistence.lock.timeout", -2)
                     .getSingleResult();
 
-        } catch (NoResultException ex) {
+        } catch (NoResultException _) {
             return null;
         } catch (Exception ex) {
             throw new DAOException(Error.GET_JOB_FAILED, ex);

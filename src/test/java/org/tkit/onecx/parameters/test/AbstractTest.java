@@ -56,7 +56,7 @@ public abstract class AbstractTest {
         MOCK_IDS.forEach(x -> {
             try {
                 client.clear(x);
-            } catch (Exception ex) {
+            } catch (Exception _) {
                 //  mockId not existing
             }
         });
