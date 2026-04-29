@@ -93,7 +93,7 @@ public class ParameterDAO extends AbstractDAO<Parameter> {
             predicates.add(cb.equal(root.get(Parameter_.NAME), name));
             cq.where(cb.and(predicates.toArray(new Predicate[0])));
             return getEntityManager().createQuery(cq).getSingleResult();
-        } catch (NoResultException nre) {
+        } catch (NoResultException _) {
             return null;
         } catch (Exception exception) {
             throw new DAOException(ErrorKeys.FIND_BY_NAME_PRODUCT_NAME_APPLICATION_ID_FAILED, exception);
